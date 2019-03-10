@@ -6,6 +6,15 @@ public class TypeFood {
     int idTypeFood;
     String title;
     String urlType;
+    boolean check = false;
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
 
     public TypeFood(String title, List<Food> foodList) {
         this.title = title;

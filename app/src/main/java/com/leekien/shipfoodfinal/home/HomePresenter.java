@@ -58,6 +58,7 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
         list.add(typeFood1);
         list.add(typeFood2);
         list.add(typeFood3);
+        typeFood1.setCheck(true);
         view.showTypeFood(list,HomePresenter.this,HomePresenter.this);
 
     }

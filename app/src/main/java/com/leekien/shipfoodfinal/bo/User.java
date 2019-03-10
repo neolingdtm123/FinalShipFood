@@ -1,6 +1,8 @@
 package com.leekien.shipfoodfinal.bo;
 
 public class User {
+    String username;
+    String password;
     String name;
     String age;
     String numberPhone;
@@ -46,4 +48,21 @@ public class User {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

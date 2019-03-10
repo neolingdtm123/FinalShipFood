@@ -20,13 +20,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHolder> {
-    public TypeFoodAdapter(List<TypeFood> typeFoodList,onReturn onReturn) {
+    public TypeFoodAdapter(List<TypeFood> typeFoodList, onReturn onReturn) {
         this.typeFoodList = typeFoodList;
         this.onReturn = onReturn;
     }
 
     private List<TypeFood> typeFoodList;
     onReturn onReturn;
+
     @NonNull
     @Override
     public TypeFoodAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -36,14 +37,28 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TypeFoodAdapter.ViewHolder viewHolder,final int i) {
-        final TypeFood typeFood = typeFoodList.get(i);
+    public void onBindViewHolder(@NonNull final TypeFoodAdapter.ViewHolder viewHolder, final int position) {
+        final TypeFood typeFood = typeFoodList.get(position);
         Picasso.get().load(typeFood.getUrlType()).into(viewHolder.imageView);
         viewHolder.textView.setText(typeFood.getTitle());
+        if (typeFood.isCheck()) {
+            viewHolder.imageView.setBackgroundResource(R.drawable.custom_icon);
+        } else {
+            viewHolder.imageView.setBackgroundResource(R.drawable.custom_type_food);
+        }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 onReturn.onReturn(typeFood,i);
+                for (int i = 0; i < typeFoodList.size(); i++) {
+                    if (i == position) {
+                        onReturn.onReturn(typeFood, i);
+                        typeFood.setCheck(true);
+                    } else {
+                        typeFoodList.get(i).setCheck(false);
+                    }
+                }
+                notifyDataSetChanged();
+
             }
         });
     }
@@ -52,6 +67,7 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
     public int getItemCount() {
         return typeFoodList.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.image)
         ImageView imageView;
@@ -71,6 +87,7 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
             itemView.setTag(this);
         }
     }
+
     public interface onReturn {
         void onReturn(TypeFood typeFood, int groupPosition);
     }
