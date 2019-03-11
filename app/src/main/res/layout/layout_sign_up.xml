@@ -2,14 +2,18 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
- >
+    android:focusableInTouchMode="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -21,6 +25,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:backgroundTint="#CCCCCC"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
                 android:hint="Tên"
                 android:paddingBottom="16dp"
                 android:textSize="12sp" />
@@ -34,7 +40,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="30dp"
-                android:layout_weight="1">
+                android:layout_weight="3">
 
                 <ImageView
                     android:id="@+id/imgCalendar"
@@ -54,6 +60,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:backgroundTint="#CCCCCC"
+                        android:clickable="true"
+                        android:focusableInTouchMode="true"
                         android:hint="dd/mm/yy"
                         android:paddingBottom="16dp"
                         android:textSize="12sp" />
@@ -63,7 +71,7 @@
             <RadioGroup
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="4"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -72,8 +80,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:buttonTint="#FF6868"
                     android:drawableRight="@drawable/ic_groupnu"
-                    android:paddingRight="14dp"
+                    android:paddingRight="6dp"
                     android:text=" Nữ"
 
                     />
@@ -84,10 +93,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:buttonTint="@color/orange"
+                    android:buttonTint="#66CF8A"
                     android:checked="true"
                     android:drawableRight="@drawable/ic_vectornam"
-                    android:paddingRight="5dp"
                     android:text="Nam" />
             </RadioGroup>
 
@@ -207,35 +215,37 @@
 
             <EditText
                 android:id="@+id/edtConfirmPass"
-                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:backgroundTint="#CCCCCC"
                 android:hint="Nhập lại mật khẩu"
+                android:inputType="textPassword"
                 android:paddingBottom="16dp"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
+
         <Button
             android:id="@+id/btnBack"
-            android:background="#3A3A3A"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#3A3A3A"
             android:text="Quay lại"
-            android:textColor="#FFFFFF"
-        />
+            android:textColor="#FFFFFF" />
+
         <Button
             android:id="@+id/btnSubmit"
-            android:background="#FFA41B"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Đăng ký"/>
+            android:layout_weight="1"
+            android:background="#FFA41B"
+            android:text="Đăng ký" />
     </LinearLayout>
 
 </FrameLayout>

@@ -1,99 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/orange"
-        android:gravity="center">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/custom_search"
-            android:orientation="vertical">
-
-            <com.leekien.shipfoodfinal.customView.RobEditText
-                android:id="@+id/UserName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:backgroundTint="#00ffffff"
-                android:hint="Nhập để tìm kiếm"
-                android:textColor="#000000"
-                android:textSize="17sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:background="@color/orange"
+            android:gravity="center">
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/custom_search"
+                android:orientation="vertical">
+
+                <com.leekien.shipfoodfinal.customView.RobEditText
+                    android:id="@+id/UserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:backgroundTint="#00ffffff"
+                    android:hint="Nhập để tìm kiếm"
+                    android:textColor="#000000"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/viewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="#7e7979"></android.support.v4.view.ViewPager>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="200dp">
 
-                    <me.relex.circleindicator.CircleIndicator
-                        android:id="@+id/circleIndicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="152dp" />
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/viewPager"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:background="#7e7979"></android.support.v4.view.ViewPager>
+
+                        <me.relex.circleindicator.CircleIndicator
+                            android:id="@+id/circleIndicator"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="152dp" />
 
 
-                </RelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvChu"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:text="Quản lí cửa hàng"
+                    android:textColor="@color/orange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvShip"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:text="Quản lí đơn hàng"
+                    android:textColor="@color/orange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/rcvType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                </android.support.v7.widget.RecyclerView>
+                <View
+                    android:layout_marginTop="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="#a6ffffff"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/rcvFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cast_expanded_controller_ad_label_background_color"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/rcvType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </android.support.v7.widget.RecyclerView>
-            <View
-                android:layout_marginTop="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:background="#a6ffffff"/>
-            <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/rcvFood"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/cast_expanded_controller_ad_label_background_color"
-               >
-
-            </android.support.v7.widget.RecyclerView>
-        </LinearLayout>
 
 
 
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_icons8_menu_filled"
+        android:backgroundTint="@color/orange"
+        />
+    <include layout="@layout/fab_layout"/>
 
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

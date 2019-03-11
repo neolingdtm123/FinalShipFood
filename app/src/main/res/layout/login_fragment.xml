@@ -72,6 +72,7 @@
 
         </LinearLayout>
         <TextView
+            android:id="@+id/tvSignUp"
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:layout_marginLeft="30dp"

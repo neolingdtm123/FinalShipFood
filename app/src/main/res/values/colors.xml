@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="orange">#FFA41B</color>
+    <color name="circle_on_map">#305bafa2</color>
 </resources>
