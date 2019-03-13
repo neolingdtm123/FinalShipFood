@@ -50,6 +50,12 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
                 onReturn.onReturn(donHang,i);
             }
         });
+        viewHolder.tvShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onReturn.onReplace(donHang,i);
+            }
+        });
     }
 
     @Override
@@ -60,7 +66,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        TextView tvId,tvPrice,tvLocation,tvPhone,tvDistance,tvCusName;
+        TextView tvId,tvPrice,tvLocation,tvPhone,tvDistance,tvCusName,tvShow;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -72,10 +78,11 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
             tvPhone = itemView.findViewById(R.id.tvNumberPhone);
             tvCusName = itemView.findViewById(R.id.tvName);
             tvDistance = itemView.findViewById(R.id.tvDistance);
-
+            tvShow = itemView.findViewById(R.id.tvShow);
         }
     }
     public interface onReturn {
         void onReturn(DonHang donHang, int groupPosition);
+        void onReplace(DonHang donHang, int groupPosition);
     }
 }

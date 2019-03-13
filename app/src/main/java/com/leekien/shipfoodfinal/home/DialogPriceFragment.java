@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.cart.CartFragment;
 
 import java.io.Serializable;
 
@@ -24,7 +27,6 @@ public class DialogPriceFragment extends DialogFragment {
     TextView tvPrice;
     Button btnContinue;
     Button btnCancel;
-    private Bundle mBundle;
     Food food;
     public static DialogPriceFragment newInstance(Food food) {
         DialogPriceFragment dialog = new DialogPriceFragment();
@@ -53,13 +55,13 @@ public class DialogPriceFragment extends DialogFragment {
         btnContinue = view.findViewById(R.id.btnContinue);
         textView.setText("1");
         textViewTitle.setText(food.getName());
-        tvPrice.setText(food.getPrice()+"");
+        tvPrice.setText(food.getPrice()+ "\n" +"đ");
         imageViewCong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int num =Integer.parseInt(textView.getText().toString())+1;
                 textView.setText( num+"");
-                tvPrice.setText(food.getPrice() * num+"");
+                tvPrice.setText(food.getPrice() * num+"\n" +"đ");
             }
         });
         imageViewTru.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +69,7 @@ public class DialogPriceFragment extends DialogFragment {
             public void onClick(View view) {
                 int num =Integer.parseInt(textView.getText().toString())-1 ;
                 textView.setText(num +"");
-                tvPrice.setText(food.getPrice() * num+"");
+                tvPrice.setText(food.getPrice() * num+"\n" +"đ");
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -76,5 +78,36 @@ public class DialogPriceFragment extends DialogFragment {
                 dismiss();
             }
         });
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                food.setNumberDat(tvPrice.getText().toString());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("food",food);
+                CartFragment cartFragment = new CartFragment();
+                cartFragment.setArguments(bundle);
+                replaceFragment(cartFragment,"hhs");
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        int width = getResources().getDimensionPixelSize(R.dimen.width);
+//        int height = getResources().getDimensionPixelSize(R.dimen.height);
+//        getDialog().getWindow().setLayout(width, height);
+    }
+    public void replaceFragment(Fragment fragment, String tag) {
+        try {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.lnlayout, fragment, tag);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.commitAllowingStateLoss();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
     }
 }

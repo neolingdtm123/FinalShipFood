@@ -43,4 +43,9 @@ public class ShipperPresenter implements ShipperManager.Presenter, DonHangAdapte
     public void onReturn(DonHang donHang, int groupPosition) {
         view.showLocation(donHang.getLocation());
     }
+
+    @Override
+    public void onReplace(DonHang donHang, int groupPosition) {
+        view.replace(donHang);
+    }
 }

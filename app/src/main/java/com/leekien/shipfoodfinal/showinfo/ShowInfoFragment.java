@@ -1,4 +1,4 @@
-package com.leekien.shipfoodfinal.shipper;
+package com.leekien.shipfoodfinal.showinfo;
 
 import android.Manifest;
 import android.app.Activity;
@@ -53,21 +53,19 @@ import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
-import com.leekien.shipfoodfinal.showinfo.ShowInfoFragment;
+import com.leekien.shipfoodfinal.common.CommonActivity;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShipperFragment extends Fragment
+public class ShowInfoFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener, ShipperManager.View {
+        View.OnClickListener,ShowInfoManager.View {
 
     private GoogleMap mGoogleMap;
-    private PolylineOptions polyline;
-    private ArrayList<LatLng> listStep;
     private GoogleApiClient mGoogleApiClient;
     private LatLng mCurrentLocation;
     private LatLng mLatLngSearchPosition;
@@ -75,18 +73,27 @@ public class ShipperFragment extends Fragment
     AsyncTask<Void, Void, Void> task;
     LatLng latlngMain;
     private FragmentActivity myContext;
-    ShipperPresenter shipperPresenter;
+    ShowInfoPresenter showInfoPresenter;
     RecyclerView rcvDonHang;
     ImageView imgLocation;
-
+    DonHang donHang;
+    String lat;
+    String lon;
+    List<LatLng> latLngList = new ArrayList<>();
+    PolylineOptions polylineOptions = new PolylineOptions();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_don_hang, container, false);
+        View view = inflater.inflate(R.layout.layout_show_info_fragment, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         imgLocation = view.findViewById(R.id.imgLocation);
-        shipperPresenter = new ShipperPresenter(this);
-        shipperPresenter.showListDonHang();
+         showInfoPresenter= new ShowInfoPresenter(this);
+         Bundle bundle = getArguments();
+         if(!CommonActivity.isNullOrEmpty(bundle)){
+             donHang = (DonHang) bundle.getSerializable("key");
+             lat = bundle.getString("lat");
+             lon = bundle.getString("long");
+         }
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -117,8 +124,8 @@ public class ShipperFragment extends Fragment
     }
 
     private void initViews() {
-        listStep = new ArrayList<LatLng>();
-        polyline = new PolylineOptions();
+        latLngList = new ArrayList<LatLng>();
+        polylineOptions = new PolylineOptions();
 
     }
 
@@ -140,6 +147,8 @@ public class ShipperFragment extends Fragment
             }
         }
         showShopLocation();
+        showInfoPresenter.getInfo(lat,lon);
+
     }
 
     @Override
@@ -268,9 +277,10 @@ public class ShipperFragment extends Fragment
     }
 
 
+
     private void directShip(android.location.Address address) {
         MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(address.getLatitude(), address.getLongitude());
+        latlngMain = new LatLng(address.getLatitude(),address.getLongitude());
         markerOptions.position(latlngMain);
         markerOptions.title("Vị trí cần tìm");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -281,8 +291,7 @@ public class ShipperFragment extends Fragment
         showCameraToPosition(latlngMain, 15f);
 
     }
-
-    private void showShopLocation() {
+    private void showShopLocation(){
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(20.997733, 105.841280);
         markerOptions.position(latLng);
@@ -292,9 +301,7 @@ public class ShipperFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-    }
-
-    ;
+    };
 
     public void showCameraToPosition(LatLngBounds bounds, int padding) {
         if (mGoogleMap != null) {
@@ -332,8 +339,7 @@ public class ShipperFragment extends Fragment
         double lon = position.longitude + dx / Math.cos(position.latitude * Math.PI / 180);
         return new LatLng(lat, lon);
     }
-
-    public String makeURL(String sourcelat, String sourcelng, String destlat, String destlng) {
+    public String makeURL (String sourcelat, String sourcelng, String destlat, String destlng ){
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/directions/json");
         urlString.append("?origin=");// from
@@ -342,38 +348,18 @@ public class ShipperFragment extends Fragment
         urlString.append(sourcelng);
         urlString.append("&destination=");// to
         urlString.append(destlat);
+        urlString.append("&mode=");// to
+        urlString.append("driving");
         urlString.append(",");
         urlString.append(destlng);
-        urlString.append("&key=" + getResources().getString(R.string.maps_api_key));
+        urlString.append("&key="+getResources().getString(R.string.maps_api_key));
 //        urlString.append("&sensor=true");
         return urlString.toString();
     }
 
 
-    @Override
-    public void showListDonHang(List<DonHang> list, DonHangAdapter.onReturn onReturn) {
-        DonHangAdapter donHangAdapter = new DonHangAdapter(list, onReturn);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rcvDonHang.setLayoutManager(layoutManager);
-        rcvDonHang.setAdapter(donHangAdapter);
-    }
 
-    @Override
-    public void showLocation(String location) {
-        searchLocation(location);
-    }
 
-    @Override
-    public void replace(DonHang donHang) {
-        ShowInfoFragment showInfoFragment = new ShowInfoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("key", donHang);
-        bundle.putString("lat",mCurrentLocation.latitude+"");
-        bundle.putString("long",mCurrentLocation.longitude+"");
-        showInfoFragment.setArguments(bundle);
-        replaceFragment(showInfoFragment, "ss");
-    }
 
     public void replaceFragment(Fragment fragment, String tag) {
         try {
@@ -386,5 +372,13 @@ public class ShipperFragment extends Fragment
             // TODO: handle exception
         }
 
+    }
+
+    @Override
+    public void directShop(List<LatLng> latLngs) {
+        polylineOptions.addAll(latLngs);
+        Polyline line = mGoogleMap.addPolyline(polylineOptions);
+        line.setColor(Color.BLUE);
+        line.setWidth(10);
     }
 }

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class GetDirectionsTask {
     private String mRequest;
+    InputStreamReader reader;
 
     public GetDirectionsTask(String _mRequest) {
         this.mRequest = _mRequest;
@@ -28,8 +29,7 @@ public class GetDirectionsTask {
             URL url;
             url = new URL(mRequest);
 
-            InputStreamReader reader = new InputStreamReader(url.openStream(), "UTF-8");
-
+            reader = new InputStreamReader(url.openStream(), "UTF-8");
             Directions results = new Gson().fromJson(reader, Directions.class);
             Directions.Route[] routes = results.getRoutes();
             Directions.Leg[] leg = routes[0].getLegs();
@@ -55,6 +55,13 @@ public class GetDirectionsTask {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+        finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return ret;
     }

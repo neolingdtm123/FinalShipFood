@@ -11,6 +11,7 @@ public class ShipperManager {
     public interface View{
         void showListDonHang(List<DonHang> list, DonHangAdapter.onReturn onReturn);
         void showLocation(String location);
+        void replace(DonHang donHang);
     }
     public interface Presenter{
         void showListDonHang();

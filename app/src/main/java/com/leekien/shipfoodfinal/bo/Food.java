@@ -10,6 +10,15 @@ public class Food implements Serializable {
     String urlFood;
     int price;
 
+    public String getNumberDat() {
+        return numberDat;
+    }
+
+    public void setNumberDat(String numberDat) {
+        this.numberDat = numberDat;
+    }
+
+    String numberDat;
     public Food(String name, String urlFood, int price) {
         this.name = name;
         this.urlFood = urlFood;
