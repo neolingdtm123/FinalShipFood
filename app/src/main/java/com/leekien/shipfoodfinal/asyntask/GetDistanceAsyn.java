@@ -11,41 +11,39 @@ import com.leekien.shipfoodfinal.bo.onPostSuccess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetDirectionAsynTask extends AsyncTask<Void,Void,List<LatLng>> {
+public class GetDistanceAsyn extends AsyncTask<Void,Void,String> {
     String lat;
     String lon;
     String lat1;
     String lon1;
     List<LatLng> listStep = new ArrayList<>();
-    onPostSuccess onPostSuccess ;
-    onPostDistance onPostDistance;
-    public GetDirectionAsynTask(String lat, String lon,String lat1,String lon1,onPostSuccess onPostSuccess) {
+    com.leekien.shipfoodfinal.bo.onPostSuccess onPostSuccess ;
+    com.leekien.shipfoodfinal.bo.onPostDistance onPostDistance;
+    public GetDistanceAsyn (String lat, String lon,String lat1,String lon1,onPostDistance onPostDistance) {
         this.lat = lat;
         this.lon = lon;
-        this.onPostSuccess = onPostSuccess;
+        this.onPostDistance = onPostDistance;
         this.lat1= lat1;
         this.lon1= lon1;
     }
 
     @Override
-    protected List<LatLng>  doInBackground(Void... Void) {
+    protected String  doInBackground(Void... Void) {
         String request = makeURL(lat,lon
                 ,lat1,lon1);
         GetDirectionsTask task1 = new GetDirectionsTask(request);
-       Map map = task1.testDirection();
+        Map map = task1.testDirection();
 //                if(list == null){
 //                    return null;
 //                }
-        for (LatLng latLng : map.getLatLngs()) {
-            listStep.add(latLng);
-        }
-        return listStep;
+
+        return map.getDistance();
     }
 
     @Override
-    protected void onPostExecute(List<LatLng> latLngs) {
-        super.onPostExecute(latLngs);
-        onPostSuccess.onPost(latLngs);
+    protected void onPostExecute(String distance) {
+        super.onPostExecute(distance);
+        onPostDistance.onPost(distance);
     }
 
 

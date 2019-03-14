@@ -18,12 +18,13 @@ import java.util.ArrayList;
 public class GetDirectionsTask {
     private String mRequest;
     InputStreamReader reader;
+    Map map;
 
     public GetDirectionsTask(String _mRequest) {
         this.mRequest = _mRequest;
     }
 
-    public ArrayList<LatLng> testDirection() {
+    public Map testDirection() {
         ArrayList<LatLng> ret = new ArrayList<LatLng>();
         try {
             URL url;
@@ -34,6 +35,8 @@ public class GetDirectionsTask {
             Directions.Route[] routes = results.getRoutes();
             Directions.Leg[] leg = routes[0].getLegs();
             Directions.Leg.Step[] steps = leg[0].getSteps();
+            Directions.Leg.Distance distance=  leg[0].getDistance();
+            String text = distance.getText();
             for (Directions.Leg.Step step : steps) {
                 LatLng latlngStart = new LatLng(step.getStart_location().getLat(),
                         step.getStart_location().getLng());
@@ -44,7 +47,9 @@ public class GetDirectionsTask {
                 ret.add(latlngStart);
                 ret.add(latlngEnd);
             }
-            return ret;
+             map= new Map(text,ret);
+
+            return map;
 
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
@@ -63,6 +68,6 @@ public class GetDirectionsTask {
                 e.printStackTrace();
             }
         }
-        return ret;
+        return map;
     }
 }

@@ -55,13 +55,13 @@ public class DialogPriceFragment extends DialogFragment {
         btnContinue = view.findViewById(R.id.btnContinue);
         textView.setText("1");
         textViewTitle.setText(food.getName());
-        tvPrice.setText(food.getPrice()+ "\n" +"đ");
+        tvPrice.setText(food.getPrice()+ " " +"đ");
         imageViewCong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int num =Integer.parseInt(textView.getText().toString())+1;
                 textView.setText( num+"");
-                tvPrice.setText(food.getPrice() * num+"\n" +"đ");
+                tvPrice.setText(food.getPrice() * num+" " +"đ");
             }
         });
         imageViewTru.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +69,7 @@ public class DialogPriceFragment extends DialogFragment {
             public void onClick(View view) {
                 int num =Integer.parseInt(textView.getText().toString())-1 ;
                 textView.setText(num +"");
-                tvPrice.setText(food.getPrice() * num+"\n" +"đ");
+                tvPrice.setText(food.getPrice() * num+" " +"đ");
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +86,8 @@ public class DialogPriceFragment extends DialogFragment {
                 bundle.putSerializable("food",food);
                 CartFragment cartFragment = new CartFragment();
                 cartFragment.setArguments(bundle);
-                replaceFragment(cartFragment,"hhs");
+                replaceFragment(cartFragment,"kiennk");
+                dismiss();
             }
         });
     }

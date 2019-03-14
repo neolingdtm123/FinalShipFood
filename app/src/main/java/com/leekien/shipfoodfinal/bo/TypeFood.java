@@ -16,15 +16,17 @@ public class TypeFood {
         this.check = check;
     }
 
-    public TypeFood(String title, List<Food> foodList) {
+    public TypeFood(String title, List<Food> foodList,int id) {
         this.title = title;
         this.foodList = foodList;
+        this.idTypeFood = id;
     }
 
-    public TypeFood(String title, String urlType, List<Food> foodList) {
+    public TypeFood(int idTypeFood,String title, String urlType, List<Food> foodList) {
         this.title = title;
         this.urlType = urlType;
         this.foodList = foodList;
+        this.idTypeFood = idTypeFood;
     }
 
     List<Food> foodList;

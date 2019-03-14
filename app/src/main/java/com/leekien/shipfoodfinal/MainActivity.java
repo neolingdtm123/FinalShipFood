@@ -1,10 +1,12 @@
 package com.leekien.shipfoodfinal;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
+import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.login.LoginFragment;
 
@@ -16,6 +18,15 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
     List<String> list = new ArrayList<String>();
     List<TypeFood> typeFoodList = new ArrayList<>();
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("kiennk");
+        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

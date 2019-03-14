@@ -34,8 +34,14 @@ public class Directions {
     }
 
     public static final class Leg {
+        public final Distance distance;
         public final String end_address;
         public final End_location end_location;
+
+        public Distance getDistance() {
+            return distance;
+        }
+
         public final String start_address;
         public final Start_location start_location;
         public final Step steps[];
@@ -61,12 +67,30 @@ public class Directions {
             return steps;
         }
 
-        public Leg(String end_address, End_location end_location, String start_address, Start_location start_location, Step[] steps) {
+        public Leg(Distance distance, String end_address, End_location end_location, String start_address, Start_location start_location, Step[] steps) {
+            this.distance = distance;
             this.end_address = end_address;
             this.end_location = end_location;
             this.start_address = start_address;
             this.start_location = start_location;
             this.steps = steps;
+        }
+        public static final class Distance {
+            public final String text;
+            public final double value;
+
+            public String getText() {
+                return text;
+            }
+
+            public double getValue() {
+                return value;
+            }
+
+            public Distance(String text, double value) {
+                this.text = text;
+                this.value = value;
+            }
         }
 
         public static final class End_location {

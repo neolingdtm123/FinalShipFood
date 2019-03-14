@@ -147,7 +147,7 @@ public class ShowInfoFragment extends Fragment
             }
         }
         showShopLocation();
-        showInfoPresenter.getInfo(lat,lon);
+
 
     }
 
@@ -201,7 +201,7 @@ public class ShowInfoFragment extends Fragment
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
         init();
-
+        showInfoPresenter.getInfo(lat,lon);
     }
 
     @Override

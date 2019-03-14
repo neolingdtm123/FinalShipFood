@@ -19,10 +19,12 @@ public class Food implements Serializable {
     }
 
     String numberDat;
-    public Food(String name, String urlFood, int price) {
+    public Food(String name, String urlFood, int price,int idTypeFood,int idFood) {
         this.name = name;
         this.urlFood = urlFood;
         this.price = price;
+        this.idTypeFood = idTypeFood;
+        this.idFood = idFood;
     }
 
     public int getIdFood() {
