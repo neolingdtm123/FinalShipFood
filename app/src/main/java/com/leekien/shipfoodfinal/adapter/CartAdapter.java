@@ -19,9 +19,10 @@ import butterknife.ButterKnife;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     List<Food> foodList;
-
-    public CartAdapter(List<Food> foodList) {
+    onReturn onReturn;
+    public CartAdapter(List<Food> foodList,onReturn onReturn) {
         this.foodList = foodList;
+        this.onReturn = onReturn;
     }
 
 
@@ -38,24 +39,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlFood()).into(viewHolder.imageView);
         viewHolder.tvName.setText(food.getName());
-        viewHolder.tvPrice.setText(food.getPrice()+"");
-        viewHolder.textView.setText("1");
-        viewHolder.imgCong.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvPrice.setText(food.getPriceDat()+ " "+"đ");
+        viewHolder.textView.setText(food.getNumberDat() + " " +"phần");
+
+        viewHolder.imgXoa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num =Integer.parseInt(viewHolder.textView.getText().toString())+1;
-                viewHolder.textView.setText( num+"");
-                viewHolder.tvPrice.setText(food.getPrice() * num+" " +"đ");
+                onReturn.onReturn(food,i);
             }
         });
-        viewHolder.imgTru.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int num =Integer.parseInt(viewHolder.textView.getText().toString())-1 ;
-                viewHolder.textView.setText(num +"");
-               viewHolder. tvPrice.setText(food.getPrice() * num+" " +"đ");
-            }
-        });
+    }
+    public interface  onReturn{
+        void onReturn(Food food,int position);
     }
 
     @Override
@@ -65,7 +60,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView,imgCong,imgTru;
+        ImageView imageView,imgCong,imgTru,imgXoa;
         TextView tvName,tvPrice,textView;
 
         public ViewHolder(View itemView) {
@@ -78,6 +73,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             tvName = itemView.findViewById(R.id.tvName);
             textView = itemView.findViewById(R.id.textview);
             tvPrice = itemView.findViewById(R.id.tvPrice);
+            imgXoa = itemView.findViewById(R.id.imgXoa);
         }
     }
 

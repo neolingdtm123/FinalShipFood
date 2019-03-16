@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
@@ -375,8 +376,11 @@ public class ShowInfoFragment extends Fragment
     }
 
     @Override
-    public void directShop(List<LatLng> latLngs) {
-        polylineOptions.addAll(latLngs);
+    public void directShop(List<String> points) {
+        for(String a :points){
+            polylineOptions.addAll(PolyUtil.decode(a));
+        }
+
         Polyline line = mGoogleMap.addPolyline(polylineOptions);
         line.setColor(Color.BLUE);
         line.setWidth(10);

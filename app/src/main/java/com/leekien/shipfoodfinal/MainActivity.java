@@ -1,11 +1,15 @@
 package com.leekien.shipfoodfinal;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
+import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.login.LoginFragment;
@@ -18,6 +22,20 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
     List<String> list = new ArrayList<String>();
     List<TypeFood> typeFoodList = new ArrayList<>();
+    static public   List<Food> listFood =  new ArrayList<>();
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        listFood = new ArrayList<>();
+        SharedPreferences myPreferences
+                = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor myEditor = myPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listFood);
+        myEditor.putString("MyObject", json);
+        myEditor.commit();
+    }
 
     @Override
     public void onBackPressed() {

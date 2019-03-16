@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ShowInfoManager {
     public interface View{
-        void directShop(List<LatLng> latLngs);
+        void directShop(List<String> latLngs);
     }
     public interface Presenter{
         void getInfo(String lat,String lon);

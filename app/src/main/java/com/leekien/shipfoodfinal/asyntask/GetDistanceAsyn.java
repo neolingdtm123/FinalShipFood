@@ -58,6 +58,8 @@ public class GetDistanceAsyn extends AsyncTask<Void,Void,String> {
         urlString.append(destlat);
         urlString.append(",");
         urlString.append(destlng);
+        urlString.append("&mode=");
+        urlString.append("driving");
         urlString.append("&key="+"AIzaSyBH8DVS13wnxPjs-MxPpwpq73WFxGMASRw");
 //        urlString.append("&sensor=true");
         return urlString.toString();

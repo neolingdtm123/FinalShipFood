@@ -47,4 +47,6 @@ dependencies {
     compile 'me.relex:circleindicator:1.2.2@aar'
     implementation 'com.squareup.picasso:picasso:2.71828'
     compile 'com.android.support:multidex:1.0.3'
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
 }

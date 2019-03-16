@@ -28,6 +28,7 @@ public class DialogPriceFragment extends DialogFragment {
     Button btnContinue;
     Button btnCancel;
     Food food;
+    int num=0;
     public static DialogPriceFragment newInstance(Food food) {
         DialogPriceFragment dialog = new DialogPriceFragment();
         Bundle args = new Bundle();
@@ -56,20 +57,24 @@ public class DialogPriceFragment extends DialogFragment {
         textView.setText("1");
         textViewTitle.setText(food.getName());
         tvPrice.setText(food.getPrice()+ " " +"đ");
+        num =Integer.parseInt(textView.getText().toString());
+        food.setPriceDat(food.getPrice() * num + "");
         imageViewCong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num =Integer.parseInt(textView.getText().toString())+1;
+                 num =Integer.parseInt(textView.getText().toString())+1;
                 textView.setText( num+"");
                 tvPrice.setText(food.getPrice() * num+" " +"đ");
+                food.setPriceDat(food.getPrice() * num + "");
             }
         });
         imageViewTru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num =Integer.parseInt(textView.getText().toString())-1 ;
+                 num =Integer.parseInt(textView.getText().toString())-1 ;
                 textView.setText(num +"");
                 tvPrice.setText(food.getPrice() * num+" " +"đ");
+                food.setPriceDat(food.getPrice() * num + "");
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +86,7 @@ public class DialogPriceFragment extends DialogFragment {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                food.setNumberDat(tvPrice.getText().toString());
+                food.setNumberDat(num +"");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("food",food);
                 CartFragment cartFragment = new CartFragment();

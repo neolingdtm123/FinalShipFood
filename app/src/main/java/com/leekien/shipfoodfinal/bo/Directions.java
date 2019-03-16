@@ -92,6 +92,17 @@ public class Directions {
                 this.value = value;
             }
         }
+        public static  final  class Polyline{
+            public Polyline(String points) {
+                this.points = points;
+            }
+
+            public String getPoints() {
+                return points;
+            }
+
+            public final String points;
+        }
 
         public static final class End_location {
             public final double lat;
@@ -134,8 +145,14 @@ public class Directions {
             public final End_location end_location;
             public final String html_instructions;
             public final Start_location start_location;
+
+            public Polyline getPolyline() {
+                return polyline;
+            }
+
             public final String travel_mode;
             public final String maneuver;
+            public final Polyline polyline;
 
 
             public End_location getEnd_location() {
@@ -161,12 +178,13 @@ public class Directions {
                 return maneuver;
             }
 
-            public Step(End_location end_location, String html_instructions, Start_location start_location, String travel_mode, String maneuver) {
+            public Step(End_location end_location, String html_instructions, Start_location start_location, String travel_mode, String maneuver,Polyline polyline) {
                 this.end_location = end_location;
                 this.html_instructions = html_instructions;
                 this.start_location = start_location;
                 this.travel_mode = travel_mode;
                 this.maneuver = maneuver;
+                this.polyline =polyline;
             }
         }
     }

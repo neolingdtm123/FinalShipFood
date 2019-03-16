@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,6 +56,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.leekien.shipfoodfinal.MainActivity.listFood;
+
 
 public class CartFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
@@ -72,11 +75,15 @@ public class CartFragment extends Fragment
     CartPresenter cartPresenter;
     RecyclerView rcvDonHang;
     Food food;
-    List<Food> listFood = new ArrayList<>();
     String lat;
     String lon;
     boolean check;
     int position = 0;
+    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice;
+    int priceDat = 0;
+    double priceDistance = 0;
+    int dem = 0;
+    int priceSum = 0;
 
     @Nullable
     @Override
@@ -113,11 +120,12 @@ public class CartFragment extends Fragment
                 listFood.add(food);
             }
         }
-        CartAdapter cartAdapter = new CartAdapter(listFood);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rcvDonHang.setLayoutManager(layoutManager);
-        rcvDonHang.setAdapter(cartAdapter);
+        tvDistance = view.findViewById(R.id.tvDistance);
+        tvPriceFood = view.findViewById(R.id.tvPriceFood);
+        tvPriceDistance = view.findViewById(R.id.tvPriceDistance);
+        tvSumPrice = view.findViewById(R.id.tvSumPrice);
+        cartPresenter.showList();
+
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -165,6 +173,7 @@ public class CartFragment extends Fragment
     }
 
 
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(getContext(),
@@ -179,7 +188,7 @@ public class CartFragment extends Fragment
             }
             mCurrentLocation = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             if (mLatLngSearchPosition == null) {
-                showCameraToPosition(mCurrentLocation, 15f);
+                showCameraToPosition(mCurrentLocation, 13f);
             }
         }
         showShopLocation();
@@ -274,24 +283,7 @@ public class CartFragment extends Fragment
     }
 
     public void init() {
-//        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if (actionId == EditorInfo.IME_ACTION_DONE
-////                        || actionId == EditorInfo.IME_ACTION_SEARCH
-////                        || event.getAction() == KeyEvent.ACTION_DOWN
-////                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-////                    if(edtSearch.getText().toString().isEmpty()){
-////                        button.setVisibility(View.GONE);
-////                    }
-////                    else {
-////                        searchLocation();
-////                    }
-////
-////                }
-////                return false;
-////            }
-////        });
+//
     }
 
     private void searchLocation(String location) {
@@ -414,7 +406,36 @@ public class CartFragment extends Fragment
 
 
     @Override
-    public void showDistance() {
+    public void showDistance(String distance) {
+        tvDistance.setText(distance);
+        String[] a = distance.split("km");
+        priceDistance = 10000 * Double.parseDouble(a[0]);
+        Double myDouble = Double.valueOf(priceDistance);
+        dem = myDouble.intValue();
+        tvPriceDistance.setText(dem + " " + "đ");
+        tvPriceFood.setText(String.valueOf(showPrice() + " " + "đ"));
+        tvSumPrice.setText(String.valueOf(showPrice() + dem + " " + "đ"));
+    }
+
+    @Override
+    public void showRemoveList(CartAdapter.onReturn onReturn, int position) {
+        listFood.remove(position);
+        CartAdapter cartAdapter = new CartAdapter(listFood, onReturn);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rcvDonHang.setLayoutManager(layoutManager);
+        rcvDonHang.setAdapter(cartAdapter);
+        tvPriceFood.setText(showPrice() + " " + "đ");
+        tvSumPrice.setText(showPrice() + dem + " " + "đ");
+    }
+
+    @Override
+    public void showList(CartAdapter.onReturn onReturn) {
+        CartAdapter cartAdapter = new CartAdapter(listFood, onReturn);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rcvDonHang.setLayoutManager(layoutManager);
+        rcvDonHang.setAdapter(cartAdapter);
 
     }
 
@@ -428,5 +449,13 @@ public class CartFragment extends Fragment
         myEditor.putString("MyObject", json);
         myEditor.commit();
         return false;
+    }
+
+    public int showPrice() {
+        priceDat =0;
+        for (Food food : listFood) {
+            priceDat += Integer.parseInt(food.getPriceDat());
+        }
+        return priceDat;
     }
 }

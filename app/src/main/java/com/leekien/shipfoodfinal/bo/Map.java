@@ -5,13 +5,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 public class Map {
-    public Map(String distance, ArrayList<LatLng> latLngs) {
+    public Map(String distance, ArrayList<String> points) {
         this.distance = distance;
-        this.latLngs = latLngs;
+        this.points = points;
     }
-
-    String distance;
-    ArrayList<LatLng> latLngs;
 
     public String getDistance() {
         return distance;
@@ -21,11 +18,16 @@ public class Map {
         this.distance = distance;
     }
 
-    public ArrayList<LatLng> getLatLngs() {
-        return latLngs;
+    public ArrayList<String> getPoints() {
+        return points;
     }
 
-    public void setLatLngs(ArrayList<LatLng> latLngs) {
-        this.latLngs = latLngs;
+    public void setPoints(ArrayList<String> points) {
+        this.points = points;
     }
+
+    String distance;
+    ArrayList<String> points;
+
+
 }

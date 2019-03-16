@@ -25,7 +25,7 @@ public class GetDirectionsTask {
     }
 
     public Map testDirection() {
-        ArrayList<LatLng> ret = new ArrayList<LatLng>();
+        ArrayList<String> points = new ArrayList<String>();
         try {
             URL url;
             url = new URL(mRequest);
@@ -38,16 +38,9 @@ public class GetDirectionsTask {
             Directions.Leg.Distance distance=  leg[0].getDistance();
             String text = distance.getText();
             for (Directions.Leg.Step step : steps) {
-                LatLng latlngStart = new LatLng(step.getStart_location().getLat(),
-                        step.getStart_location().getLng());
-
-                LatLng latlngEnd = new LatLng(step.getEnd_location().getLat(),
-                        step.getEnd_location().getLng());
-
-                ret.add(latlngStart);
-                ret.add(latlngEnd);
+                points.add(step.getPolyline().points);
             }
-             map= new Map(text,ret);
+             map= new Map(text,points);
 
             return map;
 
