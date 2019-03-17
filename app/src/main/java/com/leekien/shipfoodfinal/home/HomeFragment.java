@@ -32,6 +32,7 @@ import com.leekien.shipfoodfinal.adapter.TypeFoodAdapter;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.bo.User;
+import com.leekien.shipfoodfinal.cart.CartFragment;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.customView.RobEditText;
@@ -104,6 +105,13 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                     fabAccount.setVisibility(View.GONE);
                     check= false;
                 }
+            }
+        });
+        fabGioHang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CartFragment cartFragment = new CartFragment();
+                replaceFragment(cartFragment,"kiennk");
             }
         });
         tvShip.setOnClickListener(new View.OnClickListener() {

@@ -55,6 +55,7 @@ import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.common.CommonActivity;
+import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.home.DialogPriceFragment;
 
 
@@ -77,7 +78,7 @@ public class ShowInfoFragment extends Fragment
     private FragmentActivity myContext;
     ShowInfoPresenter showInfoPresenter;
     RecyclerView rcvDonHang;
-    Button btnSubmit;
+    RobBoldText btnSubmit;
     DonHang donHang;
     String lat;
     String lon;
@@ -106,7 +107,7 @@ public class ShowInfoFragment extends Fragment
             public void onClick(View view) {
                 FragmentManager fm = getFragmentManager();
                 DialogWait dialogPriceFragment = new DialogWait();
-                dialogPriceFragment.show(fm, null);
+                dialogPriceFragment.show(fm, "kien");
             }
         });
         return view;
