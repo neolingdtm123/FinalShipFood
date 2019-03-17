@@ -11,7 +11,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@drawable/custom_type_food"/>
-    <TextView
+    <com.leekien.shipfoodfinal.customView.RobLightText
         android:id="@+id/textview"
         android:layout_width="80dp"
         android:layout_height="wrap_content"

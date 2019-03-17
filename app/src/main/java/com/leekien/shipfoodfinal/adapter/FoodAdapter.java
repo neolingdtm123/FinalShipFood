@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.TypeFood;
@@ -41,7 +42,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlFood()).into(viewHolder.imageView);
         viewHolder.textviewTitle.setText(food.getName());
-        viewHolder.textviewPrice.setText(String.valueOf(food.getPrice()));
+        viewHolder.textviewPrice.setText(AppUtils.formatMoney(String.valueOf(food.getPrice())));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

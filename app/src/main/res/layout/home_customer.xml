@@ -4,38 +4,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="top"
+        <RelativeLayout
             android:background="@color/orange"
-            android:gravity="center">
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <RelativeLayout
+                android:id="@+id/layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.leekien.shipfoodfinal.customView.RobBoldText
+                    android:id="@+id/tv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="App quần què"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    />
+
+                <ImageView
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:id="@+id/btn_search"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_search"
+                    />
+            </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/layout_search"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/custom_search"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:visibility="gone"
+                >
 
                 <com.leekien.shipfoodfinal.customView.RobEditText
-                    android:id="@+id/UserName"
-                    android:layout_width="match_parent"
+                    android:id="@+id/edt_search"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:backgroundTint="#00ffffff"
-                    android:hint="Nhập để tìm kiếm"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search_mess_fragment"
+                    android:gravity="center_vertical"
+                    android:hint="Tìm kiếm"
+                    android:inputType="text"
+                    android:paddingLeft="10dp"
                     android:textColor="#000000"
-                    android:textSize="17sp" />
+                    android:textSize="15sp"
+                    />
 
+                <com.leekien.shipfoodfinal.customView.RobBoldText
+                    android:id="@+id/tv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Hủy"
+                    android:textColor="#ffffff"
+                    android:textSize="15sp"
+                    />
             </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -53,9 +96,15 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="200dp">
+                        <ViewFlipper
+                            android:id="@+id/viewFlipper"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
+                        </ViewFlipper>
                         <android.support.v4.view.ViewPager
                             android:id="@+id/viewPager"
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
                             android:background="#7e7979"></android.support.v4.view.ViewPager>
@@ -63,6 +112,7 @@
                         <me.relex.circleindicator.CircleIndicator
                             android:id="@+id/circleIndicator"
                             android:layout_width="match_parent"
+                            android:visibility="gone"
                             android:layout_height="40dp"
                             android:layout_marginTop="152dp" />
 

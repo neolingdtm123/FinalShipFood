@@ -71,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp">
-        <Button
+        <com.leekien.shipfoodfinal.customView.RobButton
             android:id="@+id/btnCancel"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
@@ -83,7 +83,7 @@
             android:text="Huỷ bỏ"
             android:background="@drawable/custom_button"
             android:backgroundTintMode="@color/orange"/>
-        <Button
+        <com.leekien.shipfoodfinal.customView.RobButton
             android:textColor="#FFFFFF"
             android:layout_gravity="center"
             android:id="@+id/btnContinue"

@@ -21,14 +21,14 @@
             android:orientation="vertical"
             android:background="@drawable/custom_edt"
             >
-            <EditText
+            <com.leekien.shipfoodfinal.customView.RobEditText
                 android:backgroundTint="#00ffffff"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/edtUserName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="UserName"
-                android:textColor="#FFFFFF"
+                android:hint="Username"
+                android:textColor="#000000"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -41,14 +41,14 @@
             android:orientation="vertical"
             android:background="@drawable/custom_edt"
             >
-            <EditText
+            <com.leekien.shipfoodfinal.customView.RobEditText
                 android:backgroundTint="#00ffffff"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/edtPassWord"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="PassWord"
-                android:textColor="#FFFFFF"
+                android:hint="Password"
+                android:textColor="#000000"
                 android:textSize="20sp"/>
 
         </LinearLayout>
@@ -61,7 +61,7 @@
             android:layout_marginRight="30dp"
             android:orientation="vertical"
             android:background="@drawable/custom_login_textiview">
-            <TextView
+            <com.leekien.shipfoodfinal.customView.RobBoldText
                 android:id="@+id/tvLogin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -72,7 +72,7 @@
                 android:textSize="20sp"/>
 
         </LinearLayout>
-        <TextView
+        <com.leekien.shipfoodfinal.customView.RobLightText
             android:id="@+id/tvSignUp"
             android:layout_marginTop="15dp"
             android:gravity="center"
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Chưa có tài khoản?Đăng kí ngay!"/>
+            android:text="Chưa có tài khoản? Đăng kí ngay!"/>
     </LinearLayout>
 
 </FrameLayout>
