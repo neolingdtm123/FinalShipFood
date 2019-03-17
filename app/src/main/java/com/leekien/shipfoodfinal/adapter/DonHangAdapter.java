@@ -31,18 +31,15 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
     @Override
     public DonHangAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.layout_donhang_adapter, viewGroup, false);
+                .inflate(R.layout.layout_show_detail_donhang, viewGroup, false);
         return new DonHangAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DonHangAdapter.ViewHolder viewHolder, final int i) {
         final DonHang donHang = donHangList.get(i);
-        viewHolder.tvCusName.setText(donHang.getCusName());
-        viewHolder.tvDistance.setText(donHang.getDistance());
+        viewHolder.tvDistance.setText(donHang.getDistance() + " " +"km");
         viewHolder.tvLocation.setText(donHang.getLocation());
-        viewHolder.tvPhone.setText(donHang.getNumberPhone());
-        viewHolder.tvPrice.setText(donHang.getPrice());
         viewHolder.tvId.setText(donHang.getId());
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +47,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
                 onReturn.onReturn(donHang,i);
             }
         });
-        viewHolder.tvShow.setOnClickListener(new View.OnClickListener() {
+        viewHolder.imgShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onReturn.onReplace(donHang,i);
@@ -65,20 +62,17 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        TextView tvId,tvPrice,tvLocation,tvPhone,tvDistance,tvCusName,tvShow;
+        ImageView imgShow;
+        TextView tvId,tvDistance,tvLocation;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setTag(this);
             tvId = itemView.findViewById(R.id.tvId);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
             tvLocation = itemView.findViewById(R.id.tvLocation);
-            tvPhone = itemView.findViewById(R.id.tvNumberPhone);
-            tvCusName = itemView.findViewById(R.id.tvName);
             tvDistance = itemView.findViewById(R.id.tvDistance);
-            tvShow = itemView.findViewById(R.id.tvShow);
+            imgShow = itemView.findViewById(R.id.imgShow);
         }
     }
     public interface onReturn {

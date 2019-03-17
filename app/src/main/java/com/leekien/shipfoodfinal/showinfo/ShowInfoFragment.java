@@ -55,6 +55,7 @@ import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.common.CommonActivity;
+import com.leekien.shipfoodfinal.home.DialogPriceFragment;
 
 
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class ShowInfoFragment extends Fragment
     private FragmentActivity myContext;
     ShowInfoPresenter showInfoPresenter;
     RecyclerView rcvDonHang;
-    ImageView imgLocation;
+    Button btnSubmit;
     DonHang donHang;
     String lat;
     String lon;
@@ -87,7 +88,7 @@ public class ShowInfoFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_show_info_fragment, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
-        imgLocation = view.findViewById(R.id.imgLocation);
+        btnSubmit = view.findViewById(R.id.btnSubmit);
          showInfoPresenter= new ShowInfoPresenter(this);
          Bundle bundle = getArguments();
          if(!CommonActivity.isNullOrEmpty(bundle)){
@@ -100,6 +101,14 @@ public class ShowInfoFragment extends Fragment
                 .addApi(LocationServices.API)
                 .build();
         initViews();
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                DialogWait dialogPriceFragment = new DialogWait();
+                dialogPriceFragment.show(fm, null);
+            }
+        });
         return view;
     }
 

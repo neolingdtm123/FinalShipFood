@@ -89,7 +89,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="4"
                         android:text="Phí vận chuyển:"
-                        android:textColor="#00BB00"/>
+                        android:textColor="#00BB00"
+                        />
 
                     <com.leekien.shipfoodfinal.customView.RobBoldText
                         android:id="@+id/tvPriceDistance"

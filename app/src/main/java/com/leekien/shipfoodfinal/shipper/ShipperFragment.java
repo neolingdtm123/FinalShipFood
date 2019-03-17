@@ -154,20 +154,7 @@ public class ShipperFragment extends Fragment
 
     @Override
     public void onMapClick(LatLng latLng) {
-//        mLatLngSearchPosition = latLng;
-//        showMarkerToGoogleMap(mLatLngSearchPosition);
 //
-//        if (mRadiusSearch.get() <= Constant.RADIUS_DEFAULT
-//                || mRadiusSearch.get() >= Constant.RADIUS_ALL) {
-//            showCameraToPosition(mLatLngSearchPosition, Constant.LEVEL_ZOOM_DEFAULT);
-//        } else {
-//            final LatLngBounds circleBounds = new LatLngBounds(
-//                    locationMinMax(false, mLatLngSearchPosition, mRadiusSearch.get()),
-//                    locationMinMax(true, mLatLngSearchPosition, mRadiusSearch.get()));
-//            showCameraToPosition(circleBounds, 200);
-//        }
-//
-//        showCircleToGoogleMap(mLatLngSearchPosition, mRadiusSearch.get());
     }
 
     @Override
@@ -196,21 +183,19 @@ public class ShipperFragment extends Fragment
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-//
-//            case R.id.imgPosition:
-//                break;
-//                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.imgLocation:
+                showCurrentPosition();
+                break;
+
         }
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mCurrentLocation);
-        markerOptions.title("Vị trí khách hàng");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
+    }
+
+    private void showCurrentPosition() {
+        showCameraToPosition(mCurrentLocation, 15f);
+
     }
 
     public void showCameraToPosition(LatLng position, float zoomLevel) {
@@ -369,8 +354,8 @@ public class ShipperFragment extends Fragment
         ShowInfoFragment showInfoFragment = new ShowInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("key", donHang);
-        bundle.putString("lat",mCurrentLocation.latitude+"");
-        bundle.putString("long",mCurrentLocation.longitude+"");
+        bundle.putString("lat", mCurrentLocation.latitude + "");
+        bundle.putString("long", mCurrentLocation.longitude + "");
         showInfoFragment.setArguments(bundle);
         replaceFragment(showInfoFragment, "ss");
     }
