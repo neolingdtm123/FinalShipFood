@@ -85,6 +85,7 @@ public class ShipperFragment extends Fragment
         View view = inflater.inflate(R.layout.layout_don_hang, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         imgLocation = view.findViewById(R.id.imgLocation);
+        imgLocation.setOnClickListener(this);
         shipperPresenter = new ShipperPresenter(this);
         shipperPresenter.showListDonHang();
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)

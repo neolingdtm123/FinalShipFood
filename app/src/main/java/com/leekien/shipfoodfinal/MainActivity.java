@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
             super.onBackPressed();
         }
+
     }
 
     @Override

@@ -93,8 +93,6 @@ public class Food implements Serializable {
         this.number = number;
     }
 
-
-
     int number;
 
 }

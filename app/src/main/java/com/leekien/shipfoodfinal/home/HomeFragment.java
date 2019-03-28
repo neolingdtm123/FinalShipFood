@@ -30,6 +30,7 @@ import com.leekien.shipfoodfinal.adapter.FoodAdapter;
 import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
 import com.leekien.shipfoodfinal.adapter.TypeFoodAdapter;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.cart.CartFragment;
@@ -47,7 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import me.relex.circleindicator.CircleIndicator;
 
-public class HomeFragment extends Fragment implements HomeManager.View, View.OnClickListener{
+public class HomeFragment extends Fragment implements HomeManager.View, View.OnClickListener, IOnBackPressed {
     List<String> list = new ArrayList<String>();
     ViewPager viewPager;
     CircleIndicator circleIndicator;
@@ -59,12 +60,13 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     RecyclerView rcvType;
     FloatingActionButton fab,fabGioHang,fabAccount;
     boolean check = false;
-    TextView tvChu,tvShip;
+    TextView tvChu,tvShip,tvNumber;
     ImageView btnSearch;
     User user;
     View mLayoutSearch;
 
 
+    @SuppressLint("RestrictedApi")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,10 +89,26 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         fabGioHang= view.findViewById(R.id.fabGioHang);
         fabAccount= view.findViewById(R.id.fabAccount);
         tvChu = view.findViewById(R.id.tvChu);
+        tvNumber = view.findViewById(R.id.tvNumber);
         tvShip = view.findViewById(R.id.tvShip);
         HomePresenter presenter = new HomePresenter(HomeFragment.this);
         presenter.getFood();
         initData();
+        if(!CommonActivity.isNullOrEmpty(MainActivity.listFood)){
+            tvNumber.setVisibility(View.VISIBLE);
+            tvNumber.setText(MainActivity.listFood.size()+"");
+        }
+        else {
+            tvNumber.setVisibility(View.GONE);
+        }
+        if(!check){
+            fabGioHang.setVisibility(View.GONE);
+            fabAccount.setVisibility(View.GONE);
+        }
+        else{
+            fabGioHang.setVisibility(View.VISIBLE);
+            fabAccount.setVisibility(View.VISIBLE);
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
             @Override
@@ -111,6 +129,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
             @Override
             public void onClick(View view) {
                 CartFragment cartFragment = new CartFragment();
+                check = false;
                 replaceFragment(cartFragment,"kiennk");
             }
         });
@@ -278,4 +297,10 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         viewFlipper.setOutAnimation(getActivity(),R.anim.slide_out_right);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        getActivity().finish();
+        return false;
+
+    }
 }

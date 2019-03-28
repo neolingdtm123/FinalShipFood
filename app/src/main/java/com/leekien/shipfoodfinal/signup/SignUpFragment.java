@@ -16,8 +16,17 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.leekien.shipfoodfinal.R;
+import com.leekien.shipfoodfinal.bo.Comment;
+import com.leekien.shipfoodfinal.bo.NetworkController;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
+
+import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpFragment extends Fragment implements SignUpManager.View{
     SignUpPresenter signUpPresenter;
@@ -35,7 +44,7 @@ public class SignUpFragment extends Fragment implements SignUpManager.View{
     Button btnBack;
     Button btnSubmit;
     boolean checkType;
-
+Retrofit retrofit = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,7 +114,8 @@ public class SignUpFragment extends Fragment implements SignUpManager.View{
         }
         else {
              Toast.makeText(getContext(), "Đăng ký thành công", Toast.LENGTH_LONG).show();
-             getFragmentManager().popBackStack();
+             signUpPresenter.getData();
+//             getFragmentManager().popBackStack();
          }
 
     }
@@ -113,5 +123,11 @@ public class SignUpFragment extends Fragment implements SignUpManager.View{
     @Override
     public void showTime(String date) {
         edtCalendar.setText(date);
+    }
+
+    @Override
+    public void getData(List<Comment> list) {
+        Toast.makeText(getContext(), list.size()+"", Toast.LENGTH_LONG).show();
+
     }
 }

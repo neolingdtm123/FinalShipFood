@@ -165,16 +165,38 @@
 
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_icons8_menu_filled"
-        android:backgroundTint="@color/orange"
-        />
+        android:layout_gravity="bottom|end">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_icons8_menu_filled"
+            android:backgroundTint="@color/orange"
+            android:elevation="0dp"
+
+
+            />
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:id="@+id/tvNumber"
+            android:layout_width="30dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/custonm_cicle_red"
+            android:gravity="center"
+            android:textSize="17sp"
+            android:layout_height="30dp"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentTop="true"
+            android:elevation="7dp"
+            android:text="5"/>
+
+    </RelativeLayout>
+
     <include layout="@layout/fab_layout"/>
 
 

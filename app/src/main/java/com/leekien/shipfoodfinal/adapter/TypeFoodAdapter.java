@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leekien.shipfoodfinal.R;
@@ -42,10 +43,35 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
         Picasso.get().load(typeFood.getUrlType()).into(viewHolder.imageView);
         viewHolder.textView.setText(typeFood.getTitle());
         if (typeFood.isCheck()) {
-            viewHolder.imageView.setBackgroundResource(R.drawable.custom_icon);
+            if(position ==0 ){
+                viewHolder.lnShow.setBackgroundResource(R.drawable.custom_cicle_green);
+            }
+            else if(position ==1){
+                viewHolder.lnShow.setBackgroundResource(R.drawable.custom_cicle_blue);
+            }
+            else if(position ==2){
+                viewHolder.lnShow.setBackgroundResource(R.drawable.custonm_cicle_red);
+            }
+            else if(position ==3){
+                viewHolder.lnShow.setBackgroundResource(R.drawable.custom_cicle_yellow);
+            }
+
         } else {
-            viewHolder.imageView.setBackgroundResource(R.drawable.custom_type_food);
+            viewHolder.lnShow.setBackgroundResource(R.drawable.custom_circle);
         }
+        if(position ==0 ){
+            viewHolder.imageView.setImageResource(R.drawable.ic_vectoranvat);
+        }
+        else if(position ==1){
+            viewHolder.imageView.setBackgroundResource(R.drawable.ic_trasua);
+        }
+        else if(position ==2){
+            viewHolder.imageView.setBackgroundResource(R.drawable.ic_vectorcomtrua);
+        }
+        else if(position ==3){
+            viewHolder.imageView.setBackgroundResource(R.drawable.ic_vectorngoisao);
+        }
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +95,7 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout lnShow;
         @BindView(R.id.image)
         ImageView imageView;
         @BindView(R.id.textview)
@@ -85,6 +112,7 @@ public class TypeFoodAdapter extends RecyclerView.Adapter<TypeFoodAdapter.ViewHo
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setTag(this);
+            lnShow = itemView.findViewById(R.id.lnShow);
         }
     }
 

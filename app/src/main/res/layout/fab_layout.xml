@@ -24,7 +24,7 @@
         android:layout_marginBottom="80dp"
         android:backgroundTint="@color/orange"
         android:layout_marginRight="16dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         />
 
 </FrameLayout>

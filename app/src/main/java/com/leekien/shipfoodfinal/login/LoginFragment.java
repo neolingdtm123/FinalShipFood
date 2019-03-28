@@ -34,12 +34,7 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
         textView= view.findViewById(R.id.tvLogin);
         TextView tvSignUp= view.findViewById(R.id.tvSignUp);
         presenter = new LoginPresenter(LoginFragment.this);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.getInfo(edtUserName.getText().toString(),edtpw.getText().toString());
-            }
-        });
+        textView.setOnClickListener(this);
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +53,7 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
             Bundle bundle = new Bundle();
             bundle.putSerializable("user", (Serializable) user);
             homeFragment.setArguments(bundle);
-            replaceFragment(homeFragment,"hash");
+            replaceFragment(homeFragment,"homeframent");
         } else {
             Toast.makeText(getContext(), "Bạn đã nhập sai tài khoản hoặc mật khẩu", Toast.LENGTH_LONG).show();
         }

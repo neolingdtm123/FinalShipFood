@@ -5,6 +5,10 @@ import com.leekien.shipfoodfinal.bo.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginPresenter implements LoginManager.Presenter{
     private LoginManager.View view;
     private LoginManager.Interactor interactor;
@@ -16,25 +20,28 @@ public class LoginPresenter implements LoginManager.Presenter{
     }
 
     @Override
-    public void getInfo(String username, String password) {
-        list.add("ship");
-        list.add("chu");
-        list.add("khach");
-        User user = new User();
-        if(list.contains(username)){
-            if("ship".equals(username)){
-                user.setType("ship");
+    public void getInfo(final String username, final String password) {
+        Callback<List<User>> callback = new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                for(User user:response.body()){
+                    if(user.getUsername().equals(username)&& (user.getPassword().equals(password))){
+                        view.showInfoLogin("0",user);
+                    }
+                    else {
+                        view.showInfoLogin("1",null);
+                    }
+                }
+
             }
-            else if("chu".equals(username)){
-                user.setType("chu");
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
             }
-            else if ("khach".equals(username)){
-                user.setType("khach");
-            }
-            view.showInfoLogin("0",user);
-        }
-        else {
-            view.showInfoLogin("1",null);
-        }
+        };
+
+        interactor.getInfo(callback);
+
     }
 }

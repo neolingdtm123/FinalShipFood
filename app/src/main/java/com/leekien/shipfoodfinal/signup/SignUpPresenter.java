@@ -6,7 +6,14 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.widget.DatePicker;
 
+import com.leekien.shipfoodfinal.bo.Comment;
 import com.leekien.shipfoodfinal.common.CommonActivity;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUpPresenter implements SignUpManager.Presenter {
     SignUpManager.View view;
@@ -43,6 +50,25 @@ public class SignUpPresenter implements SignUpManager.Presenter {
         else {
             view.validate("0");
         }
+    }
+
+    @Override
+    public void getData() {
+//        Callback<List<Comment>>  callback = new Callback<List<Comment>>() {
+//            @Override
+//            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+//                List<Comment> list = response.body();
+//                view.getData(list);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Comment>> call, Throwable t) {
+//
+//            }
+//        };
+//        interactor.show(callback);
+        Comment comment = new Comment(2,3,"kiên đẹp trai");
+        interactor.add(comment);
     }
 
 
