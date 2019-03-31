@@ -43,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
             super.onBackPressed();
         }
+//        int count = getSupportFragmentManager().getBackStackEntryCount();
+//
+//        if (count == 0 ) {
+//            super.onBackPressed();
+//            finish();
+//            //additional code
+//        } else {
+//            getSupportFragmentManager().popBackStack();
+//        }
 
     }
 

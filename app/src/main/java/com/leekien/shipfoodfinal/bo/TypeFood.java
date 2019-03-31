@@ -4,7 +4,7 @@ import java.util.List;
 
 public class TypeFood {
     int idTypeFood;
-    String title;
+    String name;
     String urlType;
     boolean check = false;
 
@@ -17,13 +17,13 @@ public class TypeFood {
     }
 
     public TypeFood(String title, List<Food> foodList,int id) {
-        this.title = title;
+        this.name = title;
         this.foodList = foodList;
         this.idTypeFood = id;
     }
 
     public TypeFood(int idTypeFood,String title, String urlType, List<Food> foodList) {
-        this.title = title;
+        this.name = title;
         this.urlType = urlType;
         this.foodList = foodList;
         this.idTypeFood = idTypeFood;
@@ -40,11 +40,11 @@ public class TypeFood {
     }
 
     public String getTitle() {
-        return title;
+        return name;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.name = title;
     }
 
     public String getUrlType() {

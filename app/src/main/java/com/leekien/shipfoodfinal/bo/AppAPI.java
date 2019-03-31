@@ -13,17 +13,18 @@ import retrofit2.http.Query;
 
 public interface AppAPI {
 
-    @GET("all")
+    @GET("user/all")
     Call<List<Comment>> getNewsImage();
-    @GET("login")
+    @GET("user/login")
     Call<List<User>> getUser();
 
     @POST("add")
     Call<ResponseBody> add(@Body Comment comment);
 
-    @GET("showListProduct.php")
-    Call<ResponseBody> showLstProduct(@Query("maloaicha") int maLoaiCha);
-
+    @GET("foods/all")
+    Call<List<TypeFood>> getFood();
+    @POST("foods/add")
+    Call<ResponseBody> addFood(@Body Food food);
     @GET("thuonghieu.php")
     Call<ResponseBody> getListBrand();
 

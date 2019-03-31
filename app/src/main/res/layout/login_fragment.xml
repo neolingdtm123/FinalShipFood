@@ -45,6 +45,7 @@
                 android:backgroundTint="#00ffffff"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/edtPassWord"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Password"

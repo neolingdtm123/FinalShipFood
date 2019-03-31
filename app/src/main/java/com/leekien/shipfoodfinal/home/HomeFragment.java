@@ -1,7 +1,10 @@
 package com.leekien.shipfoodfinal.home;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,14 +24,21 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.FoodAdapter;
 import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
 import com.leekien.shipfoodfinal.adapter.TypeFoodAdapter;
+import com.leekien.shipfoodfinal.addfood.AddFoodFragment;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.TypeFood;
@@ -41,12 +51,16 @@ import com.leekien.shipfoodfinal.shipper.ShipperFragment;
 import com.leekien.shipfoodfinal.signup.SignUpFragment;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import me.relex.circleindicator.CircleIndicator;
+
+import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment implements HomeManager.View, View.OnClickListener, IOnBackPressed {
     List<String> list = new ArrayList<String>();
@@ -64,8 +78,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     ImageView btnSearch;
     User user;
     View mLayoutSearch;
-
-
+    int position =0;
     @SuppressLint("RestrictedApi")
     @Nullable
     @Override
@@ -92,7 +105,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         tvNumber = view.findViewById(R.id.tvNumber);
         tvShip = view.findViewById(R.id.tvShip);
         HomePresenter presenter = new HomePresenter(HomeFragment.this);
-        presenter.getFood();
+        presenter.getFood(user);
         initData();
         if(!CommonActivity.isNullOrEmpty(MainActivity.listFood)){
             tvNumber.setVisibility(View.VISIBLE);
@@ -148,21 +161,23 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     }
 
     @Override
-    public void showFood(List<Food> foodList,FoodAdapter.onReturn onReturn) {
-        FoodAdapter foodAdapter = new FoodAdapter(foodList,onReturn);
+    public void showFood(List<Food> foodList,FoodAdapter.onReturn onReturn,FoodAdapter.onImageReturn onImageReturn,int position1) {
+        position = position1;
+        FoodAdapter foodAdapter = new FoodAdapter(foodList,onReturn,onImageReturn);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.HORIZONTAL,false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
     }
 
     @Override
-    public void showTypeFood(List<TypeFood> typeFoods,TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1) {
+    public void showTypeFood(List<TypeFood> typeFoods,TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1,FoodAdapter.onImageReturn onImageReturn) {
         TypeFoodAdapter typeFoodAdapter = new TypeFoodAdapter(typeFoods,onReturn);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvType.setLayoutManager(layoutManager);
         rcvType.setAdapter(typeFoodAdapter);
-        FoodAdapter foodAdapter = new FoodAdapter(typeFoods.get(0).getFoodList(),onReturn1);
+        List<Food> list = typeFoods.get(0).getFoodList();
+        FoodAdapter foodAdapter = new FoodAdapter(list,onReturn1,onImageReturn);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.HORIZONTAL,false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
@@ -170,10 +185,23 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
 
     @Override
     public void nextFragment(Food food) {
-        FragmentManager fm = getFragmentManager();
-        DialogPriceFragment dialogPriceFragment = DialogPriceFragment.newInstance(food);
-        dialogPriceFragment.show(fm, null);
+        if("user".equals(user.getType())){
+            FragmentManager fm = getFragmentManager();
+            DialogPriceFragment dialogPriceFragment = DialogPriceFragment.newInstance(food);
+            dialogPriceFragment.show(fm, null);
+        }
+
     }
+
+    @Override
+    public void upLoadImage() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
+        AddFoodFragment addFoodFragment = new AddFoodFragment();
+        addFoodFragment.setArguments(bundle);
+        replaceFragment(addFoodFragment,"addFoodFragment");
+    }
+
 
     @SuppressLint("RestrictedApi")
     public void initData() {
@@ -299,7 +327,6 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
 
     @Override
     public boolean onBackPressed() {
-        getActivity().finish();
         return false;
 
     }

@@ -11,21 +11,22 @@ import android.widget.TextView;
 import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
-import com.leekien.shipfoodfinal.bo.TypeFood;
+import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     List<Food> foodList;
     onReturn onReturn;
+    onImageReturn onImageReturn;
 
-    public FoodAdapter(List<Food> foodList,onReturn onReturn) {
+    public FoodAdapter(List<Food> foodList,onReturn onReturn,onImageReturn onImageReturn) {
         this.foodList = foodList;
         this.onReturn = onReturn;
+        this.onImageReturn = onImageReturn;
     }
 
 
@@ -40,13 +41,24 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder,final int i) {
         final Food food = foodList.get(i);
-        Picasso.get().load(food.getUrlFood()).into(viewHolder.imageView);
+        Picasso.get().load(food.getUrlfood()).into(viewHolder.imageView);
         viewHolder.textviewTitle.setText(food.getName());
-        viewHolder.textviewPrice.setText(AppUtils.formatMoney(String.valueOf(food.getPrice())));
+        if(CommonActivity.isNullOrEmpty(food.getPrice())){
+            viewHolder.textviewPrice.setVisibility(View.GONE);
+        }
+        else {
+            viewHolder.textviewPrice.setText(AppUtils.formatMoney(String.valueOf(food.getPrice())));
+        }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onReturn.onReturn(food,i);
+            }
+        });
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onImageReturn.onImageReturn(food,i);
             }
         });
     }
@@ -74,5 +86,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     }
     public interface onReturn {
         void onReturn(Food food, int groupPosition);
+    }
+    public interface onImageReturn {
+        void onImageReturn(Food food, int groupPosition);
     }
 }

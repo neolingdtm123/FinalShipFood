@@ -7,8 +7,11 @@ public class Food implements Serializable {
     int idTypeFood;
     String name;
     String content;
-    String urlFood;
+    String urlfood;
     int price;
+
+    public Food() {
+    }
 
     public String getNumberDat() {
         return numberDat;
@@ -29,9 +32,9 @@ public class Food implements Serializable {
         this.priceDat = priceDat;
     }
 
-    public Food(String name, String urlFood, int price, int idTypeFood, int idFood) {
+    public Food(String name, String urlfood, int price, int idTypeFood, int idFood) {
         this.name = name;
-        this.urlFood = urlFood;
+        this.urlfood = urlfood;
         this.price = price;
         this.idTypeFood = idTypeFood;
         this.idFood = idFood;
@@ -69,12 +72,12 @@ public class Food implements Serializable {
         this.content = content;
     }
 
-    public String getUrlFood() {
-        return urlFood;
+    public String getUrlfood() {
+        return urlfood;
     }
 
-    public void setUrlFood(String urlFood) {
-        this.urlFood = urlFood;
+    public void setUrlfood(String urlfood) {
+        this.urlfood = urlfood;
     }
 
     public int getPrice() {

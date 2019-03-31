@@ -12,6 +12,8 @@ import retrofit2.Response;
 public class LoginPresenter implements LoginManager.Presenter{
     private LoginManager.View view;
     private LoginManager.Interactor interactor;
+    boolean check;
+    int position = -1;
     //fix cứng data
     List<String> list= new ArrayList<String>();
     public LoginPresenter(LoginManager.View view) {
@@ -24,13 +26,23 @@ public class LoginPresenter implements LoginManager.Presenter{
         Callback<List<User>> callback = new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                for(User user:response.body()){
+                for(int i =0;i<response.body().size();i++ ){
+                    User user = response.body().get(i);
                     if(user.getUsername().equals(username)&& (user.getPassword().equals(password))){
-                        view.showInfoLogin("0",user);
+                        check = true;
+                        position =i;
+                        break;
                     }
                     else {
-                        view.showInfoLogin("1",null);
+                        check = false;
                     }
+
+                }
+                if(check){
+                    view.showInfoLogin("0",response.body().get(position));
+                }
+                else {
+                    view.showInfoLogin("1",null);
                 }
 
             }

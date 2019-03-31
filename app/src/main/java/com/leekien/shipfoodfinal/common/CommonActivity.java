@@ -1,11 +1,18 @@
 package com.leekien.shipfoodfinal.common;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.util.Log;
 import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.leekien.shipfoodfinal.R;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class CommonActivity extends Activity {
     public static boolean isNullOrEmpty(Object input) {
@@ -27,5 +34,24 @@ public class CommonActivity extends Activity {
         }
 
         return input instanceof ArrayList && ((ArrayList) input).isEmpty();
+    }
+    public static Dialog createAlertDialog(Activity act, String message, String title) {
+        try {
+            return new MaterialDialog.Builder(act)
+                    .title(title)
+                    .content(message)
+                    .positiveText("Đồng ý")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick( MaterialDialog dialog,  DialogAction which) {
+                            if(dialog != null && dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                        }
+                    }).build();
+        } catch (Exception e) {
+            Log.d(TAG, "Error", e);
+            return null;
+        }
     }
 }
