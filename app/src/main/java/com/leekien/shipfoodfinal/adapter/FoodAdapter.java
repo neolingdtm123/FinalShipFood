@@ -21,12 +21,9 @@ import butterknife.ButterKnife;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     List<Food> foodList;
     onReturn onReturn;
-    onImageReturn onImageReturn;
-
-    public FoodAdapter(List<Food> foodList,onReturn onReturn,onImageReturn onImageReturn) {
+    public FoodAdapter(List<Food> foodList,onReturn onReturn) {
         this.foodList = foodList;
         this.onReturn = onReturn;
-        this.onImageReturn = onImageReturn;
     }
 
 
@@ -55,12 +52,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
                 onReturn.onReturn(food,i);
             }
         });
-        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onImageReturn.onImageReturn(food,i);
-            }
-        });
     }
 
     @Override
@@ -87,7 +78,5 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     public interface onReturn {
         void onReturn(Food food, int groupPosition);
     }
-    public interface onImageReturn {
-        void onImageReturn(Food food, int groupPosition);
-    }
+
 }

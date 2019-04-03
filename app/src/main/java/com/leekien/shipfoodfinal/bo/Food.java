@@ -3,7 +3,7 @@ package com.leekien.shipfoodfinal.bo;
 import java.io.Serializable;
 
 public class Food implements Serializable {
-    int idFood;
+    int id;
     int idTypeFood;
     String name;
     String content;
@@ -32,20 +32,20 @@ public class Food implements Serializable {
         this.priceDat = priceDat;
     }
 
-    public Food(String name, String urlfood, int price, int idTypeFood, int idFood) {
+    public Food(String name, String urlfood, int price, int idTypeFood, int id) {
         this.name = name;
         this.urlfood = urlfood;
         this.price = price;
         this.idTypeFood = idTypeFood;
-        this.idFood = idFood;
+        this.id = id;
     }
 
-    public int getIdFood() {
-        return idFood;
+    public int getId() {
+        return id;
     }
 
-    public void setIdFood(int idFood) {
-        this.idFood = idFood;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getIdTypeFood() {

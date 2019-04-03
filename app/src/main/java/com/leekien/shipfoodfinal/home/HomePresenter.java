@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onReturn, FoodAdapter.onReturn,FoodAdapter.onImageReturn {
+public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onReturn, FoodAdapter.onReturn {
     HomeManager.View view;
     HomeManager.Interactor interactor;
     String type;
@@ -50,7 +50,7 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
                         typeFood.setFoodList(list1);
                     }
                 }
-                view.showTypeFood(list, HomePresenter.this, HomePresenter.this,HomePresenter.this);
+                view.showTypeFood(list, HomePresenter.this, HomePresenter.this);
             }
 
             @Override
@@ -66,18 +66,18 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
 
     @Override
     public void onReturn(TypeFood typeFood, int groupPosition) {
-        view.showFood(typeFood.getFoodList(), HomePresenter.this,HomePresenter.this,groupPosition);
+        view.showFood(typeFood.getFoodList(), HomePresenter.this,groupPosition);
     }
 
     @Override
     public void onReturn(Food food, int groupPosition) {
-        view.nextFragment(food);
-    }
-
-    @Override
-    public void onImageReturn(Food food, int groupPosition) {
         if("Thêm mới".equals(food.getName())){
             view.upLoadImage();
         }
+        else {
+            view.nextFragment(food);
+        }
+
     }
+
 }

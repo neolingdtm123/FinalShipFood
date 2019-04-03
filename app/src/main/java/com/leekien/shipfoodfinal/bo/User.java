@@ -7,9 +7,27 @@ public class User implements Serializable {
     String password;
     String name;
     String age;
-    String numberPhone;
+    String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     String location;
     String type;
+    String birthdate;
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
 
     public String getName() {
         return name;
@@ -27,13 +45,7 @@ public class User implements Serializable {
         this.age = age;
     }
 
-    public String getNumberPhone() {
-        return numberPhone;
-    }
 
-    public void setNumberPhone(String numberPhone) {
-        this.numberPhone = numberPhone;
-    }
 
     public String getLocation() {
         return location;

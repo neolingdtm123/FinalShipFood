@@ -174,20 +174,6 @@ public class ShowInfoFragment extends Fragment
 
     @Override
     public void onMapClick(LatLng latLng) {
-//        mLatLngSearchPosition = latLng;
-//        showMarkerToGoogleMap(mLatLngSearchPosition);
-//
-//        if (mRadiusSearch.get() <= Constant.RADIUS_DEFAULT
-//                || mRadiusSearch.get() >= Constant.RADIUS_ALL) {
-//            showCameraToPosition(mLatLngSearchPosition, Constant.LEVEL_ZOOM_DEFAULT);
-//        } else {
-//            final LatLngBounds circleBounds = new LatLngBounds(
-//                    locationMinMax(false, mLatLngSearchPosition, mRadiusSearch.get()),
-//                    locationMinMax(true, mLatLngSearchPosition, mRadiusSearch.get()));
-//            showCameraToPosition(circleBounds, 200);
-//        }
-//
-//        showCircleToGoogleMap(mLatLngSearchPosition, mRadiusSearch.get());
     }
 
     @Override
@@ -349,23 +335,6 @@ public class ShowInfoFragment extends Fragment
         double lat = position.latitude + dx;
         double lon = position.longitude + dx / Math.cos(position.latitude * Math.PI / 180);
         return new LatLng(lat, lon);
-    }
-    public String makeURL (String sourcelat, String sourcelng, String destlat, String destlng ){
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
-        urlString.append(sourcelat);
-        urlString.append(",");
-        urlString.append(sourcelng);
-        urlString.append("&destination=");// to
-        urlString.append(destlat);
-        urlString.append("&mode=");// to
-        urlString.append("driving");
-        urlString.append(",");
-        urlString.append(destlng);
-        urlString.append("&key="+getResources().getString(R.string.maps_api_key));
-//        urlString.append("&sensor=true");
-        return urlString.toString();
     }
 
 

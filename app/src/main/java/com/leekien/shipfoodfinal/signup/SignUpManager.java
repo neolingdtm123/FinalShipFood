@@ -7,23 +7,23 @@ import com.leekien.shipfoodfinal.bo.User;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public class SignUpManager {
     public interface View{
         void validate(String type);
         void showTime(String date);
-        void getData(List<Comment> list);
+        void showSuccess();
 
     }
     public interface Presenter{
         void showTime(Context context);
-        void validate(String date,String location,boolean check,String userName,String pass,String confirmPass);
-        void getData();
+        void validate(String date,String location,String userName,String pass,String confirmPass,String name,String phone);
+        boolean getData(User user);
     }
     public interface Interactor{
-       void show(  Callback<List<Comment>> callback );
-       void add(Comment comment);
-
+       void add(User user, Callback<ResponseBody> callback);
+       void getUserName(Callback<List<String>> callback);
     }
 }

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ShipFoodFinal</string>
     <string name="maps_api_key">AIzaSyBH8DVS13wnxPjs-MxPpwpq73WFxGMASRw</string>
-    <string name="null_value">Bạn chưa nhập đầy đủ các thông tin</string>
+    <string name="null_value">Bạn chưa nhập đầy đủ các thông tin!</string>
     <string name="shipfood">Ship Food</string>
+    <string name="error_password">Mật khẩu bạn nhập chưa trùng khớp!</string>
+    <string name="error_username">Tên người dùng đã được sử dụng,vui lòng chọn lại tên khác!</string>
+    <string name="wrong_login">Bạn đã nhập sai tài khoản hoặc mật khẩu!</string>
+    <string name="success_login">Đăng nhập thành công!</string>
 </resources>

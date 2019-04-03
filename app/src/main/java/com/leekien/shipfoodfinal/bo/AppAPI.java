@@ -13,21 +13,20 @@ import retrofit2.http.Query;
 
 public interface AppAPI {
 
-    @GET("user/all")
-    Call<List<Comment>> getNewsImage();
     @GET("user/login")
     Call<List<User>> getUser();
-
-    @POST("add")
-    Call<ResponseBody> add(@Body Comment comment);
-
     @GET("foods/all")
     Call<List<TypeFood>> getFood();
     @POST("foods/add")
     Call<ResponseBody> addFood(@Body Food food);
-    @GET("thuonghieu.php")
-    Call<ResponseBody> getListBrand();
-
+    @POST("user/register")
+    Call<ResponseBody> addUser(@Body User user);
+    @GET("user/getusername")
+    Call<List<String>> getUserName();
+    @POST("orders/add")
+    Call<ResponseBody> addOrder(@Body Order order);
+    @POST("foodorder/add")
+    Call<ResponseBody> addFoodOrder(@Body Foodorder foodorder);
     @GET("getAuthor.php")
     Call<ResponseBody[]> getAuthor(@Query("idAuthor") int idAuthor);
 
@@ -38,6 +37,4 @@ public interface AppAPI {
     @POST("uploadcomment.php")
     Call<ResponseBody> postComment(@Field("idNews") String idRoom, @Field("content") String cmt);
 
-    @GET("getLstComment.php")
-    Call<ResponseBody[]> getLstComment(@Query("idNews") int idNews);
 }

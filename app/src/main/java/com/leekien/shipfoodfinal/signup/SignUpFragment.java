@@ -28,23 +28,22 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SignUpFragment extends Fragment implements SignUpManager.View{
+public class SignUpFragment extends Fragment implements SignUpManager.View {
     SignUpPresenter signUpPresenter;
+
     EditText edtName;
     ImageView imgCalendar;
     EditText edtCalendar;
     RadioButton radioNu;
     RadioButton radioNam;
     EditText edtLocation;
-    ImageView imgCus;
-    ImageView imgShip;
     EditText edtUserName;
     EditText edtPass;
     EditText edtConfirmPass;
+    EditText edtPhone;
     Button btnBack;
     Button btnSubmit;
-    boolean checkType;
-Retrofit retrofit = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,10 +54,9 @@ Retrofit retrofit = null;
         edtLocation = view.findViewById(R.id.edtLocation);
         edtUserName = view.findViewById(R.id.edtUserName);
         edtPass = view.findViewById(R.id.edtPass);
+        edtPhone = view.findViewById(R.id.edtPhone);
         edtConfirmPass = view.findViewById(R.id.edtConfirmPass);
         imgCalendar = view.findViewById(R.id.imgCalendar);
-        imgCus = view.findViewById(R.id.imageCus);
-        imgShip = view.findViewById(R.id.imageShip);
         radioNu = view.findViewById(R.id.radioNu);
         radioNam = view.findViewById(R.id.radioNam);
         btnBack = view.findViewById(R.id.btnBack);
@@ -70,27 +68,11 @@ Retrofit retrofit = null;
                 signUpPresenter.showTime(getContext());
             }
         });
-        imgCus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgCus.setBackgroundResource(R.drawable.custom_icon);
-                imgShip.setBackgroundResource(R.drawable.custom_type_food);
-                checkType = true;
-            }
-        });
-        imgShip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgShip.setBackgroundResource(R.drawable.custom_icon);
-                imgCus.setBackgroundResource(R.drawable.custom_type_food);
-                checkType = true;
-            }
-        });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signUpPresenter.validate(edtCalendar.getText().toString(),edtLocation.getText().toString(),checkType,
-                        edtUserName.getText().toString(),edtPass.getText().toString(),edtConfirmPass.getText().toString());
+                signUpPresenter.validate(edtCalendar.getText().toString(), edtLocation.getText().toString(),
+                        edtUserName.getText().toString(), edtPass.getText().toString(), edtConfirmPass.getText().toString(), edtName.getText().toString(), edtPhone.getText().toString());
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -105,18 +87,24 @@ Retrofit retrofit = null;
 
     @Override
     public void validate(String type) {
-
-         if("1".equals(type)){
-             Toast.makeText(getContext(), "Bạn chưa nhập đủ các thông tin", Toast.LENGTH_LONG).show();
-         }
-        else if("2".equals(type)){
-             Toast.makeText(getContext(), "Mật khẩu bạn nhập chưa trùng khớp", Toast.LENGTH_LONG).show();
-        }
-        else {
-             Toast.makeText(getContext(), "Đăng ký thành công", Toast.LENGTH_LONG).show();
-             signUpPresenter.getData();
+        if ("3".equals(type)) {
+            CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_username), getString(R.string.shipfood)).show();
+        } else if ("1".equals(type)) {
+            CommonActivity.createAlertDialog(getActivity(), getString(R.string.null_value), getString(R.string.shipfood)).show();
+        } else if ("2".equals(type)) {
+            CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_password), getString(R.string.shipfood)).show();
+        } else {
+            User user = new User();
+            user.setUsername(edtUserName.getText().toString());
+            user.setPassword(edtPass.getText().toString());
+            user.setType("user");
+            user.setLocation(edtLocation.getText().toString());
+            user.setName(edtName.getText().toString());
+            user.setPhone(edtPhone.getText().toString());
+            user.setBirthdate(edtCalendar.getText().toString());
+            signUpPresenter.getData(user);
 //             getFragmentManager().popBackStack();
-         }
+        }
 
     }
 
@@ -126,8 +114,8 @@ Retrofit retrofit = null;
     }
 
     @Override
-    public void getData(List<Comment> list) {
-        Toast.makeText(getContext(), list.size()+"", Toast.LENGTH_LONG).show();
-
+    public void showSuccess() {
+        Toast.makeText(getContext(), "Đăng ký thành công", Toast.LENGTH_LONG).show();
+        getFragmentManager().popBackStack();
     }
 }

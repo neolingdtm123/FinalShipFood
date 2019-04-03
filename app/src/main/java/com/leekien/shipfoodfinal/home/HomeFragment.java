@@ -155,29 +155,27 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         });
         tvCancel.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
-        //set cứng data show đồ ăn
-//        TypeFood typeFood1 = new TypeFood("Ăn vặt",);
         return view;
     }
 
     @Override
-    public void showFood(List<Food> foodList,FoodAdapter.onReturn onReturn,FoodAdapter.onImageReturn onImageReturn,int position1) {
+    public void showFood(List<Food> foodList,FoodAdapter.onReturn onReturn,int position1) {
         position = position1;
-        FoodAdapter foodAdapter = new FoodAdapter(foodList,onReturn,onImageReturn);
+        FoodAdapter foodAdapter = new FoodAdapter(foodList,onReturn);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.HORIZONTAL,false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
     }
 
     @Override
-    public void showTypeFood(List<TypeFood> typeFoods,TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1,FoodAdapter.onImageReturn onImageReturn) {
+    public void showTypeFood(List<TypeFood> typeFoods,TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1) {
         TypeFoodAdapter typeFoodAdapter = new TypeFoodAdapter(typeFoods,onReturn);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rcvType.setLayoutManager(layoutManager);
         rcvType.setAdapter(typeFoodAdapter);
         List<Food> list = typeFoods.get(0).getFoodList();
-        FoodAdapter foodAdapter = new FoodAdapter(list,onReturn1,onImageReturn);
+        FoodAdapter foodAdapter = new FoodAdapter(list,onReturn1);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2,GridLayoutManager.HORIZONTAL,false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);

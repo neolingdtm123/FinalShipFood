@@ -7,10 +7,12 @@ import android.support.annotation.RequiresApi;
 import android.widget.DatePicker;
 
 import com.leekien.shipfoodfinal.bo.Comment;
+import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,6 +20,7 @@ import retrofit2.Response;
 public class SignUpPresenter implements SignUpManager.Presenter {
     SignUpManager.View view;
     SignUpManager.Interactor interactor;
+    boolean check = false;
     public SignUpPresenter(SignUpManager.View view) {
         this.view = view;
         this.interactor = new SignUpInteractor();
@@ -38,37 +41,59 @@ public class SignUpPresenter implements SignUpManager.Presenter {
     }
 
     @Override
-    public void validate(String date, String location, boolean check, String userName, String pass, String confirmPass) {
-
+    public void validate(String date, String location, final String userName, String pass, String confirmPass, String name, String phone) {
+        check = false;
         if(CommonActivity.isNullOrEmpty(date)|| CommonActivity.isNullOrEmpty(userName)||CommonActivity.isNullOrEmpty(pass)
-        ||CommonActivity.isNullOrEmpty(confirmPass)||CommonActivity.isNullOrEmpty(location)||!check){
+        ||CommonActivity.isNullOrEmpty(confirmPass)||CommonActivity.isNullOrEmpty(location)||CommonActivity.isNullOrEmpty(name)
+        ||CommonActivity.isNullOrEmpty(phone)){
             view.validate("1");
         }
         else if(!pass.equals( confirmPass)){
             view.validate("2");
         }
         else {
-            view.validate("0");
+            Callback<List<String>> callback = new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    for(String s : response.body()){
+                        if(s.equals(userName)){
+                            check = true;
+                        }
+                    }
+                    if(!check){
+                        view.validate("0");
+                    }
+                    else {
+                        view.validate("3");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable t) {
+
+                }
+            };
+            interactor.getUserName(callback);
         }
     }
 
     @Override
-    public void getData() {
-//        Callback<List<Comment>>  callback = new Callback<List<Comment>>() {
-//            @Override
-//            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
-//                List<Comment> list = response.body();
-//                view.getData(list);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Comment>> call, Throwable t) {
-//
-//            }
-//        };
-//        interactor.show(callback);
-        Comment comment = new Comment(2,3,"kiên đẹp trai");
-        interactor.add(comment);
+    public boolean getData(User user) {
+        Callback<ResponseBody>  callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    view.showSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.add(user,callback);
+        return false;
     }
 
 

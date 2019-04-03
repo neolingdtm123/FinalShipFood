@@ -3,6 +3,7 @@ package com.leekien.shipfoodfinal.signup;
 import com.leekien.shipfoodfinal.bo.AppAPI;
 import com.leekien.shipfoodfinal.bo.Comment;
 import com.leekien.shipfoodfinal.bo.NetworkController;
+import com.leekien.shipfoodfinal.bo.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,28 +19,18 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpInteractor implements SignUpManager.Interactor  {
+
     AppAPI appAPI = NetworkController.getInfoService();
-    List<Comment > list = new ArrayList<Comment>();
     @Override
-    public void show(  Callback<List<Comment>>  callback ) {
-        Call<List<Comment>> call = appAPI.getNewsImage();
+    public void add(User user, Callback<ResponseBody> callback) {
+        Call<ResponseBody> call = appAPI.addUser(user);
         call.enqueue(callback);
-
     }
 
     @Override
-    public void add(Comment comment) {
-       Call<ResponseBody> call= appAPI.add(comment);
-        call.enqueue(new Callback<ResponseBody>() {
-           @Override
-           public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-           }
-
-           @Override
-           public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-           }
-       });
+    public void getUserName(Callback<List<String>> callback) {
+        Call<List<String>> call = appAPI.getUserName();
+        call.enqueue(callback);
     }
+
 }

@@ -12,8 +12,8 @@ import retrofit2.Callback;
 
 public class HomeManager {
     interface View{
-        void showFood(List<Food> list,FoodAdapter.onReturn onReturn,FoodAdapter.onImageReturn onImageReturn,int position);
-        void showTypeFood(List<TypeFood> list, TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1,FoodAdapter.onImageReturn onImageReturn);
+        void showFood(List<Food> list,FoodAdapter.onReturn onReturn,int position);
+        void showTypeFood(List<TypeFood> list, TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1);
         void nextFragment(Food food );
         void upLoadImage();
     }

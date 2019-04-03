@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,14 +47,20 @@ import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.CartAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.bo.Foodorder;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
+import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoManager;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoPresenter;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.leekien.shipfoodfinal.MainActivity.listFood;
@@ -79,7 +86,7 @@ public class CartFragment extends Fragment
     String lon;
     boolean check;
     int position = 0;
-    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice;
+    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice,tvSubmit;
     int priceDat = 0;
     double priceDistance = 0;
     int dem = 0;
@@ -102,7 +109,7 @@ public class CartFragment extends Fragment
             food = (Food) bundle.getSerializable("food");
             if (!CommonActivity.isNullOrEmpty(listFood)) {
                 for (int i = 0; i < listFood.size(); i++) {
-                    if ((food.getIdFood() == listFood.get(i).getIdFood()) && (food.getIdTypeFood() == listFood.get(i).getIdTypeFood())) {
+                    if ((food.getId() == listFood.get(i).getId()) && (food.getIdTypeFood() == listFood.get(i).getIdTypeFood())) {
                         check = false;
                         position = i;
                     } else {
@@ -123,8 +130,10 @@ public class CartFragment extends Fragment
         tvDistance = view.findViewById(R.id.tvDistance);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
         tvPriceDistance = view.findViewById(R.id.tvPriceDistance);
+        tvSubmit = view.findViewById(R.id.tvSubmit);
         tvSumPrice = view.findViewById(R.id.tvSumPrice);
         cartPresenter.showList();
+        tvSubmit.setOnClickListener(this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -254,6 +263,9 @@ public class CartFragment extends Fragment
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tvSubmit:
+                addNewOrder();
+                break;
 //
 //            case R.id.imgPosition:
 //                break;
@@ -267,6 +279,19 @@ public class CartFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
+    }
+
+    private void addNewOrder() {
+        Order order = new Order();
+        order.setType("Đơn hàng vừa được đặt");
+        String pattern = "MM/dd/yyyy HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(pattern);
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = df.format(today);
+        order.setCreatetime(todayAsString);
+        order.setFoodList(listFood);
+        cartPresenter.newOrder(order,listFood);
+
     }
 
     public void showCameraToPosition(LatLng position, float zoomLevel) {
@@ -372,23 +397,6 @@ public class CartFragment extends Fragment
         return new LatLng(lat, lon);
     }
 
-    public String makeURL(String sourcelat, String sourcelng, String destlat, String destlng) {
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
-        urlString.append(sourcelat);
-        urlString.append(",");
-        urlString.append(sourcelng);
-        urlString.append("&destination=");// to
-        urlString.append(destlat);
-        urlString.append("&mode=");// to
-        urlString.append("driving");
-        urlString.append(",");
-        urlString.append(destlng);
-        urlString.append("&key=" + getResources().getString(R.string.maps_api_key));
-//        urlString.append("&sensor=true");
-        return urlString.toString();
-    }
 
 
     public void replaceFragment(Fragment fragment, String tag) {
@@ -437,6 +445,16 @@ public class CartFragment extends Fragment
         rcvDonHang.setLayoutManager(layoutManager);
         rcvDonHang.setAdapter(cartAdapter);
 
+    }
+
+    @Override
+    public void showSuccess(int id) {
+//        for(Food food : listFood){
+//            Foodorder foodorder = new Foodorder();
+//            foodorder.setIdfood(food.getId());
+//            foodorder.setIdorder(id);
+//            cartPresenter.newFoodOrder(foodorder);
+//        }
     }
 
     @Override

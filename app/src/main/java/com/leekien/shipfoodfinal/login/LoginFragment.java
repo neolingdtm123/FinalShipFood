@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
+import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.home.HomeFragment;
+import com.leekien.shipfoodfinal.shipper.ShipperFragment;
 import com.leekien.shipfoodfinal.signup.SignUpFragment;
 
 import java.io.Serializable;
@@ -48,14 +50,24 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
     @Override
     public void showInfoLogin(String code, User user) {
         if ("0".equals(code)) {
-            Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
-            HomeFragment homeFragment = new HomeFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("user", (Serializable) user);
-            homeFragment.setArguments(bundle);
-            replaceFragment(homeFragment,"homeframent");
+            Toast.makeText(getContext(), getString(R.string.success_login), Toast.LENGTH_LONG).show();
+            if("ship".equals(user.getType())){
+                ShipperFragment shipperFragment = new ShipperFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", (Serializable) user);
+                shipperFragment.setArguments(bundle);
+                replaceFragment(shipperFragment,"sạdja");
+            }
+            else {
+                HomeFragment homeFragment = new HomeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("user", (Serializable) user);
+                homeFragment.setArguments(bundle);
+                replaceFragment(homeFragment,"homeframent");
+            }
+
         } else {
-            Toast.makeText(getContext(), "Bạn đã nhập sai tài khoản hoặc mật khẩu", Toast.LENGTH_LONG).show();
+            CommonActivity.createAlertDialog(getActivity(),getString(R.string.wrong_login),getString(R.string.shipfood)).show();
         }
     }
 
