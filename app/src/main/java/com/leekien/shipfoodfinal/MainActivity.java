@@ -12,6 +12,7 @@ import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.TypeFood;
+import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.login.LoginFragment;
 
 import java.util.ArrayList;
@@ -22,7 +23,10 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
     List<String> list = new ArrayList<String>();
     List<TypeFood> typeFoodList = new ArrayList<>();
+    static public User user;
     static public   List<Food> listFood =  new ArrayList<>();
+    static public String latShop = "18.773998";
+    static public String lonShop = "105.646607";
 
     @Override
     protected void onStop() {

@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.CartAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
@@ -50,9 +51,11 @@ import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.Foodorder;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.Order;
+import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoManager;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoPresenter;
+import com.leekien.shipfoodfinal.statusorder.StatusOrderFragment;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -89,6 +92,7 @@ public class CartFragment extends Fragment
     TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice,tvSubmit;
     int priceDat = 0;
     double priceDistance = 0;
+    String distanceMain;
     int dem = 0;
     int priceSum = 0;
 
@@ -200,7 +204,6 @@ public class CartFragment extends Fragment
                 showCameraToPosition(mCurrentLocation, 13f);
             }
         }
-        showShopLocation();
         cartPresenter.getDistance(mCurrentLocation);
 
 
@@ -255,7 +258,8 @@ public class CartFragment extends Fragment
         } else {
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
-        init();
+        showShopLocation();
+
 
     }
 
@@ -266,10 +270,6 @@ public class CartFragment extends Fragment
             case R.id.tvSubmit:
                 addNewOrder();
                 break;
-//
-//            case R.id.imgPosition:
-//                break;
-//                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
         }
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(mCurrentLocation);
@@ -283,13 +283,25 @@ public class CartFragment extends Fragment
 
     private void addNewOrder() {
         Order order = new Order();
-        order.setType("Đơn hàng vừa được đặt");
+        order.setType("Đặt hàng");
         String pattern = "MM/dd/yyyy HH:mm:ss";
+        String pattern1 = "HH:mm";
         DateFormat df = new SimpleDateFormat(pattern);
+        DateFormat df1 = new SimpleDateFormat(pattern1);
         Date today = Calendar.getInstance().getTime();
         String todayAsString = df.format(today);
+        String todayHour =df1.format(today);
         order.setCreatetime(todayAsString);
+        order.setCreatehour(todayHour);
+        order.setCurrentlat(String.valueOf(mCurrentLocation.latitude));
+        order.setCurrentlon(String.valueOf(mCurrentLocation.longitude));
         order.setFoodList(listFood);
+        order.setDistance(distanceMain);
+        order.setPrice(priceSum +"");
+        order.setPricefood(priceDat+"");
+        List<User> list = new ArrayList<>();
+        list.add(MainActivity.user);
+        order.setUserList(list);
         cartPresenter.newOrder(order,listFood);
 
     }
@@ -311,40 +323,8 @@ public class CartFragment extends Fragment
 //
     }
 
-    private void searchLocation(String location) {
-        Geocoder geocoder = new Geocoder(getContext());
-        List<android.location.Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(location, 1);
-        } catch (IOException e) {
-        }
-        if (list.size() > 0) {
-            android.location.Address address = list.get(0);
-            directShip(address);
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    task.execute();
-//                }
-//            });
-        }
-
-    }
 
 
-    private void directShip(android.location.Address address) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(address.getLatitude(), address.getLongitude());
-        markerOptions.position(latlngMain);
-        markerOptions.title("Vị trí cần tìm");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-        showCameraToPosition(latlngMain, 15f);
-
-    }
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -415,6 +395,7 @@ public class CartFragment extends Fragment
 
     @Override
     public void showDistance(String distance) {
+        distanceMain = distance;
         tvDistance.setText(distance);
         String[] a = distance.split("km");
         priceDistance = 10000 * Double.parseDouble(a[0]);
@@ -422,7 +403,9 @@ public class CartFragment extends Fragment
         dem = myDouble.intValue();
         tvPriceDistance.setText(dem + " " + "đ");
         tvPriceFood.setText(String.valueOf(showPrice() + " " + "đ"));
-        tvSumPrice.setText(String.valueOf(showPrice() + dem + " " + "đ"));
+        priceSum=0;
+        priceSum= showPrice() + dem;
+        tvSumPrice.setText(showPrice() + dem + " " + "đ");
     }
 
     @Override
@@ -449,12 +432,12 @@ public class CartFragment extends Fragment
 
     @Override
     public void showSuccess(int id) {
-//        for(Food food : listFood){
-//            Foodorder foodorder = new Foodorder();
-//            foodorder.setIdfood(food.getId());
-//            foodorder.setIdorder(id);
-//            cartPresenter.newFoodOrder(foodorder);
-//        }
+        Toast.makeText(getContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
+        StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("key",id);
+        statusOrderFragment.setArguments(bundle);
+        replaceFragment(statusOrderFragment,"statusOrderFragment");
     }
 
     @Override

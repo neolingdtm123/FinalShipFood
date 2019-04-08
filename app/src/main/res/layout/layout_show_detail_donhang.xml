@@ -18,21 +18,21 @@
             android:background="@drawable/custom_detail"
             android:layout_marginTop="3dp"
             >
+
             <TextView
                 android:id="@+id/tvDistance"
-                android:layout_marginLeft="23dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.7 km"
-                android:gravity="center"
                 android:layout_gravity="center"
-                android:textColor="#FFFFFF"/>
+                android:layout_marginLeft="13dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="20dp"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:orientation="vertical"
             >
             <LinearLayout

@@ -53,61 +53,89 @@ import com.google.maps.android.PolyUtil;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
+import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
+import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.home.DialogPriceFragment;
 
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ShowInfoFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener,ShowInfoManager.View {
+        View.OnClickListener, ShowInfoManager.View {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private LatLng mCurrentLocation;
     private LatLng mLatLngSearchPosition;
     SupportMapFragment m;
-    AsyncTask<Void, Void, Void> task;
     LatLng latlngMain;
-    private FragmentActivity myContext;
     ShowInfoPresenter showInfoPresenter;
     RecyclerView rcvDonHang;
     RobBoldText btnSubmit;
-    DonHang donHang;
-    String lat;
-    String lon;
+    Order order;
     List<LatLng> latLngList = new ArrayList<>();
     PolylineOptions polylineOptions = new PolylineOptions();
+    TextView tvDistance, tvNameCus, tvLocation, tvPhone, tvFood, tvPriceFood, tvPrice;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_show_info_fragment, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         btnSubmit = view.findViewById(R.id.btnSubmit);
-         showInfoPresenter= new ShowInfoPresenter(this);
-         Bundle bundle = getArguments();
-         if(!CommonActivity.isNullOrEmpty(bundle)){
-             donHang = (DonHang) bundle.getSerializable("key");
-             lat = bundle.getString("lat");
-             lon = bundle.getString("long");
-         }
+        tvDistance = view.findViewById(R.id.tvDistance);
+        tvNameCus = view.findViewById(R.id.tvNameCus);
+        tvLocation = view.findViewById(R.id.tvLocation);
+        tvPhone = view.findViewById(R.id.tvPhone);
+        tvFood = view.findViewById(R.id.tvFood);
+        tvPriceFood = view.findViewById(R.id.tvPriceFood);
+        tvPrice = view.findViewById(R.id.tvPrice);
+        showInfoPresenter = new ShowInfoPresenter(this);
+        Bundle bundle = getArguments();
+        if (!CommonActivity.isNullOrEmpty(bundle)) {
+            order = (Order) bundle.getSerializable("key");
+        }
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
         initViews();
+        tvDistance.setText(order.getDistance());
+        tvNameCus.setText(order.getUserList().get(0).getName());
+        tvLocation.setText(order.getAddress());
+        tvPhone.setText(order.getUserList().get(0).getPhone());
+        String text = "";
+        for (Food food : order.getFoodList()) {
+            text += food.getName();
+        }
+        tvPriceFood.setText("Giá sản phẩm:" + " " + order.getPricefood());
+        tvPrice.setText("Tổng giá trị đơn hàng:" + " " + order.getPrice());
+        tvFood.setText(text);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fm = getFragmentManager();
-                DialogWait dialogPriceFragment = new DialogWait();
-                dialogPriceFragment.show(fm, "kien");
+                String pattern = "MM/dd/yyyy HH:mm:ss";
+                String pattern1 = "HH:mm";
+                DateFormat df = new SimpleDateFormat(pattern);
+                DateFormat df1 = new SimpleDateFormat(pattern1);
+                Date today = Calendar.getInstance().getTime();
+                String todayAsString = df.format(today);
+                String todayHour = df1.format(today);
+                order.setShiptime(todayAsString);
+                order.setShiphour(todayHour);
+                order.setType("Đã nhận hàng");
+                showInfoPresenter.accept(order);
             }
         });
         return view;
@@ -198,7 +226,7 @@ public class ShowInfoFragment extends Fragment
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
         init();
-        showInfoPresenter.getInfo(lat,lon);
+        showInfoPresenter.getInfo(order.getCurrentlat(), order.getCurrentlon());
     }
 
     @Override
@@ -253,31 +281,10 @@ public class ShowInfoFragment extends Fragment
 ////        });
     }
 
-    private void searchLocation(String location) {
-        Geocoder geocoder = new Geocoder(getContext());
-        List<android.location.Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(location, 1);
-        } catch (IOException e) {
-        }
-        if (list.size() > 0) {
-            android.location.Address address = list.get(0);
-            directShip(address);
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    task.execute();
-//                }
-//            });
-        }
-
-    }
-
-
 
     private void directShip(android.location.Address address) {
         MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(address.getLatitude(),address.getLongitude());
+        latlngMain = new LatLng(address.getLatitude(), address.getLongitude());
         markerOptions.position(latlngMain);
         markerOptions.title("Vị trí cần tìm");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -288,7 +295,8 @@ public class ShowInfoFragment extends Fragment
         showCameraToPosition(latlngMain, 15f);
 
     }
-    private void showShopLocation(){
+
+    private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(20.997733, 105.841280);
         markerOptions.position(latLng);
@@ -298,7 +306,9 @@ public class ShowInfoFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-    };
+    }
+
+    ;
 
     public void showCameraToPosition(LatLngBounds bounds, int padding) {
         if (mGoogleMap != null) {
@@ -338,9 +348,6 @@ public class ShowInfoFragment extends Fragment
     }
 
 
-
-
-
     public void replaceFragment(Fragment fragment, String tag) {
         try {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -356,12 +363,16 @@ public class ShowInfoFragment extends Fragment
 
     @Override
     public void directShop(List<String> points) {
-        for(String a :points){
+        for (String a : points) {
             polylineOptions.addAll(PolyUtil.decode(a));
         }
-
         Polyline line = mGoogleMap.addPolyline(polylineOptions);
         line.setColor(Color.BLUE);
         line.setWidth(10);
+    }
+
+    @Override
+    public void replace() {
+
     }
 }

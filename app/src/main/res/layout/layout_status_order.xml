@@ -1,6 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
+
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái đơn hàng"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnShow"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/orange">
+
+            <ImageView
+                android:id="@+id/imgNotShow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18dp"
+                app:srcCompat="@drawable/ic_delete" />
+
+            <com.leekien.shipfoodfinal.customView.RobBoldText
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_marginLeft="60dp"
+                android:text="Trạng thái đơn hàng"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="10dp"
+            tools:listitem="@layout/layout_item_status_order"></android.support.v7.widget.RecyclerView>
+
+        <com.leekien.shipfoodfinal.customView.RobButton
+            android:id="@+id/btnContinue"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/custom_button_tieptuc"
+            android:text="Hoàn thành"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnNotShow"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/orange"
+        android:visibility="gone">
+
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:id="@+id/tvSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Trạng thái đơn hàng"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

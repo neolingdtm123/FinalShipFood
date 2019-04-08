@@ -3,6 +3,7 @@ package com.leekien.shipfoodfinal.cart;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.adapter.CartAdapter;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.Foodorder;
@@ -23,7 +24,7 @@ public class CartPresenter implements CartManager.Presenter, CartAdapter.onRetur
 
     @Override
     public void getDistance(LatLng mCurrentLocation) {
-        interactor.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude+"", "20.997733", "105.841280", new onPostDistance() {
+        interactor.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude+"", MainActivity.latShop,MainActivity.lonShop, new onPostDistance() {
             @Override
             public void onPost(String result) {
                 view.showDistance(result);
@@ -38,16 +39,16 @@ public class CartPresenter implements CartManager.Presenter, CartAdapter.onRetur
 
     @Override
     public void newOrder(Order order, List<Food> list) {
-        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+        Callback<Integer> callback = new Callback<Integer>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if(response.isSuccessful()){
-
+                    view.showSuccess(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
 
             }
         };

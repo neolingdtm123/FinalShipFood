@@ -1,11 +1,10 @@
-package com.leekien.shipfoodfinal.shipper;
+package com.leekien.shipfoodfinal.statusorder;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
 import android.graphics.Color;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -35,6 +34,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.data.Subscription;
+import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,52 +51,78 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
+import com.leekien.shipfoodfinal.adapter.CartAdapter;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
+import com.leekien.shipfoodfinal.adapter.StatusOrderAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
-import com.leekien.shipfoodfinal.bo.Order;
-import com.leekien.shipfoodfinal.showinfo.ShowInfoFragment;
+import com.leekien.shipfoodfinal.bo.StatusOrder;
+import com.leekien.shipfoodfinal.common.CommonActivity;
+import com.leekien.shipfoodfinal.customView.RobBoldText;
+import com.leekien.shipfoodfinal.home.DialogPriceFragment;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 
-public class ShipperFragment extends Fragment
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
+import static com.leekien.shipfoodfinal.MainActivity.listFood;
+
+public class StatusOrderFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener, ShipperManager.View {
+        View.OnClickListener,StatusOrderManager.View {
 
     private GoogleMap mGoogleMap;
-    private PolylineOptions polyline;
-    private ArrayList<LatLng> listStep;
     private GoogleApiClient mGoogleApiClient;
     private LatLng mCurrentLocation;
     private LatLng mLatLngSearchPosition;
     SupportMapFragment m;
-    AsyncTask<Void, Void, Void> task;
     LatLng latlngMain;
-    private FragmentActivity myContext;
-    ShipperPresenter shipperPresenter;
-    RecyclerView rcvDonHang;
-    ImageView imgLocation;
-
+    StatusOrderPresenter statusOrderPresenter;
+    int idOrder;
+    LinearLayout lnShow;
+    LinearLayout lnNotShow;
+    ImageView imgNotShow;
+    RecyclerView rcvStatus;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_don_hang, container, false);
-        rcvDonHang = view.findViewById(R.id.rcvDonHang);
-        imgLocation = view.findViewById(R.id.imgLocation);
-        imgLocation.setOnClickListener(this);
-        shipperPresenter = new ShipperPresenter(this);
+        View view = inflater.inflate(R.layout.layout_status_order, container, false);
+        statusOrderPresenter= new StatusOrderPresenter(this);
+        Bundle bundle = getArguments();
+        if(!CommonActivity.isNullOrEmpty(bundle)){
+           idOrder =  bundle.getInt("key");
+        }
+        rcvStatus = view.findViewById(R.id.rcvStatus);
+        lnShow = view.findViewById(R.id.lnShow);
+        lnNotShow = view.findViewById(R.id.lnNotShow);
+        imgNotShow = view.findViewById(R.id.imgNotShow);
+        lnNotShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lnNotShow.setVisibility(View.GONE);
+                lnShow.setVisibility(View.VISIBLE);
+            }
+        });
+        imgNotShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lnNotShow.setVisibility(View.VISIBLE);
+                lnShow.setVisibility(View.GONE);
+            }
+        });
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        initViews();
         return view;
     }
 
@@ -120,11 +147,6 @@ public class ShipperFragment extends Fragment
         mGoogleApiClient.disconnect();
     }
 
-    private void initViews() {
-        listStep = new ArrayList<LatLng>();
-        polyline = new PolylineOptions();
-
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -143,7 +165,9 @@ public class ShipperFragment extends Fragment
                 showCameraToPosition(mCurrentLocation, 15f);
             }
         }
-        showShopLocation();
+
+
+
     }
 
     @Override
@@ -158,7 +182,6 @@ public class ShipperFragment extends Fragment
 
     @Override
     public void onMapClick(LatLng latLng) {
-//
     }
 
     @Override
@@ -182,14 +205,14 @@ public class ShipperFragment extends Fragment
         } else {
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
-        init();
+        showShopLocation();
         final boolean shouldStopLoop = false;
         final Handler mHandler = new Handler();
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                shipperPresenter.showListDonHang();
+                statusOrderPresenter.getOrder(idOrder);
                 if (!shouldStopLoop) {
                     mHandler.postDelayed(this, 5000);
                 }
@@ -200,19 +223,21 @@ public class ShipperFragment extends Fragment
     }
 
     @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id){
-            case R.id.imgLocation:
-                showCurrentPosition();
-                break;
-
+    public void onClick(View v) {
+        switch (v.getId()) {
+//
+//            case R.id.imgPosition:
+//                break;
+//                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
         }
-    }
-
-    private void showCurrentPosition() {
-        showCameraToPosition(mCurrentLocation, 13f);
-
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(mCurrentLocation);
+        markerOptions.title("Vị trí khách hàng");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.alpha(0.8f);
+        markerOptions.rotation(0);
+        Marker marker = mGoogleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
     }
 
     public void showCameraToPosition(LatLng position, float zoomLevel) {
@@ -248,36 +273,45 @@ public class ShipperFragment extends Fragment
 ////            }
 ////        });
     }
-//
-//    private void searchLocation(String location) {
-//        Geocoder geocoder = new Geocoder(getContext());
-//        List<android.location.Address> list = new ArrayList<>();
-//        try {
-//            list = geocoder.getFromLocationName(location, 1);
-//        } catch (IOException e) {
-//        }
-//        if (list.size() > 0) {
-//            android.location.Address address = list.get(0);
-//            directShip(address);
-////            button.setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View v) {
-////                    task.execute();
-////                }
-////            });
-//        }
-//
-//    }
 
-
-    private void directShip1(String lat, String lon) {
-
+    private void searchLocation(String location) {
+        Geocoder geocoder = new Geocoder(getContext());
+        List<android.location.Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(location, 1);
+        } catch (IOException e) {
+        }
+        if (list.size() > 0) {
+            android.location.Address address = list.get(0);
+            directShip(address);
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    task.execute();
+//                }
+//            });
+        }
 
     }
 
-    private void showShopLocation() {
+
+
+    private void directShip(android.location.Address address) {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
+        latlngMain = new LatLng(address.getLatitude(),address.getLongitude());
+        markerOptions.position(latlngMain);
+        markerOptions.title("Vị trí cần tìm");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.alpha(0.8f);
+        markerOptions.rotation(0);
+        Marker marker = mGoogleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+        showCameraToPosition(latlngMain, 15f);
+
+    }
+    private void showShopLocation(){
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop),Double.valueOf( MainActivity.lonShop));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -285,9 +319,7 @@ public class ShipperFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-    }
-
-    ;
+    };
 
     public void showCameraToPosition(LatLngBounds bounds, int padding) {
         if (mGoogleMap != null) {
@@ -295,6 +327,21 @@ public class ShipperFragment extends Fragment
         }
     }
 
+    public void showCircleToGoogleMap(LatLng position, float radius) {
+        if (position == null) {
+            return;
+        }
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(position);
+        //Radius in meters
+        circleOptions.radius(radius * 1000);
+        circleOptions.fillColor(getResources().getColor(R.color.circle_on_map));
+        circleOptions.strokeColor(getResources().getColor(R.color.circle_on_map));
+        circleOptions.strokeWidth(0);
+        if (mGoogleMap != null) {
+            mGoogleMap.addCircle(circleOptions);
+        }
+    }
 
     public void showMarkerToGoogleMap(LatLng position) {
         mGoogleMap.clear();
@@ -312,41 +359,6 @@ public class ShipperFragment extends Fragment
     }
 
 
-    @Override
-    public void showListDonHang(List<Order> list, DonHangAdapter.onReturn onReturn) {
-        for(Order order :list){
-            order.setAddress(getAddress(Double.valueOf(order.getCurrentlat()),Double.valueOf(order.getCurrentlon())));
-        }
-        DonHangAdapter donHangAdapter = new DonHangAdapter(list, onReturn);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rcvDonHang.setLayoutManager(layoutManager);
-        rcvDonHang.setAdapter(donHangAdapter);
-    }
-
-    @Override
-    public void directShip(String lat, String lon) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
-        markerOptions.position(latlngMain);
-        markerOptions.title("Vị trí cần tìm");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-        showCameraToPosition(latlngMain, 15f);
-    }
-
-
-    @Override
-    public void replace(Order order) {
-        ShowInfoFragment showInfoFragment = new ShowInfoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("key", order);
-        showInfoFragment.setArguments(bundle);
-        replaceFragment(showInfoFragment, "ss");
-    }
 
     public void replaceFragment(Fragment fragment, String tag) {
         try {
@@ -360,26 +372,16 @@ public class ShipperFragment extends Fragment
         }
 
     }
-    public String getAddress(double lat, double lng) {
-        String add ="";
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
-            Address obj = addresses.get(0);
-             add = obj.getAddressLine(0);
-//            add = add + "\n" + obj.getCountryName();
-//            add = add + "\n" + obj.getCountryCode();
-//            add = add + "\n" + obj.getAdminArea();
-//            add = add + "\n" + obj.getPostalCode();
-//            add = add + "\n" + obj.getSubAdminArea();
-//            add = add + "\n" + obj.getLocality();
-//            add = add + "\n" + obj.getSubThoroughfare();
-            return add;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    @Override
+    public void showStatusOrder(List<StatusOrder> statusOrderList) {
+        StatusOrderAdapter statusOrderAdapter = new StatusOrderAdapter(statusOrderList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rcvStatus.setLayoutManager(layoutManager);
+        rcvStatus.setAdapter(statusOrderAdapter);
 
-        }
-        return add;
     }
+
+
+
 }

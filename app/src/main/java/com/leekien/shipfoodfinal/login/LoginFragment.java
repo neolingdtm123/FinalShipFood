@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
@@ -51,6 +52,7 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
     public void showInfoLogin(String code, User user) {
         if ("0".equals(code)) {
             Toast.makeText(getContext(), getString(R.string.success_login), Toast.LENGTH_LONG).show();
+            MainActivity.user = user;
             if("ship".equals(user.getType())){
                 ShipperFragment shipperFragment = new ShipperFragment();
                 Bundle bundle = new Bundle();

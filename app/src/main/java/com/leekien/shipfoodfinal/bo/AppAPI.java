@@ -9,6 +9,8 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface AppAPI {
@@ -23,15 +25,20 @@ public interface AppAPI {
     Call<ResponseBody> addUser(@Body User user);
     @GET("user/getusername")
     Call<List<String>> getUserName();
+    @GET("orders/getOrder/{id}")
+    Call<Order> getOrder(@Path("id") int id);
     @POST("orders/add")
-    Call<ResponseBody> addOrder(@Body Order order);
+    Call<Integer> addOrder(@Body Order order);
     @POST("foodorder/add")
     Call<ResponseBody> addFoodOrder(@Body Foodorder foodorder);
-    @GET("getAuthor.php")
-    Call<ResponseBody[]> getAuthor(@Query("idAuthor") int idAuthor);
-
-    @GET("getNewsById.php")
-    Call<ResponseBody[]> getNewsById(@Query("idNews") int idNews);
+    @GET("orders/getall")
+    Call<List<Order>> getAllOrder();
+    @FormUrlEncoded
+    @PUT("orders/update/{id}")
+    Call<ResponseBody> updateOrder(@Path("id") int id,@Field("type") String type,@Field("shiphour")
+            String shiphour,@Field("iduser") int iduser,@Field("shiptime") String shiptime);
+//    @PUT("orders/update/{id}")
+//    Call<ResponseBody> updateOrder(@Path("id") int id,@Body Order order);
 
     @FormUrlEncoded
     @POST("uploadcomment.php")

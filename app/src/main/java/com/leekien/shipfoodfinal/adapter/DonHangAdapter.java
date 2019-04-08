@@ -1,5 +1,7 @@
 package com.leekien.shipfoodfinal.adapter;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,18 +13,21 @@ import android.widget.TextView;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.bo.Order;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 
 public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHolder> {
-    List<DonHang> donHangList;
+    List<Order> orderList;
     DonHangAdapter.onReturn onReturn;
 
-    public DonHangAdapter(List<DonHang> donHangList, DonHangAdapter.onReturn onReturn) {
-        this.donHangList = donHangList;
+    public DonHangAdapter(List<Order> orderList, DonHangAdapter.onReturn onReturn) {
+        this.orderList = orderList;
         this.onReturn = onReturn;
     }
 
@@ -37,27 +42,27 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DonHangAdapter.ViewHolder viewHolder, final int i) {
-        final DonHang donHang = donHangList.get(i);
-        viewHolder.tvDistance.setText(donHang.getDistance() + " " +"km");
-        viewHolder.tvLocation.setText(donHang.getLocation());
-        viewHolder.tvId.setText(donHang.getId());
+        final Order order = orderList.get(i);
+        viewHolder.tvDistance.setText(order.getDistance());
+        viewHolder.tvLocation.setText(order.getAddress());
+        viewHolder.tvId.setText("Đơn #"+order.getId()+"");
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReturn.onReturn(donHang,i);
+                onReturn.onReturn(order,i);
             }
         });
         viewHolder.imgShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReturn.onReplace(donHang,i);
+                onReturn.onReplace(order,i);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return donHangList.size();
+        return orderList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,7 +81,8 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
         }
     }
     public interface onReturn {
-        void onReturn(DonHang donHang, int groupPosition);
-        void onReplace(DonHang donHang, int groupPosition);
+        void onReturn(Order order, int groupPosition);
+        void onReplace(Order order, int groupPosition);
     }
+
 }

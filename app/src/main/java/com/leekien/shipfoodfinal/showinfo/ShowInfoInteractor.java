@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.asyntask.GetDirectionAsynTask;
 import com.leekien.shipfoodfinal.bo.AppAPI;
@@ -24,11 +25,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class ShowInfoInteractor  implements ShowInfoManager.Interactor{
+    AppAPI appAPI = NetworkController.getInfoService();
 
 
     @Override
     public void getListStep(String lat, String lon, onPostSuccess onPostSuccess) {
-        GetDirectionAsynTask getDirectionAsynTask = new GetDirectionAsynTask(lat,lon,"20.997733","105.841280",onPostSuccess);
+        GetDirectionAsynTask getDirectionAsynTask = new GetDirectionAsynTask(lat,lon, MainActivity.latShop,MainActivity.lonShop,onPostSuccess);
         getDirectionAsynTask.execute();
     }
+
+    @Override
+    public void updateOrder(Order order, Callback<ResponseBody> callback) {
+        int a = order.getId();
+        Call<ResponseBody> call = appAPI.updateOrder(a,order.getType(),order.getShiphour(),MainActivity.user.getId(),order.getShiptime());
+        call.enqueue(callback);
+    }
+
+
 }

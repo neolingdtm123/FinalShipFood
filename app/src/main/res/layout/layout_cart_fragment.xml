@@ -67,7 +67,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="450000" />
+                       />
                 </LinearLayout>
 
                 <LinearLayout
@@ -88,7 +88,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="4"
-                        android:text="Phí vận chuyển:"
                         android:textColor="#00BB00"
                         />
 
@@ -99,7 +98,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1.2"
                         android:gravity="right"
-                        android:text="450000" />
+                      />
                 </LinearLayout>
 
                 <View
@@ -127,7 +126,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:text="450000" />
+                     />
                 </LinearLayout>
             </LinearLayout>
 

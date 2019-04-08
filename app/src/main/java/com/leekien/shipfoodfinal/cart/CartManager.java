@@ -30,7 +30,7 @@ public class CartManager {
     }
     interface Interactor{
         void getDistance(String lat, String lon, String lat1, String lon1, onPostDistance onPostDistance);
-        void newOrder(Order order, List<Food> list, Callback<ResponseBody> callback);
+        void newOrder(Order order, List<Food> list, Callback<Integer> callback);
         void newFoodOrder(Foodorder foodorder, Callback<ResponseBody> callback);
     }
 }

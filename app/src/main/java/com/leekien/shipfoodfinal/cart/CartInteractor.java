@@ -19,8 +19,8 @@ public class CartInteractor implements CartManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
 
     @Override
-    public void newOrder(Order order, List<Food> list, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = appAPI.addOrder(order);
+    public void newOrder(Order order, List<Food> list, Callback<Integer> callback) {
+        Call<Integer> call = appAPI.addOrder(order);
         call.enqueue(callback);
     }
 

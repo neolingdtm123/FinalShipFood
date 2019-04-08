@@ -3,6 +3,16 @@ package com.leekien.shipfoodfinal.bo;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     String username;
     String password;
     String name;
