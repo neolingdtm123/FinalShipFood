@@ -2,6 +2,7 @@ package com.leekien.shipfoodfinal.shipper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 
 import android.graphics.Color;
@@ -57,6 +58,7 @@ import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoFragment;
+import com.leekien.shipfoodfinal.successorder.SuccessOrderFragment;
 
 
 import java.io.IOException;
@@ -68,6 +70,7 @@ public class ShipperFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, ShipperManager.View {
+
 
     private GoogleMap mGoogleMap;
     private PolylineOptions polyline;
@@ -82,6 +85,14 @@ public class ShipperFragment extends Fragment
     ShipperPresenter shipperPresenter;
     RecyclerView rcvDonHang;
     ImageView imgLocation;
+    TextView tvHistory;
+    Context context;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Nullable
     @Override
@@ -89,6 +100,7 @@ public class ShipperFragment extends Fragment
         View view = inflater.inflate(R.layout.layout_don_hang, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         imgLocation = view.findViewById(R.id.imgLocation);
+        tvHistory= view.findViewById(R.id.tvHistory);
         imgLocation.setOnClickListener(this);
         shipperPresenter = new ShipperPresenter(this);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
@@ -96,6 +108,13 @@ public class ShipperFragment extends Fragment
                 .addApi(LocationServices.API)
                 .build();
         initViews();
+        tvHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SuccessOrderFragment successOrderFragment = new SuccessOrderFragment();
+                replaceFragment(successOrderFragment,"successOrderFragment");
+            }
+        });
         return view;
     }
 
@@ -140,7 +159,7 @@ public class ShipperFragment extends Fragment
             }
             mCurrentLocation = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             if (mLatLngSearchPosition == null) {
-                showCameraToPosition(mCurrentLocation, 15f);
+                showCameraToPosition(mCurrentLocation, 13f);
             }
         }
         showShopLocation();
@@ -326,6 +345,8 @@ public class ShipperFragment extends Fragment
 
     @Override
     public void directShip(String lat, String lon) {
+        mGoogleMap.clear();
+        showShopLocation();
         MarkerOptions markerOptions = new MarkerOptions();
         latlngMain = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
         markerOptions.position(latlngMain);
@@ -335,12 +356,13 @@ public class ShipperFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-        showCameraToPosition(latlngMain, 15f);
+        showCameraToPosition(latlngMain, 13f);
     }
 
 
     @Override
     public void replace(Order order) {
+        showShopLocation();
         ShowInfoFragment showInfoFragment = new ShowInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("key", order);
@@ -362,7 +384,7 @@ public class ShipperFragment extends Fragment
     }
     public String getAddress(double lat, double lng) {
         String add ="";
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);

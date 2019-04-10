@@ -12,13 +12,15 @@ import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public class StatusOrderManager {
-    public interface View{
-      void   showStatusOrder(List<StatusOrder> statusOrderList);
+    public interface View {
+        void showStatusOrder(List<StatusOrder> statusOrderList);
     }
-    public interface Presenter{
+
+    public interface Presenter {
         void getOrder(int idOrder);
     }
-    public interface Interactor{
-        void getOrder(Callback<Order> callback,int idOrder);
+
+    public interface Interactor {
+        void getOrder(Callback<Order> callback, int idOrder);
     }
 }

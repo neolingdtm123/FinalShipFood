@@ -1,8 +1,10 @@
 package com.leekien.shipfoodfinal.home;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.adapter.FoodAdapter;
 import com.leekien.shipfoodfinal.adapter.TypeFoodAdapter;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.bo.User;
 
@@ -24,14 +26,14 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
     }
 
     @Override
-    public void getFood(final User user) {
+    public void getFood(final User user, final int position) {
         type = user.getType();
         Callback<List<TypeFood>> callback = new Callback<List<TypeFood>>() {
             @Override
             public void onResponse(Call<List<TypeFood>> call, Response<List<TypeFood>> response) {
                 List<TypeFood> list = response.body();
                 for (int i = 0; i < list.size(); i++) {
-                    if (i == 0) {
+                    if (i == position) {
                         list.get(i).setCheck(true);
                     } else {
                         list.get(i).setCheck(false);
@@ -50,7 +52,7 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
                         typeFood.setFoodList(list1);
                     }
                 }
-                view.showTypeFood(list, HomePresenter.this, HomePresenter.this);
+                view.showTypeFood(list, HomePresenter.this, HomePresenter.this, position);
             }
 
             @Override
@@ -63,18 +65,36 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
 
     }
 
+    @Override
+    public void getWaitOrder(int iduser, final Food food) {
+        Callback<Order> callback = new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                if (response.isSuccessful()) {
+                    view.checkFragment(response.body(), food);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                view.checkFragment(null, food);
+            }
+        };
+        interactor.getWaitOrder(callback, iduser);
+
+    }
+
 
     @Override
     public void onReturn(TypeFood typeFood, int groupPosition) {
-        view.showFood(typeFood.getFoodList(), HomePresenter.this,groupPosition);
+        view.showFood(typeFood.getFoodList(), HomePresenter.this, groupPosition);
     }
 
     @Override
     public void onReturn(Food food, int groupPosition) {
-        if("Thêm mới".equals(food.getName())){
+        if ("Thêm mới".equals(food.getName())) {
             view.upLoadImage();
-        }
-        else {
+        } else {
             view.nextFragment(food);
         }
 

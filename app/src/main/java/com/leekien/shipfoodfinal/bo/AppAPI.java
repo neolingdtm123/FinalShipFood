@@ -31,17 +31,19 @@ public interface AppAPI {
     Call<Integer> addOrder(@Body Order order);
     @POST("foodorder/add")
     Call<ResponseBody> addFoodOrder(@Body Foodorder foodorder);
-    @GET("orders/getall")
-    Call<List<Order>> getAllOrder();
+    @GET("orders/getall/{id}")
+    Call<List<Order>> getAllOrder(@Path("id") int id);
     @FormUrlEncoded
     @PUT("orders/update/{id}")
     Call<ResponseBody> updateOrder(@Path("id") int id,@Field("type") String type,@Field("shiphour")
             String shiphour,@Field("iduser") int iduser,@Field("shiptime") String shiptime);
-//    @PUT("orders/update/{id}")
-//    Call<ResponseBody> updateOrder(@Path("id") int id,@Body Order order);
-
     @FormUrlEncoded
-    @POST("uploadcomment.php")
-    Call<ResponseBody> postComment(@Field("idNews") String idRoom, @Field("content") String cmt);
+    @PUT("orders/updateend/{id}")
+    Call<ResponseBody> updateEnd(@Path("id") int id,@Field("type") String type,@Field("endhour")
+            String endhour,@Field("endtime") String endtime);
+    @GET("orders/getSuccessOrder")
+    Call<List<Order>> getSuccessOrder();
+    @GET("orders/getWaitOrder/{id}")
+    Call<Order> getWaitOrder(@Path("id") int id);
 
 }

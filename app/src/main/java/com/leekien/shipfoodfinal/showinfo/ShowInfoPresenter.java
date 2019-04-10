@@ -32,12 +32,12 @@ public class ShowInfoPresenter implements ShowInfoManager.Presenter {
     }
 
     @Override
-    public void accept(Order order) {
+    public void accept(final Order order) {
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
-
+                    view.replace(order);
                 }
             }
 
@@ -47,5 +47,23 @@ public class ShowInfoPresenter implements ShowInfoManager.Presenter {
             }
         };
         interactor.updateOrder(order,callback);
+    }
+
+    @Override
+    public void updatEnd(final Order order1) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    view.end();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.updateEnd(order1,callback);
     }
 }

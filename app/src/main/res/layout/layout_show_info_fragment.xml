@@ -37,148 +37,156 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_marginTop="10dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.leekien.shipfoodfinal.customView.RobBoldText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Thông tin giao hàng"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
-
-                <TextView
-                    android:id="@+id/tvNameCus"
+                <com.leekien.shipfoodfinal.customView.RobBoldText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Nguyễn Khắc Kiên" />
-            </LinearLayout>
+                    android:layout_marginTop="10dp"
+                    android:text="Thông tin giao hàng"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
-
-                <TextView
-                    android:id="@+id/tvLocation"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Ngõ 92,Nguyễn Khánh Toàn,Cầu Giấy,Hà Nội" />
+                    android:layout_marginTop="10dp">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                    <TextView
+                        android:id="@+id/tvNameCus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Nguyễn Khắc Kiên" />
+                </LinearLayout>
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
-
-                <TextView
-                    android:id="@+id/tvPhone"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0962188659" />
-            </LinearLayout>
+                    android:layout_marginTop="10dp">
 
-            <com.leekien.shipfoodfinal.customView.RobBoldText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Thông tin đơn hàng"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                    <TextView
+                        android:id="@+id/tvLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Ngõ 92,Nguyễn Khánh Toàn,Cầu Giấy,Hà Nội" />
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvFood"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0962188659" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp">
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                <TextView
-                    android:id="@+id/tvPriceFood"
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0962188659" />
+                </LinearLayout>
+
+                <com.leekien.shipfoodfinal.customView.RobBoldText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0962188659" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                    android:layout_marginTop="20dp"
+                    android:text="Thông tin đơn hàng"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
-
-                <TextView
-                    android:id="@+id/tvPrice"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="0962188659" />
-            </LinearLayout>
+                    android:layout_marginTop="10dp">
 
-        </LinearLayout>
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
+
+                    <TextView
+                        android:id="@+id/tvFood"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0962188659" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
+
+                    <TextView
+                        android:id="@+id/tvPriceFood"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0962188659" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0962188659" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
 
 
     </LinearLayout>
 
 
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
@@ -191,6 +199,16 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="NHẬN ĐƠN"
+            android:visibility="gone"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:id="@+id/btnSubmit1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="HOÀN THÀNH"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 

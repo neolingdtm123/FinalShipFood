@@ -44,6 +44,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
     public void onBindViewHolder(@NonNull DonHangAdapter.ViewHolder viewHolder, final int i) {
         final Order order = orderList.get(i);
         viewHolder.tvDistance.setText(order.getDistance());
+        viewHolder.tvStatus.setText(order.getType());
         viewHolder.tvLocation.setText(order.getAddress());
         viewHolder.tvId.setText("Đơn #"+order.getId()+"");
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +69,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgShow;
-        TextView tvId,tvDistance,tvLocation;
+        TextView tvId,tvDistance,tvLocation,tvStatus;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -77,6 +78,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
             tvId = itemView.findViewById(R.id.tvId);
             tvLocation = itemView.findViewById(R.id.tvLocation);
             tvDistance = itemView.findViewById(R.id.tvDistance);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
             imgShow = itemView.findViewById(R.id.imgShow);
         }
     }

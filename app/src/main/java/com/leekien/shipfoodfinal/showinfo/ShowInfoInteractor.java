@@ -41,5 +41,12 @@ public class ShowInfoInteractor  implements ShowInfoManager.Interactor{
         call.enqueue(callback);
     }
 
+    @Override
+    public void updateEnd(Order order, Callback<ResponseBody> callback) {
+        int a = order.getId();
+        Call<ResponseBody> call = appAPI.updateEnd(a,order.getType(),order.getEndhour(),order.getEndtime());
+        call.enqueue(callback);
+    }
+
 
 }

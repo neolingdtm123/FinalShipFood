@@ -18,6 +18,15 @@ public class User implements Serializable {
     String name;
     String age;
     String phone;
+    String urlimage;
+
+    public String getUrlimage() {
+        return urlimage;
+    }
+
+    public void setUrlimage(String urlimage) {
+        this.urlimage = urlimage;
+    }
 
     public String getPhone() {
         return phone;

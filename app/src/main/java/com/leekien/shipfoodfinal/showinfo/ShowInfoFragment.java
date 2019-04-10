@@ -50,6 +50,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
@@ -82,11 +83,15 @@ public class ShowInfoFragment extends Fragment
     LatLng latlngMain;
     ShowInfoPresenter showInfoPresenter;
     RecyclerView rcvDonHang;
-    RobBoldText btnSubmit;
+    RobBoldText btnSubmit, btnSubmit1;
     Order order;
     List<LatLng> latLngList = new ArrayList<>();
     PolylineOptions polylineOptions = new PolylineOptions();
-    TextView tvDistance, tvNameCus, tvLocation, tvPhone, tvFood, tvPriceFood, tvPrice;
+    LinearLayout linearLayout;
+    TextView tvId, tvDistance, tvNameCus, tvLocation, tvPhone, tvFood, tvPriceFood, tvPrice;
+    String todayAsString = "";
+    String todayHour = "";
+    boolean check = true;
 
     @Nullable
     @Override
@@ -94,6 +99,7 @@ public class ShowInfoFragment extends Fragment
         View view = inflater.inflate(R.layout.layout_show_info_fragment, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         btnSubmit = view.findViewById(R.id.btnSubmit);
+        btnSubmit1 = view.findViewById(R.id.btnSubmit1);
         tvDistance = view.findViewById(R.id.tvDistance);
         tvNameCus = view.findViewById(R.id.tvNameCus);
         tvLocation = view.findViewById(R.id.tvLocation);
@@ -101,6 +107,8 @@ public class ShowInfoFragment extends Fragment
         tvFood = view.findViewById(R.id.tvFood);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
         tvPrice = view.findViewById(R.id.tvPrice);
+        tvId = view.findViewById(R.id.tvId);
+        linearLayout = view.findViewById(R.id.linear);
         showInfoPresenter = new ShowInfoPresenter(this);
         Bundle bundle = getArguments();
         if (!CommonActivity.isNullOrEmpty(bundle)) {
@@ -115,6 +123,7 @@ public class ShowInfoFragment extends Fragment
         tvNameCus.setText(order.getUserList().get(0).getName());
         tvLocation.setText(order.getAddress());
         tvPhone.setText(order.getUserList().get(0).getPhone());
+        tvId.setText("Đơn hàng" + " " + "#" + order.getId());
         String text = "";
         for (Food food : order.getFoodList()) {
             text += food.getName();
@@ -122,20 +131,31 @@ public class ShowInfoFragment extends Fragment
         tvPriceFood.setText("Giá sản phẩm:" + " " + order.getPricefood());
         tvPrice.setText("Tổng giá trị đơn hàng:" + " " + order.getPrice());
         tvFood.setText(text);
+        String pattern = "MM/dd/yyyy HH:mm:ss";
+        String pattern1 = "HH:mm";
+        DateFormat df = new SimpleDateFormat(pattern);
+        DateFormat df1 = new SimpleDateFormat(pattern1);
+        Date today = Calendar.getInstance().getTime();
+        todayAsString = df.format(today);
+        todayHour = df1.format(today);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String pattern = "MM/dd/yyyy HH:mm:ss";
-                String pattern1 = "HH:mm";
-                DateFormat df = new SimpleDateFormat(pattern);
-                DateFormat df1 = new SimpleDateFormat(pattern1);
-                Date today = Calendar.getInstance().getTime();
-                String todayAsString = df.format(today);
-                String todayHour = df1.format(today);
+                mGoogleMap.clear();
+                check = false;
                 order.setShiptime(todayAsString);
                 order.setShiphour(todayHour);
                 order.setType("Đã nhận hàng");
                 showInfoPresenter.accept(order);
+            }
+        });
+        btnSubmit1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                order.setEndtime(todayAsString);
+                order.setEndhour(todayHour);
+                order.setType("Đã hoàn thành");
+                showInfoPresenter.updatEnd(order);
             }
         });
         return view;
@@ -186,6 +206,19 @@ public class ShowInfoFragment extends Fragment
             }
         }
         showShopLocation();
+        String a = String.valueOf(mCurrentLocation.latitude);
+        String b = String.valueOf(mCurrentLocation.longitude);
+        if (check) {
+            if ("Đặt hàng".equals(order.getType())) {
+                showInfoPresenter.getInfo(a, b);
+                btnSubmit1.setVisibility(View.GONE);
+                btnSubmit.setVisibility(View.VISIBLE);
+            } else {
+                showInfoPresenter.getInfo(order.getCurrentlat(), order.getCurrentlon());
+                btnSubmit1.setVisibility(View.VISIBLE);
+                btnSubmit.setVisibility(View.GONE);
+            }
+        }
 
 
     }
@@ -226,7 +259,8 @@ public class ShowInfoFragment extends Fragment
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
         init();
-        showInfoPresenter.getInfo(order.getCurrentlat(), order.getCurrentlon());
+
+
     }
 
     @Override
@@ -237,14 +271,14 @@ public class ShowInfoFragment extends Fragment
 //                break;
 //                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
         }
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mCurrentLocation);
-        markerOptions.title("Vị trí khách hàng");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(mCurrentLocation);
+//        markerOptions.title("Vị trí khách hàng");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//        markerOptions.alpha(0.8f);
+//        markerOptions.rotation(0);
+//        Marker marker = mGoogleMap.addMarker(markerOptions);
+//        marker.showInfoWindow();
     }
 
     public void showCameraToPosition(LatLng position, float zoomLevel) {
@@ -298,7 +332,7 @@ public class ShowInfoFragment extends Fragment
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(20.997733, 105.841280);
+        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -332,12 +366,6 @@ public class ShowInfoFragment extends Fragment
         }
     }
 
-    public void showMarkerToGoogleMap(LatLng position) {
-        mGoogleMap.clear();
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_active));
-        mGoogleMap.addMarker(markerOptions);
-    }
 
     private LatLng locationMinMax(boolean positive, LatLng position, float radius) {
         double sign = positive ? 1 : -1;
@@ -363,6 +391,7 @@ public class ShowInfoFragment extends Fragment
 
     @Override
     public void directShop(List<String> points) {
+        polylineOptions = new PolylineOptions();
         for (String a : points) {
             polylineOptions.addAll(PolyUtil.decode(a));
         }
@@ -372,7 +401,14 @@ public class ShowInfoFragment extends Fragment
     }
 
     @Override
-    public void replace() {
+    public void replace(Order order) {
+        showInfoPresenter.getInfo(order.getCurrentlat(), order.getCurrentlon());
+        btnSubmit1.setVisibility(View.VISIBLE);
+        btnSubmit.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void end() {
+        getFragmentManager().popBackStack();
     }
 }

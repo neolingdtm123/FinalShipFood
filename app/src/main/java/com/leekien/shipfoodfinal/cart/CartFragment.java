@@ -51,6 +51,7 @@ import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.bo.Foodorder;
 import com.leekien.shipfoodfinal.bo.IOnBackPressed;
 import com.leekien.shipfoodfinal.bo.Order;
+import com.leekien.shipfoodfinal.bo.TypeFood;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoManager;
@@ -84,10 +85,6 @@ public class CartFragment extends Fragment
     private FragmentActivity myContext;
     CartPresenter cartPresenter;
     RecyclerView rcvDonHang;
-    Food food;
-    String lat;
-    String lon;
-    boolean check;
     int position = 0;
     TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice,tvSubmit;
     int priceDat = 0;
@@ -95,6 +92,7 @@ public class CartFragment extends Fragment
     String distanceMain;
     int dem = 0;
     int priceSum = 0;
+    List<TypeFood> typeFoodList;
 
     @Nullable
     @Override
@@ -109,28 +107,27 @@ public class CartFragment extends Fragment
         }.getType();
         listFood = new Gson().fromJson(json, type);
         Bundle bundle = getArguments();
-        if (!CommonActivity.isNullOrEmpty(bundle)) {
-            food = (Food) bundle.getSerializable("food");
-            if (!CommonActivity.isNullOrEmpty(listFood)) {
-                for (int i = 0; i < listFood.size(); i++) {
-                    if ((food.getId() == listFood.get(i).getId()) && (food.getIdTypeFood() == listFood.get(i).getIdTypeFood())) {
-                        check = false;
-                        position = i;
-                    } else {
-                        check = true;
-                    }
-                }
-                if (check) {
-                    listFood.add(food);
-                } else {
-                    listFood.set(position, food);
-                }
-
-            } else {
-                listFood = new ArrayList<>();
-                listFood.add(food);
-            }
-        }
+//        if (!CommonActivity.isNullOrEmpty(bundle)) {
+//            if (!CommonActivity.isNullOrEmpty(listFood)) {
+//                for (int i = 0; i < listFood.size(); i++) {
+//                    if ((food.getId() == listFood.get(i).getId()) && (food.getIdTypeFood() == listFood.get(i).getIdTypeFood())) {
+//                        check = false;
+//                        position = i;
+//                    } else {
+//                        check = true;
+//                    }
+//                }
+//                if (check) {
+//                    listFood.add(food);
+//                } else {
+//                    listFood.set(position, food);
+//                }
+//
+//            } else {
+//                listFood = new ArrayList<>();
+//                listFood.add(food);
+//            }
+//        }
         tvDistance = view.findViewById(R.id.tvDistance);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
         tvPriceDistance = view.findViewById(R.id.tvPriceDistance);
@@ -328,7 +325,7 @@ public class CartFragment extends Fragment
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(20.997733, 105.841280);
+        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop),Double.valueOf( MainActivity.lonShop));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));

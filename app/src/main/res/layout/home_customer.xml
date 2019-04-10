@@ -127,14 +127,6 @@
                     android:textColor="@color/orange"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tvShip"
-                    android:visibility="gone"
-                    android:layout_marginTop="10dp"
-                    android:text="Quản lí đơn hàng"
-                    android:textColor="@color/orange"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_marginTop="10dp"
@@ -158,8 +150,29 @@
                     >
 
                 </android.support.v7.widget.RecyclerView>
+                <com.leekien.shipfoodfinal.customView.RobButton
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/btnContinue"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm vào giỏ"
+                    android:visibility="visible"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/custom_button_tieptuc"/>
+                <com.leekien.shipfoodfinal.customView.RobButton
+                    android:visibility="gone"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/btnSubmit"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Xem đơn hàng"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/custom_button_tieptuc"/>
             </LinearLayout>
-
 
 
 

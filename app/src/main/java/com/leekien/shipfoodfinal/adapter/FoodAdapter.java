@@ -21,7 +21,8 @@ import butterknife.ButterKnife;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     List<Food> foodList;
     onReturn onReturn;
-    public FoodAdapter(List<Food> foodList,onReturn onReturn) {
+
+    public FoodAdapter(List<Food> foodList, onReturn onReturn) {
         this.foodList = foodList;
         this.onReturn = onReturn;
     }
@@ -36,20 +37,24 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder,final int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlfood()).into(viewHolder.imageView);
         viewHolder.textviewTitle.setText(food.getName());
-        if(CommonActivity.isNullOrEmpty(food.getPrice())){
+        if (CommonActivity.isNullOrEmpty(food.getPrice())) {
             viewHolder.textviewPrice.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             viewHolder.textviewPrice.setText(AppUtils.formatMoney(String.valueOf(food.getPrice())));
+        }
+        if (CommonActivity.isNullOrEmpty(food.getNumberDat())) {
+            viewHolder.tvNumberDat.setVisibility(View.GONE);
+        } else {
+            viewHolder.tvNumberDat.setText(food.getNumberDat() +" "+"phần");
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReturn.onReturn(food,i);
+                onReturn.onReturn(food, i);
             }
         });
     }
@@ -64,17 +69,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         ImageView imageView;
         TextView textviewTitle;
         TextView textviewPrice;
+        TextView tvNumberDat;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setTag(this);
-             textviewTitle = itemView.findViewById(R.id.textviewTitle);
-             textviewPrice = itemView.findViewById(R.id.textviewPrice);
-             imageView = itemView.findViewById(R.id.imageView);
+            textviewTitle = itemView.findViewById(R.id.textviewTitle);
+            textviewPrice = itemView.findViewById(R.id.textviewPrice);
+            tvNumberDat = itemView.findViewById(R.id.tvNumberDat);
+            imageView = itemView.findViewById(R.id.imageView);
 
         }
     }
+
     public interface onReturn {
         void onReturn(Food food, int groupPosition);
     }

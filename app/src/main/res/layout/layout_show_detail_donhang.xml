@@ -32,7 +32,7 @@
             android:layout_marginLeft="20dp"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:orientation="vertical"
             >
             <LinearLayout
@@ -73,6 +73,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Ngõ 92 Nguyễn Khánh Toàn,Cầu Giấy,Hà Nội"/>
+            <com.leekien.shipfoodfinal.customView.RobBoldText
+                android:textColor="#000000"
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
   <View
