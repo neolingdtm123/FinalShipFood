@@ -5,6 +5,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -25,6 +26,10 @@ public interface AppAPI {
     Call<ResponseBody> addUser(@Body User user);
     @GET("user/getusername")
     Call<List<String>> getUserName();
+    @FormUrlEncoded
+    @PUT("user/update/{id}")
+    Call<ResponseBody> updateUser(@Path("id") int id,@Field("name") String name,@Field("phone")
+            String phone,@Field("birthdate") String birthdate,@Field("location") String location);
     @GET("orders/getOrder/{id}")
     Call<Order> getOrder(@Path("id") int id);
     @POST("orders/add")
@@ -45,5 +50,9 @@ public interface AppAPI {
     Call<List<Order>> getSuccessOrder();
     @GET("orders/getWaitOrder/{id}")
     Call<Order> getWaitOrder(@Path("id") int id);
-
+    @FormUrlEncoded
+    @PUT("orders/updateSuccess/{id}")
+    Call<ResponseBody> updateOrderSuccess(@Path("id") int id,@Field("type") String type,@Field("content") String content);
+    @DELETE("orders/delete/{id}")
+    Call<ResponseBody> deleteOrder(@Path("id") int id);
 }

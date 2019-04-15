@@ -154,7 +154,7 @@ public class ShowInfoFragment extends Fragment
             public void onClick(View view) {
                 order.setEndtime(todayAsString);
                 order.setEndhour(todayHour);
-                order.setType("Đã hoàn thành");
+                order.setType("Ship hoàn thành");
                 showInfoPresenter.updatEnd(order);
             }
         });
@@ -402,6 +402,16 @@ public class ShowInfoFragment extends Fragment
 
     @Override
     public void replace(Order order) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        latlngMain = new LatLng(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon()));
+        markerOptions.position(latlngMain);
+        markerOptions.title("Vị trí khách hàng");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.alpha(0.8f);
+        markerOptions.rotation(0);
+        Marker marker = mGoogleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+        showCameraToPosition(latlngMain, 15f);
         showInfoPresenter.getInfo(order.getCurrentlat(), order.getCurrentlon());
         btnSubmit1.setVisibility(View.VISIBLE);
         btnSubmit.setVisibility(View.GONE);

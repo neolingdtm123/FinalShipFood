@@ -13,14 +13,17 @@ import retrofit2.Callback;
 
 public class StatusOrderManager {
     public interface View {
-        void showStatusOrder(List<StatusOrder> statusOrderList);
+        void showStatusOrder(List<StatusOrder> statusOrderList,Order order);
+        void cancelSuccess(String checkType);
     }
 
     public interface Presenter {
         void getOrder(int idOrder);
+        void deleteOrder(Order order,String checkType);
     }
 
     public interface Interactor {
         void getOrder(Callback<Order> callback, int idOrder);
+        void deleteOrder(Callback<ResponseBody> callback,Order order);
     }
 }

@@ -2,6 +2,7 @@ package com.leekien.shipfoodfinal.statusorder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,49 +52,39 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.PolyUtil;
+import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
-import com.leekien.shipfoodfinal.adapter.CartAdapter;
-import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.adapter.StatusOrderAdapter;
-import com.leekien.shipfoodfinal.bo.DonHang;
-import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
+import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.bo.StatusOrder;
+import com.leekien.shipfoodfinal.bo.onBackDialog;
 import com.leekien.shipfoodfinal.common.CommonActivity;
-import com.leekien.shipfoodfinal.customView.RobBoldText;
-import com.leekien.shipfoodfinal.home.DialogPriceFragment;
+import com.leekien.shipfoodfinal.home.DialogFragment;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
-import static com.leekien.shipfoodfinal.MainActivity.listFood;
 
 public class StatusOrderFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener,StatusOrderManager.View {
+        View.OnClickListener,StatusOrderManager.View, onBackDialog {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private LatLng mCurrentLocation;
     private LatLng mLatLngSearchPosition;
     SupportMapFragment m;
-    LatLng latlngMain;
     StatusOrderPresenter statusOrderPresenter;
     int idOrder;
     LinearLayout lnShow;
     LinearLayout lnNotShow;
     ImageView imgNotShow;
     RecyclerView rcvStatus;
+    Button btnContinue;
+    Button btnCancel;
+    Order orderMain;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,6 +95,8 @@ public class StatusOrderFragment extends Fragment
            idOrder =  bundle.getInt("key");
         }
         rcvStatus = view.findViewById(R.id.rcvStatus);
+        btnContinue = view.findViewById(R.id.btnContinue);
+        btnCancel = view.findViewById(R.id.btnCancel);
         lnShow = view.findViewById(R.id.lnShow);
         lnNotShow = view.findViewById(R.id.lnNotShow);
         imgNotShow = view.findViewById(R.id.imgNotShow);
@@ -119,12 +114,15 @@ public class StatusOrderFragment extends Fragment
                 lnShow.setVisibility(View.GONE);
             }
         });
+        btnContinue.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -225,19 +223,18 @@ public class StatusOrderFragment extends Fragment
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//
-//            case R.id.imgPosition:
-//                break;
-//                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
+            case R.id.btnContinue:
+                orderMain.setType("Đã hoàn thành");
+                statusOrderPresenter.deleteOrder(orderMain,"1");
+                break;
+            case R.id.btnCancel:
+                DialogReasonFragment pd = new DialogReasonFragment();
+                pd.setListener(this);
+                pd.show(getFragmentManager(), "MonthYearPickerDialog");
+                break;
+
         }
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mCurrentLocation);
-        markerOptions.title("Vị trí khách hàng");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
+
     }
 
     public void showCameraToPosition(LatLng position, float zoomLevel) {
@@ -253,62 +250,7 @@ public class StatusOrderFragment extends Fragment
         }
     }
 
-    public void init() {
-//        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if (actionId == EditorInfo.IME_ACTION_DONE
-////                        || actionId == EditorInfo.IME_ACTION_SEARCH
-////                        || event.getAction() == KeyEvent.ACTION_DOWN
-////                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-////                    if(edtSearch.getText().toString().isEmpty()){
-////                        button.setVisibility(View.GONE);
-////                    }
-////                    else {
-////                        searchLocation();
-////                    }
-////
-////                }
-////                return false;
-////            }
-////        });
-    }
 
-    private void searchLocation(String location) {
-        Geocoder geocoder = new Geocoder(getContext());
-        List<android.location.Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(location, 1);
-        } catch (IOException e) {
-        }
-        if (list.size() > 0) {
-            android.location.Address address = list.get(0);
-            directShip(address);
-//            button.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    task.execute();
-//                }
-//            });
-        }
-
-    }
-
-
-
-    private void directShip(android.location.Address address) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(address.getLatitude(),address.getLongitude());
-        markerOptions.position(latlngMain);
-        markerOptions.title("Vị trí cần tìm");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-        showCameraToPosition(latlngMain, 15f);
-
-    }
     private void showShopLocation(){
         MarkerOptions markerOptions = new MarkerOptions();
         LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop),Double.valueOf( MainActivity.lonShop));
@@ -321,59 +263,18 @@ public class StatusOrderFragment extends Fragment
         marker.showInfoWindow();
     };
 
-    public void showCameraToPosition(LatLngBounds bounds, int padding) {
-        if (mGoogleMap != null) {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-        }
-    }
 
-    public void showCircleToGoogleMap(LatLng position, float radius) {
-        if (position == null) {
-            return;
-        }
-        CircleOptions circleOptions = new CircleOptions();
-        circleOptions.center(position);
-        //Radius in meters
-        circleOptions.radius(radius * 1000);
-        circleOptions.fillColor(getResources().getColor(R.color.circle_on_map));
-        circleOptions.strokeColor(getResources().getColor(R.color.circle_on_map));
-        circleOptions.strokeWidth(0);
-        if (mGoogleMap != null) {
-            mGoogleMap.addCircle(circleOptions);
-        }
-    }
-
-    public void showMarkerToGoogleMap(LatLng position) {
-        mGoogleMap.clear();
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_active));
-        mGoogleMap.addMarker(markerOptions);
-    }
-
-    private LatLng locationMinMax(boolean positive, LatLng position, float radius) {
-        double sign = positive ? 1 : -1;
-        double dx = (sign * radius * 1000) / 6378000 * (180 / Math.PI);
-        double lat = position.latitude + dx;
-        double lon = position.longitude + dx / Math.cos(position.latitude * Math.PI / 180);
-        return new LatLng(lat, lon);
-    }
-
-
-
-    public void replaceFragment(Fragment fragment, String tag) {
-        try {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.lnlayout, fragment, tag);
-            fragmentTransaction.addToBackStack(tag);
-            fragmentTransaction.commitAllowingStateLoss();
-
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-    }
     @Override
-    public void showStatusOrder(List<StatusOrder> statusOrderList) {
+    public void showStatusOrder(List<StatusOrder> statusOrderList, Order order) {
+        orderMain = order;
+        if(statusOrderList.get(2).isCheck()){
+            btnContinue.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.GONE);
+        }
+        else {
+            btnCancel.setVisibility(View.VISIBLE);
+            btnContinue.setVisibility(View.GONE);
+        }
         StatusOrderAdapter statusOrderAdapter = new StatusOrderAdapter(statusOrderList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -382,6 +283,28 @@ public class StatusOrderFragment extends Fragment
 
     }
 
+    @Override
+    public void cancelSuccess(String checkType) {
+        if("2".equals(checkType)){
+            Toast.makeText(getActivity(),getString(R.string.success_cancel),Toast.LENGTH_SHORT).show();
+        }
+
+        MainActivity.listFood = new ArrayList<>();
+        SharedPreferences myPreferences
+                = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor myEditor = myPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(MainActivity.listFood);
+        myEditor.putString("MyObject", json);
+        myEditor.commit();
+        getFragmentManager().popBackStack("homeframent",0);
+    }
 
 
+    @Override
+    public void back(String s) {
+        orderMain.setType("Đã hủy");
+        orderMain.setContentcancel(s);
+        statusOrderPresenter.deleteOrder(orderMain,"2");
+    }
 }

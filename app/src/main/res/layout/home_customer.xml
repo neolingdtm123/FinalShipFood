@@ -18,6 +18,17 @@
                 android:id="@+id/layout_header"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <ImageView
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:id="@+id/imgAccount"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:padding="12dp"
+                    app:srcCompat="@drawable/ic_user_account_box"
+                    />
 
                 <com.leekien.shipfoodfinal.customView.RobBoldText
                     android:id="@+id/tv_header"
@@ -159,7 +170,8 @@
                     android:layout_height="wrap_content"
                     android:text="Thêm vào giỏ"
                     android:visibility="visible"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@drawable/custom_button_tieptuc"/>
                 <com.leekien.shipfoodfinal.customView.RobButton
                     android:visibility="gone"
@@ -170,7 +182,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Xem đơn hàng"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:background="@drawable/custom_button_tieptuc"/>
             </LinearLayout>
 

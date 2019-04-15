@@ -108,6 +108,15 @@ public class Order implements Serializable {
     String shiptime;
     String shiphour;
     String endhour;
+    String contentcancel;
+
+    public String getContentcancel() {
+        return contentcancel;
+    }
+
+    public void setContentcancel(String contentcancel) {
+        this.contentcancel = contentcancel;
+    }
 
     public String getShiphour() {
         return shiphour;

@@ -8,6 +8,7 @@ import com.leekien.shipfoodfinal.common.CommonActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,14 +52,20 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
                         }
                     }
                 }
-                else if("Đã hoàn thành".equals(order.getType())){
+                else if("Ship hoàn thành".equals(order.getType())){
                     statusOrder3.setCheck(true);
                     statusOrder2.setCheck(true);
+                    for(User user : order.getUserList()){
+                        if("ship".equals(user.getType())){
+                            statusOrder2.setShipinfo(user.getName());
+                        }
+                    }
+                    statusOrder2.setTime(order.getShiphour());
                 }
                 list.add(statusOrder1);
                 list.add(statusOrder2);
                 list.add(statusOrder3);
-                view.showStatusOrder(list);
+                view.showStatusOrder(list,order);
             }
 
             @Override
@@ -67,5 +74,23 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
             }
         };
         interactor.getOrder(callback,idOrder);
+    }
+
+    @Override
+    public void deleteOrder(Order order, final String checkType) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    view.cancelSuccess(checkType);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.deleteOrder(callback,order);
     }
 }

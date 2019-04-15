@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#C4C4C4">
+
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Chọn lý do bạn hủy đơn hàng"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/layout_cancel_item"></android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/orange"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:id="@+id/tvCancel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Hủy đơn hàng"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</LinearLayout>

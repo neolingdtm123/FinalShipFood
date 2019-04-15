@@ -74,6 +74,7 @@
             tools:listitem="@layout/layout_item_status_order"></android.support.v7.widget.RecyclerView>
 
         <com.leekien.shipfoodfinal.customView.RobButton
+            android:visibility="gone"
             android:id="@+id/btnContinue"
             android:layout_width="200dp"
             android:layout_height="40dp"
@@ -81,6 +82,16 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/custom_button_tieptuc"
             android:text="Hoàn thành"
+            android:textColor="#FFFFFF" />
+        <com.leekien.shipfoodfinal.customView.RobButton
+            android:visibility="gone"
+            android:id="@+id/btnCancel"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/custom_button_tieptuc"
+            android:text="Hủy đơn hàng"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>

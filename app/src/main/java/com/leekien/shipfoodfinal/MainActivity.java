@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.adapter.SlideImageAdapter;
@@ -21,13 +22,13 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends AppCompatActivity {
-    List<String> list = new ArrayList<String>();
-    List<TypeFood> typeFoodList = new ArrayList<>();
+//    List<String> list = new ArrayList<String>();
+//    List<TypeFood> typeFoodList = new ArrayList<>();
     static public User user;
     static public   List<Food> listFood =  new ArrayList<>();
-    static public String latShop = "18.773998";
-    static public String lonShop = "105.646607";
-
+    static public String latShop = "20.997791";
+    static public String lonShop = "105.841122";
+    static public boolean checkOrder =true;
     @Override
     protected void onStop() {
         super.onStop();
@@ -43,25 +44,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("kiennk");
-        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
-            super.onBackPressed();
-        }
-//        int count = getSupportFragmentManager().getBackStackEntryCount();
-//
-//        if (count == 0 ) {
+//        Fragment fragment = getSupportFragmentManager().findFragmentByTag("kiennk");
+//        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
 //            super.onBackPressed();
-//            finish();
-//            //additional code
-//        } else {
-//            getSupportFragmentManager().popBackStack();
 //        }
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 1 || count ==2 ) {
+            finish();
+            //additional code
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         LoginFragment fragment = new LoginFragment();
 
         fragmentTransaction.add(R.id.lnlayout, fragment);
-
+        fragmentTransaction.addToBackStack("loginFragment");
         fragmentTransaction.commit();
 //        ViewPager viewPager = findViewById(R.id.viewPager);
 //        CircleIndicator circleIndicator = findViewById(R.id.circleIndicator);

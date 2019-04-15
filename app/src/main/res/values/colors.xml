@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="orange">#FFA41B</color>
     <color name="circle_on_map">#305bafa2</color>
+    <color name="gray_3">#D3D3D3</color>
+    <color name="gray_1">#F5F5F5</color>
 </resources>

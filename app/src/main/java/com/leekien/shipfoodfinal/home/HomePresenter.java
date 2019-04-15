@@ -66,18 +66,18 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
     }
 
     @Override
-    public void getWaitOrder(int iduser, final Food food) {
+    public void getWaitOrder(int iduser) {
         Callback<Order> callback = new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 if (response.isSuccessful()) {
-                    view.checkFragment(response.body(), food);
+                    view.checkFragment(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
-                view.checkFragment(null, food);
+                view.checkFragment(null);
             }
         };
         interactor.getWaitOrder(callback, iduser);

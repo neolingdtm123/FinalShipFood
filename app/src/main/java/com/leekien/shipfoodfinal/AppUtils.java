@@ -24,7 +24,7 @@ public class AppUtils {
         try {
             Double value = Double.parseDouble(input);
             DecimalFormat formatter = new DecimalFormat("#,###,###.####");
-            return formatter.format(value);
+            return formatter.format(value)+" đ";
 //            String[] split = formatter.format(value).split("\\.");
 //            return split[0].replaceAll(",", ".") + (split.length > 1 ? "," + split[1] : "");
         } catch (Exception e) {

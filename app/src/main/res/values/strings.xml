@@ -7,4 +7,7 @@
     <string name="error_username">Tên người dùng đã được sử dụng,vui lòng chọn lại tên khác!</string>
     <string name="wrong_login">Bạn đã nhập sai tài khoản hoặc mật khẩu!</string>
     <string name="success_login">Đăng nhập thành công!</string>
+    <string name="success_cancel">Huỷ đơn hàng thành công!</string>
+    <string name="error_order">Bạn đang còn đơn hàng chưa hoàn thành!</string>
+    <string name="error_order_change">Bạn không được thay đổi đơn hàng chưa hoàn thành!</string>
 </resources>

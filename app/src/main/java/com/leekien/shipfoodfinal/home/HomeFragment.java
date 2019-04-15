@@ -57,6 +57,7 @@ import com.leekien.shipfoodfinal.cart.CartFragment;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.customView.RobEditText;
+import com.leekien.shipfoodfinal.logout.LogOutFragment;
 import com.leekien.shipfoodfinal.shipper.ShipperFragment;
 import com.leekien.shipfoodfinal.signup.SignUpFragment;
 import com.leekien.shipfoodfinal.statusorder.StatusOrderFragment;
@@ -90,10 +91,12 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     ImageView btnSearch;
     Button btnContinue;
     Button btnSubmit;
+    ImageView imgAccount;
     User user;
     View mLayoutSearch;
     int position = 0;
-    int iđOrder;
+    int idOrder;
+    Order orderMain;
     TypeFoodAdapter typeFoodAdapter;
     FoodAdapter foodAdapter;
     List<TypeFood> typeFoodList = new ArrayList<>();
@@ -101,8 +104,6 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     TypeFoodAdapter.onReturn mOnReturn;
     FoodAdapter.onReturn mOnReturn1;
     HomePresenter presenter;
-
-
     @SuppressLint("RestrictedApi")
     @Nullable
     @Override
@@ -113,6 +114,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
             user = (User) bundle.getSerializable("user");
         }
         viewFlipper = view.findViewById(R.id.viewFlipper);
+        imgAccount = view.findViewById(R.id.imgAccount);
         btnSearch = view.findViewById(R.id.btn_search);
         tvCancel = view.findViewById(R.id.tv_cancel);
         mLayoutSearch = view.findViewById(R.id.layout_search);
@@ -136,6 +138,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
             changeData();
             setAdapter();
         }
+        presenter.getWaitOrder(user.getId());
         initData();
         if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
             tvNumber.setVisibility(View.VISIBLE);
@@ -177,6 +180,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         btnSearch.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
+        imgAccount.setOnClickListener(this);
         return view;
     }
 
@@ -211,7 +215,15 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     @Override
     public void nextFragment(Food food) {
         if ("user".equals(user.getType())) {
-            presenter.getWaitOrder(user.getId(),food);
+            if (idOrder == -1) {
+                DialogFragment pd = new DialogFragment();
+                pd.setListener(this, food);
+                pd.show(getFragmentManager(), "MonthYearPickerDialog");
+            } else {
+                CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_order)
+                        , getString(R.string.shipfood)).show();
+            }
+
         }
 
     }
@@ -226,21 +238,35 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     }
 
     @Override
-    public void checkFragment(Order order, Food food) {
-        if(CommonActivity.isNullOrEmpty(order)){
+    public void checkFragment(Order order) {
+        if ("user".equals(user.getType())) {
+            if (CommonActivity.isNullOrEmpty(order)) {
+                MainActivity.checkOrder = true;
+                idOrder = -1;
+                btnSubmit.setVisibility(View.GONE);
+                btnContinue.setVisibility(View.VISIBLE);
+
+            } else {
+                MainActivity.listFood = new ArrayList<>();
+                MainActivity.listFood.addAll(order.getFoodList());
+//                SharedPreferences myPreferences
+//                        = PreferenceManager.getDefaultSharedPreferences(getContext());
+//                SharedPreferences.Editor myEditor = myPreferences.edit();
+//                Gson gson = new Gson();
+//                String json = gson.toJson(listFood);
+//                myEditor.putString("MyObject", json);
+//                myEditor.commit();
+                MainActivity.checkOrder = false;
+                orderMain = order;
+                idOrder = order.getId();
+                btnSubmit.setVisibility(View.VISIBLE);
+                btnContinue.setVisibility(View.GONE);
+            }
+        } else {
             btnSubmit.setVisibility(View.GONE);
-            btnContinue.setVisibility(View.VISIBLE);
-            DialogFragment pd = new DialogFragment();
-            pd.setListener(this, food);
-            pd.show(getFragmentManager(), "MonthYearPickerDialog");
-        }
-        else {
-            iđOrder = order.getId();
-            CommonActivity.createAlertDialog(getActivity(),"Bạn đang còn đơn hàng chưa hoàn thành"
-                    ,getString(R.string.shipfood)).show();
-            btnSubmit.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.GONE);
         }
+
     }
 
 
@@ -319,12 +345,19 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 List<Food> list = typeFoodList.get(position).getFoodList();
                 foodList = new ArrayList<>();
-                for (Food food : list) {
-                    if (food.getName().contains(charSequence)) {
-                        foodList.add(food);
+                if (charSequence == null) {
+                    foodList.addAll(list);
+                } else {
+                    for (Food food : list) {
+                        if (food.getName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                            foodList.add(food);
+                        }
                     }
                 }
-                foodAdapter.notifyDataSetChanged();
+                foodAdapter = new FoodAdapter(foodList, mOnReturn1);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false);
+                rcvFood.setLayoutManager(gridLayoutManager);
+                rcvFood.setAdapter(foodAdapter);
             }
 
             @Override
@@ -374,19 +407,27 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                 gotoHeader();
                 break;
             case R.id.btnContinue:
-                CartFragment cartFragment = new CartFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("listfood", (Serializable) typeFoodList);
-                cartFragment.setArguments(bundle);
-                replaceFragment(cartFragment, "kiennk");
+                if(!CommonActivity.isNullOrEmpty(MainActivity.listFood)){
+                    CartFragment cartFragment = new CartFragment();
+                    replaceFragment(cartFragment, "kiennk");
+                }
+                else {
+                    CommonActivity.createAlertDialog(getActivity(),"Trong giỏ chưa có gì,vui lòng chọn mặt hàng"
+                            ,getString(R.string.shipfood)).show();
+                }
+
                 break;
             case R.id.btnSubmit:
-                StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
-                Bundle bundle1 = new Bundle();
-                bundle1.putInt("key", iđOrder);
-                statusOrderFragment.setArguments(bundle1);
-                replaceFragment(statusOrderFragment, "kiennk");
+                CartFragment cartFragment1 = new CartFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("idOrder", (idOrder));
+                bundle.putSerializable("order", orderMain);
+                cartFragment1.setArguments(bundle);
+                replaceFragment(cartFragment1, "kiennk");
                 break;
+            case R.id.imgAccount:
+                LogOutFragment logOutFragment = new LogOutFragment();
+                replaceFragment(logOutFragment,"logOutFragment");
         }
     }
 
@@ -410,15 +451,15 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     }
 
     @Override
-    public void back(List<Food> listfood) {
+    public void back(String s) {
         changeData();
-        SharedPreferences myPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor myEditor = myPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(listFood);
-        myEditor.putString("MyObject", json);
-        myEditor.commit();
+//        SharedPreferences myPreferences
+//                = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        SharedPreferences.Editor myEditor = myPreferences.edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(listFood);
+//        myEditor.putString("MyObject", json);
+//        myEditor.commit();
         setAdapter();
     }
 

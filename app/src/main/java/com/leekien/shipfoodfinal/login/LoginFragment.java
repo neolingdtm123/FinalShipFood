@@ -1,6 +1,8 @@
 package com.leekien.shipfoodfinal.login;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
@@ -21,6 +24,7 @@ import com.leekien.shipfoodfinal.shipper.ShipperFragment;
 import com.leekien.shipfoodfinal.signup.SignUpFragment;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class LoginFragment extends Fragment implements LoginManager.View, View.OnClickListener {
     LoginPresenter presenter;
@@ -52,6 +56,14 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
     public void showInfoLogin(String code, User user) {
         if ("0".equals(code)) {
             Toast.makeText(getContext(), getString(R.string.success_login), Toast.LENGTH_LONG).show();
+            MainActivity.listFood = new ArrayList<>();
+            SharedPreferences myPreferences
+                    = PreferenceManager.getDefaultSharedPreferences(getContext());
+            SharedPreferences.Editor myEditor = myPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(MainActivity.listFood);
+            myEditor.putString("MyObject", json);
+            myEditor.commit();
             MainActivity.user = user;
             if("ship".equals(user.getType())){
                 ShipperFragment shipperFragment = new ShipperFragment();

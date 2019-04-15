@@ -109,7 +109,7 @@ public class DialogFragment extends  android.support.v4.app.DialogFragment {
                                 }
                             }
                         }
-                        listener.back(MainActivity.listFood);
+                        listener.back(null);
                     }
                 })
                 .setNegativeButton("Hủy bỏ", new DialogInterface.OnClickListener() {

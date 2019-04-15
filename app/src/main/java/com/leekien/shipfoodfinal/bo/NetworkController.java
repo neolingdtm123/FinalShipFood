@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkController {
     private static volatile AppAPI appAPI;
-    public static final String IP_ADDRESS = "192.168.1.5";
+    public static final String IP_ADDRESS = "192.168.1.19";
     public static final String BASE_URL = "http://"+IP_ADDRESS+":8080/";
     public static final String BASE_URL_IMAGE = "http://"+IP_ADDRESS+":8080/lazada";
 

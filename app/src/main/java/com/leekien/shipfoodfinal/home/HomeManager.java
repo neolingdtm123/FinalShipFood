@@ -17,11 +17,11 @@ public class HomeManager {
         void showTypeFood(List<TypeFood> list, TypeFoodAdapter.onReturn onReturn,FoodAdapter.onReturn onReturn1,int position);
         void nextFragment(Food food );
         void upLoadImage();
-        void checkFragment(Order order,Food food);
+        void checkFragment(Order order);
     }
     interface Presenter{
         void getFood(User user,int position);
-        void getWaitOrder(int iduser,Food food);
+        void getWaitOrder(int iduser);
 
     }
     interface Interactor{

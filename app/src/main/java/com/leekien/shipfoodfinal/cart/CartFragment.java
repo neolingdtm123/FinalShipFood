@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.CartAdapter;
@@ -80,19 +81,16 @@ public class CartFragment extends Fragment
     private LatLng mCurrentLocation;
     private LatLng mLatLngSearchPosition;
     SupportMapFragment m;
-    AsyncTask<Void, Void, Void> task;
-    LatLng latlngMain;
-    private FragmentActivity myContext;
     CartPresenter cartPresenter;
     RecyclerView rcvDonHang;
-    int position = 0;
-    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice,tvSubmit;
+    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice, tvSubmit, tvShow;
     int priceDat = 0;
     double priceDistance = 0;
     String distanceMain;
     int dem = 0;
     int priceSum = 0;
-    List<TypeFood> typeFoodList;
+    int idOrder;
+    Order order;
 
     @Nullable
     @Override
@@ -100,62 +98,51 @@ public class CartFragment extends Fragment
         View view = inflater.inflate(R.layout.layout_cart_fragment, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         cartPresenter = new CartPresenter(this);
-        SharedPreferences myPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String json = myPreferences.getString("MyObject", "");
-        Type type = new TypeToken<List<Food>>() {
-        }.getType();
-        listFood = new Gson().fromJson(json, type);
+//        SharedPreferences myPreferences
+//                = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        String json = myPreferences.getString("MyObject", "");
+//        Type type = new TypeToken<List<Food>>() {
+//        }.getType();
+//        listFood = new Gson().fromJson(json, type);
         Bundle bundle = getArguments();
-//        if (!CommonActivity.isNullOrEmpty(bundle)) {
-//            if (!CommonActivity.isNullOrEmpty(listFood)) {
-//                for (int i = 0; i < listFood.size(); i++) {
-//                    if ((food.getId() == listFood.get(i).getId()) && (food.getIdTypeFood() == listFood.get(i).getIdTypeFood())) {
-//                        check = false;
-//                        position = i;
-//                    } else {
-//                        check = true;
-//                    }
-//                }
-//                if (check) {
-//                    listFood.add(food);
-//                } else {
-//                    listFood.set(position, food);
-//                }
-//
-//            } else {
-//                listFood = new ArrayList<>();
-//                listFood.add(food);
-//            }
-//        }
+        if (!CommonActivity.isNullOrEmpty(bundle)) {
+            idOrder = bundle.getInt("idOrder");
+            order = (Order) bundle.getSerializable("order");
+        }
         tvDistance = view.findViewById(R.id.tvDistance);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
         tvPriceDistance = view.findViewById(R.id.tvPriceDistance);
         tvSubmit = view.findViewById(R.id.tvSubmit);
         tvSumPrice = view.findViewById(R.id.tvSumPrice);
+        tvShow = view.findViewById(R.id.tvShow);
+        if (MainActivity.checkOrder) {
+            tvSubmit.setVisibility(View.VISIBLE);
+        } else {
+            tvShow.setVisibility(View.VISIBLE);
+        }
         cartPresenter.showList();
         tvSubmit.setOnClickListener(this);
-
+        tvShow.setOnClickListener(this);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    SharedPreferences myPreferences
-                            = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    SharedPreferences.Editor myEditor = myPreferences.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listFood);
-                    myEditor.putString("MyObject", json);
-                    myEditor.commit();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        view.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                if (i == KeyEvent.KEYCODE_BACK) {
+//                     myPreferences
+//                            = PreferenceManager.getDefaultSharedPreferences(getContext());
+//                    SharedPreferences.Editor myEditor = myPreferences.edit();
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson(listFood);
+//                    myEditor.putString("MyObject", json);
+//                    myEditor.commit();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         return view;
     }
@@ -181,7 +168,6 @@ public class CartFragment extends Fragment
         super.onStop();
         mGoogleApiClient.disconnect();
     }
-
 
 
     @Override
@@ -267,15 +253,14 @@ public class CartFragment extends Fragment
             case R.id.tvSubmit:
                 addNewOrder();
                 break;
+            case R.id.tvShow:
+                StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("key", idOrder);
+                statusOrderFragment.setArguments(bundle);
+                replaceFragment(statusOrderFragment, "statusOrderFragment");
+                break;
         }
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mCurrentLocation);
-        markerOptions.title("Vị trí khách hàng");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
     }
 
     private void addNewOrder() {
@@ -287,19 +272,19 @@ public class CartFragment extends Fragment
         DateFormat df1 = new SimpleDateFormat(pattern1);
         Date today = Calendar.getInstance().getTime();
         String todayAsString = df.format(today);
-        String todayHour =df1.format(today);
+        String todayHour = df1.format(today);
         order.setCreatetime(todayAsString);
         order.setCreatehour(todayHour);
         order.setCurrentlat(String.valueOf(mCurrentLocation.latitude));
         order.setCurrentlon(String.valueOf(mCurrentLocation.longitude));
         order.setFoodList(listFood);
         order.setDistance(distanceMain);
-        order.setPrice(priceSum +"");
-        order.setPricefood(priceDat+"");
+        order.setPrice(priceSum + "");
+        order.setPricefood(priceDat + "");
         List<User> list = new ArrayList<>();
         list.add(MainActivity.user);
         order.setUserList(list);
-        cartPresenter.newOrder(order,listFood);
+        cartPresenter.newOrder(order, listFood);
 
     }
 
@@ -316,16 +301,10 @@ public class CartFragment extends Fragment
         }
     }
 
-    public void init() {
-//
-    }
-
-
-
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop),Double.valueOf( MainActivity.lonShop));
+        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -334,46 +313,6 @@ public class CartFragment extends Fragment
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
     }
-
-    ;
-
-    public void showCameraToPosition(LatLngBounds bounds, int padding) {
-        if (mGoogleMap != null) {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
-        }
-    }
-
-    public void showCircleToGoogleMap(LatLng position, float radius) {
-        if (position == null) {
-            return;
-        }
-        CircleOptions circleOptions = new CircleOptions();
-        circleOptions.center(position);
-        //Radius in meters
-        circleOptions.radius(radius * 1000);
-        circleOptions.fillColor(getResources().getColor(R.color.circle_on_map));
-        circleOptions.strokeColor(getResources().getColor(R.color.circle_on_map));
-        circleOptions.strokeWidth(0);
-        if (mGoogleMap != null) {
-            mGoogleMap.addCircle(circleOptions);
-        }
-    }
-
-    public void showMarkerToGoogleMap(LatLng position) {
-        mGoogleMap.clear();
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_active));
-        mGoogleMap.addMarker(markerOptions);
-    }
-
-    private LatLng locationMinMax(boolean positive, LatLng position, float radius) {
-        double sign = positive ? 1 : -1;
-        double dx = (sign * radius * 1000) / 6378000 * (180 / Math.PI);
-        double lat = position.latitude + dx;
-        double lon = position.longitude + dx / Math.cos(position.latitude * Math.PI / 180);
-        return new LatLng(lat, lon);
-    }
-
 
 
     public void replaceFragment(Fragment fragment, String tag) {
@@ -399,22 +338,34 @@ public class CartFragment extends Fragment
         Double myDouble = Double.valueOf(priceDistance);
         dem = myDouble.intValue();
         tvPriceDistance.setText(dem + " " + "đ");
-        tvPriceFood.setText(String.valueOf(showPrice() + " " + "đ"));
-        priceSum=0;
-        priceSum= showPrice() + dem;
-        tvSumPrice.setText(showPrice() + dem + " " + "đ");
+        if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
+            tvPriceFood.setText(AppUtils.formatMoney(order.getPricefood()));
+            priceSum = 0;
+            priceSum = Integer.parseInt(order.getPricefood()) + dem;
+            tvSumPrice.setText(AppUtils.formatMoney(priceSum + ""));
+        } else {
+            tvPriceFood.setText(AppUtils.formatMoney(showPrice() + ""));
+            priceSum = 0;
+            tvSumPrice.setText(AppUtils.formatMoney(showPrice() + dem + ""));
+        }
+
     }
 
     @Override
     public void showRemoveList(CartAdapter.onReturn onReturn, int position) {
-        listFood.remove(position);
-        CartAdapter cartAdapter = new CartAdapter(listFood, onReturn);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rcvDonHang.setLayoutManager(layoutManager);
-        rcvDonHang.setAdapter(cartAdapter);
-        tvPriceFood.setText(showPrice() + " " + "đ");
-        tvSumPrice.setText(showPrice() + dem + " " + "đ");
+        if (!MainActivity.checkOrder) {
+            CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_order_change), getString(R.string.shipfood)).show();
+        } else {
+            listFood.remove(position);
+            CartAdapter cartAdapter = new CartAdapter(listFood, onReturn);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            rcvDonHang.setLayoutManager(layoutManager);
+            rcvDonHang.setAdapter(cartAdapter);
+            tvPriceFood.setText(AppUtils.formatMoney(showPrice() + ""));
+            tvSumPrice.setText(AppUtils.formatMoney(showPrice() + dem + ""));
+        }
+
     }
 
     @Override
@@ -429,30 +380,32 @@ public class CartFragment extends Fragment
 
     @Override
     public void showSuccess(int id) {
-        Toast.makeText(getContext(),"Đặt hàng thành công",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
         StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("key",id);
+        bundle.putInt("key", id);
         statusOrderFragment.setArguments(bundle);
-        replaceFragment(statusOrderFragment,"statusOrderFragment");
+        replaceFragment(statusOrderFragment, "statusOrderFragment");
     }
 
     @Override
     public boolean onBackPressed() {
-        SharedPreferences myPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor myEditor = myPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(listFood);
-        myEditor.putString("MyObject", json);
-        myEditor.commit();
+//        SharedPreferences myPreferences
+//                = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        SharedPreferences.Editor myEditor = myPreferences.edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(listFood);
+//        myEditor.putString("MyObject", json);
+//        myEditor.commit();
         return false;
     }
 
     public int showPrice() {
-        priceDat =0;
+        priceDat = 0;
         for (Food food : listFood) {
-            priceDat += Integer.parseInt(food.getPriceDat());
+            if (!CommonActivity.isNullOrEmpty(food.getPriceDat())) {
+                priceDat += Integer.parseInt(food.getPriceDat());
+            }
         }
         return priceDat;
     }

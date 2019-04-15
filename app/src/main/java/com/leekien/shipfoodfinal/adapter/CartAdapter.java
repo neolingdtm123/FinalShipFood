@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.squareup.picasso.Picasso;
@@ -37,6 +38,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final CartAdapter.ViewHolder viewHolder, final int i) {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlfood()).into(viewHolder.imageView);
+        if(!MainActivity.checkOrder){
+            viewHolder.tvPrice.setVisibility(View.GONE);
+            viewHolder.textView.setVisibility(View.GONE);
+            viewHolder.imgXoa.setVisibility(View.GONE);
+        }
         viewHolder.tvName.setText(food.getName());
         viewHolder.tvPrice.setText(food.getPriceDat()+ " "+"đ");
         viewHolder.textView.setText(food.getNumberDat() + " " +"phần");
