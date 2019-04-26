@@ -2,16 +2,22 @@ package com.leekien.shipfoodfinal.statusorder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -58,6 +64,7 @@ import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.StatusOrderAdapter;
 import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.bo.StatusOrder;
+import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.bo.onBackDialog;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.home.DialogFragment;
@@ -69,7 +76,7 @@ import java.util.List;
 public class StatusOrderFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener,StatusOrderManager.View, onBackDialog {
+        View.OnClickListener, StatusOrderManager.View, onBackDialog {
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -85,14 +92,22 @@ public class StatusOrderFragment extends Fragment
     Button btnContinue;
     Button btnCancel;
     Order orderMain;
+    Context context;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_status_order, container, false);
-        statusOrderPresenter= new StatusOrderPresenter(this);
+        statusOrderPresenter = new StatusOrderPresenter(this);
         Bundle bundle = getArguments();
-        if(!CommonActivity.isNullOrEmpty(bundle)){
-           idOrder =  bundle.getInt("key");
+        if (!CommonActivity.isNullOrEmpty(bundle)) {
+            idOrder = bundle.getInt("key");
         }
         rcvStatus = view.findViewById(R.id.rcvStatus);
         btnContinue = view.findViewById(R.id.btnContinue);
@@ -165,7 +180,6 @@ public class StatusOrderFragment extends Fragment
         }
 
 
-
     }
 
     @Override
@@ -225,7 +239,7 @@ public class StatusOrderFragment extends Fragment
         switch (v.getId()) {
             case R.id.btnContinue:
                 orderMain.setType("Đã hoàn thành");
-                statusOrderPresenter.deleteOrder(orderMain,"1");
+                statusOrderPresenter.deleteOrder(orderMain, "1");
                 break;
             case R.id.btnCancel:
                 DialogReasonFragment pd = new DialogReasonFragment();
@@ -250,10 +264,22 @@ public class StatusOrderFragment extends Fragment
         }
     }
 
-
-    private void showShopLocation(){
+    private void showShipLocation(double lat, double lon) {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop),Double.valueOf( MainActivity.lonShop));
+        LatLng latLng = new LatLng(lat, lon);
+        markerOptions.position(latLng);
+        markerOptions.title("Vị trí của ship");
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmapFromView(R.drawable.ic_scooter)));
+        markerOptions.alpha(0.8f);
+        markerOptions.rotation(0);
+        Marker marker = mGoogleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+    }
+
+
+    private void showShopLocation() {
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -261,17 +287,26 @@ public class StatusOrderFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-    };
+    }
+
+    ;
 
 
     @Override
     public void showStatusOrder(List<StatusOrder> statusOrderList, Order order) {
+        mGoogleMap.clear();
+        showShopLocation();
+        for (User user : order.getUserList()) {
+            if ("ship".equals(user.getType())) {
+                showShipLocation(Double.valueOf(user.getCurrentlat()), Double.valueOf(user.getCurrentlon()));
+            }
+        }
+
         orderMain = order;
-        if(statusOrderList.get(2).isCheck()){
+        if (statusOrderList.get(2).isCheck()) {
             btnContinue.setVisibility(View.VISIBLE);
             btnCancel.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             btnCancel.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.GONE);
         }
@@ -285,19 +320,19 @@ public class StatusOrderFragment extends Fragment
 
     @Override
     public void cancelSuccess(String checkType) {
-        if("2".equals(checkType)){
-            Toast.makeText(getActivity(),getString(R.string.success_cancel),Toast.LENGTH_SHORT).show();
+        if ("2".equals(checkType)) {
+            Toast.makeText(getActivity(), getString(R.string.success_cancel), Toast.LENGTH_SHORT).show();
         }
 
         MainActivity.listFood = new ArrayList<>();
-        SharedPreferences myPreferences
-                = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor myEditor = myPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(MainActivity.listFood);
-        myEditor.putString("MyObject", json);
-        myEditor.commit();
-        getFragmentManager().popBackStack("homeframent",0);
+//        SharedPreferences myPreferences
+//                = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        SharedPreferences.Editor myEditor = myPreferences.edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(MainActivity.listFood);
+//        myEditor.putString("MyObject", json);
+//        myEditor.commit();
+        getFragmentManager().popBackStack("homeframent", 0);
     }
 
 
@@ -305,6 +340,24 @@ public class StatusOrderFragment extends Fragment
     public void back(String s) {
         orderMain.setType("Đã hủy");
         orderMain.setContentcancel(s);
-        statusOrderPresenter.deleteOrder(orderMain,"2");
+        statusOrderPresenter.deleteOrder(orderMain, "2");
+    }
+
+    private Bitmap getMarkerBitmapFromView(@DrawableRes int resId) {
+        View customMarkerView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.layout_custom_shipper, null);
+        ImageView markerImageView = (ImageView) customMarkerView.findViewById(R.id.profile_image);
+        markerImageView.setImageResource(resId);
+        customMarkerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        customMarkerView.layout(0, 0, customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight());
+        customMarkerView.buildDrawingCache();
+        Bitmap returnedBitmap = Bitmap.createBitmap(customMarkerView.getMeasuredWidth(), customMarkerView.getMeasuredHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        canvas.drawColor(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        Drawable drawable = customMarkerView.getBackground();
+        if (drawable != null)
+            drawable.draw(canvas);
+        customMarkerView.draw(canvas);
+        return returnedBitmap;
     }
 }

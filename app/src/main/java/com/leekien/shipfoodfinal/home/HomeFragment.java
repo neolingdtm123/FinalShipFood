@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     RecyclerView rcvType;
     FloatingActionButton fab, fabGioHang, fabAccount;
     boolean check = false;
-    TextView tvChu, tvNumber;
+    TextView tvChu, tvNumber,tvNumber1;
     ImageView btnSearch;
     Button btnContinue;
     Button btnSubmit;
@@ -131,27 +131,34 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         fabAccount = view.findViewById(R.id.fabAccount);
         tvChu = view.findViewById(R.id.tvChu);
         tvNumber = view.findViewById(R.id.tvNumber);
+        tvNumber1 = view.findViewById(R.id.tvNumber1);
         presenter = new HomePresenter(HomeFragment.this);
-        if (CommonActivity.isNullOrEmpty(typeFoodList)) {
+        if (CommonActivity.isNullOrEmpty(typeFoodList)|| MainActivity.checkAddFood) {
             presenter.getFood(user, position);
         } else {
             changeData();
             setAdapter();
         }
+        MainActivity.checkAddFood= false;
         presenter.getWaitOrder(user.getId());
         initData();
         if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
+            tvNumber1.setVisibility(View.VISIBLE);
             tvNumber.setVisibility(View.VISIBLE);
             tvNumber.setText(MainActivity.listFood.size() + "");
+            tvNumber1.setText(MainActivity.listFood.size() + "");
         } else {
             tvNumber.setVisibility(View.GONE);
+            tvNumber1.setVisibility(View.GONE);
         }
         if (!check) {
             fabGioHang.setVisibility(View.GONE);
             fabAccount.setVisibility(View.GONE);
+            tvNumber1.setVisibility(View.GONE);
         } else {
             fabGioHang.setVisibility(View.VISIBLE);
             fabAccount.setVisibility(View.VISIBLE);
+            tvNumber1.setVisibility(View.VISIBLE);
         }
         fab.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("RestrictedApi")
@@ -160,10 +167,12 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                 if (!check) {
                     fabGioHang.setVisibility(View.VISIBLE);
                     fabAccount.setVisibility(View.VISIBLE);
+                    tvNumber1.setVisibility(View.VISIBLE);
                     check = true;
                 } else {
                     fabGioHang.setVisibility(View.GONE);
                     fabAccount.setVisibility(View.GONE);
+                    tvNumber1.setVisibility(View.GONE);
                     check = false;
                 }
             }
@@ -174,6 +183,13 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                 CartFragment cartFragment = new CartFragment();
                 check = false;
                 replaceFragment(cartFragment, "kiennk");
+            }
+        });
+        fabAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogOutFragment logOutFragment = new LogOutFragment();
+                replaceFragment(logOutFragment,"logOutFragment");
             }
         });
         tvCancel.setOnClickListener(this);
@@ -249,6 +265,15 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
             } else {
                 MainActivity.listFood = new ArrayList<>();
                 MainActivity.listFood.addAll(order.getFoodList());
+                if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
+                    tvNumber1.setVisibility(View.GONE);
+                    tvNumber.setVisibility(View.VISIBLE);
+                    tvNumber.setText(MainActivity.listFood.size() + "");
+                    tvNumber1.setText(MainActivity.listFood.size() + "");
+                } else {
+                    tvNumber.setVisibility(View.GONE);
+                    tvNumber1.setVisibility(View.GONE);
+                }
 //                SharedPreferences myPreferences
 //                        = PreferenceManager.getDefaultSharedPreferences(getContext());
 //                SharedPreferences.Editor myEditor = myPreferences.edit();

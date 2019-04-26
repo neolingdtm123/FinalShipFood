@@ -10,6 +10,7 @@ import com.leekien.shipfoodfinal.signup.SignUpManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,8 +44,19 @@ public class ShipperPresenter implements ShipperManager.Presenter, DonHangAdapte
     }
 
     @Override
-    public void getLocation(String location) {
+    public void getLocation(int id,Double lat,Double lon) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.getLocation(id,lat,lon,callback);
     }
 
     @Override

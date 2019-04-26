@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
@@ -24,7 +25,7 @@ import java.util.Calendar;
  * Created by leekien on 9/21/2018.
  */
 
-public class DialogFragment extends  android.support.v4.app.DialogFragment {
+public class DialogFragment extends android.support.v4.app.DialogFragment {
     TextView textViewTitle;
     ImageView imageViewCong;
     ImageView imageViewTru;
@@ -35,6 +36,7 @@ public class DialogFragment extends  android.support.v4.app.DialogFragment {
     boolean check = false;
     private onBackDialog listener;
     private Food food;
+
     public void setListener(onBackDialog listener, Food food) {
         this.listener = listener;
         this.food = food;
@@ -45,16 +47,18 @@ public class DialogFragment extends  android.support.v4.app.DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        final Calendar cal = Calendar.getInstance();
-        View dialog = inflater.inflate(R.layout.layout_dialog_fragment,null);
+        View dialog = inflater.inflate(R.layout.layout_dialog_fragment, null);
         textView = dialog.findViewById(R.id.textview);
         tvPrice = dialog.findViewById(R.id.tvPrice);
         textViewTitle = dialog.findViewById(R.id.tvTitle);
         imageViewCong = dialog.findViewById(R.id.imgCong);
         imageViewTru = dialog.findViewById(R.id.imgTru);
-        btnContinue = dialog.findViewById(R.id.btnContinue);
-        textView.setText("1");
+        btnContinue = dialog.findViewById(R.id.btnSubmit);
+        if (CommonActivity.isNullOrEmpty(food.getNumberDat())) {
+            textView.setText("1");
+        } else {
+            textView.setText(food.getNumberDat());
+        }
         textViewTitle.setText(food.getName());
         tvPrice.setText(food.getPrice() + " " + "đ");
         num = Integer.parseInt(textView.getText().toString());
@@ -64,59 +68,54 @@ public class DialogFragment extends  android.support.v4.app.DialogFragment {
             public void onClick(View view) {
                 num = Integer.parseInt(textView.getText().toString()) + 1;
                 textView.setText(num + "");
-                tvPrice.setText(food.getPrice() * num + " " + "đ");
+                tvPrice.setText(AppUtils.formatMoney(food.getPrice() * num + ""));
                 food.setPriceDat(food.getPrice() * num + "");
             }
         });
         imageViewTru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                num = Integer.parseInt(textView.getText().toString()) - 1;
-                textView.setText(num + "");
-                tvPrice.setText(food.getPrice() * num + " " + "đ");
-                food.setPriceDat(food.getPrice() * num + "");
+                if (Integer.parseInt(textView.getText().toString()) > 0) {
+                    num = Integer.parseInt(textView.getText().toString()) - 1;
+                    textView.setText(num + "");
+                    tvPrice.setText(AppUtils.formatMoney(food.getPrice() * num + ""));
+                    food.setPriceDat(food.getPrice() * num + "");
+                }
             }
         });
-
-
-        builder.setView(dialog)
-                // Add action buttons
-                .setPositiveButton("Tiếp tục", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (num != 0) {
-                            food.setNumberDat(num + "");
-                            if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
-                                for (int i = 0; i < MainActivity.listFood.size(); i++) {
-                                    if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
-                                            == food.getIdTypeFood()) {
-                                        MainActivity.listFood.set(i,food);
-                                        check = true;
-                                    }
-                                }
-
-                            }
-                            if(!check){
-                                MainActivity.listFood.add(food);
-                            }
-                        } else {
-                            if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
-                                for (int i = 0; i < MainActivity.listFood.size(); i++) {
-                                    if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
-                                            == food.getIdTypeFood()) {
-                                        MainActivity.listFood.remove(i);
-                                    }
-                                }
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (num != 0) {
+                    food.setNumberDat(num + "");
+                    if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
+                        for (int i = 0; i < MainActivity.listFood.size(); i++) {
+                            if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
+                                    == food.getIdTypeFood()) {
+                                MainActivity.listFood.set(i, food);
+                                check = true;
                             }
                         }
-                        listener.back(null);
+
                     }
-                })
-                .setNegativeButton("Hủy bỏ", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        DialogFragment.this.getDialog().cancel();
+                    if (!check) {
+                        MainActivity.listFood.add(food);
                     }
-                });
+                } else {
+                    if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
+                        for (int i = 0; i < MainActivity.listFood.size(); i++) {
+                            if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
+                                    == food.getIdTypeFood()) {
+                                MainActivity.listFood.remove(i);
+                            }
+                        }
+                    }
+                }
+                listener.back(null);
+                dismiss();
+            }
+        });
+        builder.setView(dialog);
         return builder.create();
     }
 

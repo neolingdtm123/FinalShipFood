@@ -39,6 +39,24 @@ public class User implements Serializable {
     String location;
     String type;
     String birthdate;
+    String currentlat;
+    String currentlon;
+
+    public String getCurrentlat() {
+        return currentlat;
+    }
+
+    public void setCurrentlat(String currentlat) {
+        this.currentlat = currentlat;
+    }
+
+    public String getCurrentlon() {
+        return currentlon;
+    }
+
+    public void setCurrentlon(String currentlon) {
+        this.currentlon = currentlon;
+    }
 
     public String getBirthdate() {
         return birthdate;

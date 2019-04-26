@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.common.CommonActivity;
@@ -118,6 +119,7 @@ public class AddFoodFragment extends Fragment implements AddFoodManager.View, Vi
           dialog.show();
         }
         else {
+
             Food food = new Food();
             food.setUrlfood(downloadUrl.toString());
             food.setName(edtName.getText().toString());
@@ -130,6 +132,7 @@ public class AddFoodFragment extends Fragment implements AddFoodManager.View, Vi
     @Override
     public void showSuccess() {
         Toast.makeText(getContext(),"Thêm món ăn thành công",Toast.LENGTH_LONG).show();
+        MainActivity.checkAddFood= true;
         getFragmentManager().popBackStack();
     }
 

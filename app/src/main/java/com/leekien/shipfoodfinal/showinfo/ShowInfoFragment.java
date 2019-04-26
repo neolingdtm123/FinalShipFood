@@ -59,7 +59,7 @@ import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.customView.RobBoldText;
-import com.leekien.shipfoodfinal.home.DialogPriceFragment;
+
 
 
 import java.io.IOException;

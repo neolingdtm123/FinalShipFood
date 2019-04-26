@@ -35,7 +35,7 @@
     <LinearLayout
         android:id="@+id/lnShow"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="20dp"
         android:background="#FFFFFF"
@@ -69,7 +69,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rcvStatus"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:layout_marginTop="10dp"
             tools:listitem="@layout/layout_item_status_order"></android.support.v7.widget.RecyclerView>
 
@@ -89,7 +89,7 @@
             android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/custom_button_tieptuc"
             android:text="Hủy đơn hàng"
             android:textColor="#FFFFFF" />

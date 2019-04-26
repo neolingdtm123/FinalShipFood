@@ -30,6 +30,10 @@ public interface AppAPI {
     @PUT("user/update/{id}")
     Call<ResponseBody> updateUser(@Path("id") int id,@Field("name") String name,@Field("phone")
             String phone,@Field("birthdate") String birthdate,@Field("location") String location);
+    @FormUrlEncoded
+    @PUT("user/updateLocation/{id}")
+    Call<ResponseBody> updateLocation(@Path("id") int id,@Field("lat") String lat,@Field("lon")
+            String lon);
     @GET("orders/getOrder/{id}")
     Call<Order> getOrder(@Path("id") int id);
     @POST("orders/add")

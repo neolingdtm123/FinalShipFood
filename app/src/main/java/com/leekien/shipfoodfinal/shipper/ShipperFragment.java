@@ -2,7 +2,9 @@ package com.leekien.shipfoodfinal.shipper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.graphics.Color;
@@ -12,6 +14,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -36,6 +39,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,12 +55,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
 import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.bo.Order;
+//import com.leekien.shipfoodfinal.service.PushLocationService;
+import com.leekien.shipfoodfinal.service.PushLocationService;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoFragment;
 import com.leekien.shipfoodfinal.successorder.SuccessOrderFragment;
 
@@ -66,12 +73,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static com.leekien.shipfoodfinal.MainActivity.mServiceIntent;
+
 public class ShipperFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, ShipperManager.View {
 
-
+    private FusedLocationProviderClient client;
     private GoogleMap mGoogleMap;
     private PolylineOptions polyline;
     private ArrayList<LatLng> listStep;
@@ -100,7 +110,7 @@ public class ShipperFragment extends Fragment
         View view = inflater.inflate(R.layout.layout_don_hang, container, false);
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         imgLocation = view.findViewById(R.id.imgLocation);
-        tvHistory= view.findViewById(R.id.tvHistory);
+        tvHistory = view.findViewById(R.id.tvHistory);
         imgLocation.setOnClickListener(this);
         shipperPresenter = new ShipperPresenter(this);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
@@ -108,11 +118,13 @@ public class ShipperFragment extends Fragment
                 .addApi(LocationServices.API)
                 .build();
         initViews();
+        Intent intent = new Intent(getContext(), PushLocationService.class);
+        context.startService(intent);
         tvHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SuccessOrderFragment successOrderFragment = new SuccessOrderFragment();
-                replaceFragment(successOrderFragment,"successOrderFragment");
+                replaceFragment(successOrderFragment, "successOrderFragment");
             }
         });
         return view;
@@ -162,6 +174,9 @@ public class ShipperFragment extends Fragment
                 showCameraToPosition(mCurrentLocation, 13f);
             }
         }
+
+        shipperPresenter.getLocation(MainActivity.user.getId(), mCurrentLocation.latitude, mCurrentLocation.longitude);
+
         showShopLocation();
     }
 
@@ -215,13 +230,14 @@ public class ShipperFragment extends Fragment
             }
         };
         mHandler.post(runnable);
-
+//        Intent intent = new Intent(getContext(), PushLocationService.class);
+//        context.startService(intent);
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id){
+        switch (id) {
             case R.id.imgLocation:
                 showCurrentPosition();
                 break;
@@ -333,8 +349,8 @@ public class ShipperFragment extends Fragment
 
     @Override
     public void showListDonHang(List<Order> list, DonHangAdapter.onReturn onReturn) {
-        for(Order order :list){
-            order.setAddress(getAddress(Double.valueOf(order.getCurrentlat()),Double.valueOf(order.getCurrentlon())));
+        for (Order order : list) {
+            order.setAddress(getAddress(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon())));
         }
         DonHangAdapter donHangAdapter = new DonHangAdapter(list, onReturn);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -350,7 +366,7 @@ public class ShipperFragment extends Fragment
         MarkerOptions markerOptions = new MarkerOptions();
         latlngMain = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
         markerOptions.position(latlngMain);
-        markerOptions.title("Vị trí cần tìm");
+        markerOptions.title("Vị trí khách hàng");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         markerOptions.alpha(0.8f);
         markerOptions.rotation(0);
@@ -382,13 +398,14 @@ public class ShipperFragment extends Fragment
         }
 
     }
+
     public String getAddress(double lat, double lng) {
-        String add ="";
+        String add = "";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
-             add = obj.getAddressLine(0);
+            add = obj.getAddressLine(0);
 //            add = add + "\n" + obj.getCountryName();
 //            add = add + "\n" + obj.getCountryCode();
 //            add = add + "\n" + obj.getAdminArea();
@@ -403,5 +420,45 @@ public class ShipperFragment extends Fragment
 
         }
         return add;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i("Service status", "Not running");
+        return false;
+    }
+
+    public void getLocation() {
+        requestPermission();
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        client.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    MainActivity.lat = location.getLatitude();
+                    MainActivity.lon = location.getLongitude();
+                }
+            }
+        });
+    }
+
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 }

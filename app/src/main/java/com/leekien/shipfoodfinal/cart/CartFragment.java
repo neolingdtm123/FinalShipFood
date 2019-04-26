@@ -334,10 +334,19 @@ public class CartFragment extends Fragment
         distanceMain = distance;
         tvDistance.setText(distance);
         String[] a = distance.split("km");
-        priceDistance = 10000 * Double.parseDouble(a[0]);
-        Double myDouble = Double.valueOf(priceDistance);
+        double gia =0;
+        if(Double.parseDouble(a[0]) <=2){
+            gia =0;
+        }
+        else if(Double.parseDouble(a[0]) <=5){
+            gia = 20000;
+        }
+        else {
+            gia = 20000 + 5000*(Double.parseDouble(a[0])-5);
+        }
+        Double myDouble = Double.valueOf(gia);
         dem = myDouble.intValue();
-        tvPriceDistance.setText(dem + " " + "đ");
+        tvPriceDistance.setText(AppUtils.formatMoney(dem+""));
         if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
             tvPriceFood.setText(AppUtils.formatMoney(order.getPricefood()));
             priceSum = 0;
@@ -375,14 +384,15 @@ public class CartFragment extends Fragment
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcvDonHang.setLayoutManager(layoutManager);
         rcvDonHang.setAdapter(cartAdapter);
-
     }
 
     @Override
     public void showSuccess(int id) {
         Toast.makeText(getContext(), "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+        MainActivity.checkOrder = false;
         StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
         Bundle bundle = new Bundle();
+        idOrder =id;
         bundle.putInt("key", id);
         statusOrderFragment.setArguments(bundle);
         replaceFragment(statusOrderFragment, "statusOrderFragment");

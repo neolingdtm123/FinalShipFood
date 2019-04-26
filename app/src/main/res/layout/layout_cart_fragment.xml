@@ -14,11 +14,13 @@
         android:layout_marginBottom="50dp"
         android:orientation="vertical">
 
-        <TextView
+
+        <com.leekien.shipfoodfinal.customView.RobBoldText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đơn hàng vừa được đặt"
-            android:textColor="@color/orange" />
+            android:text="Thông tin đơn hàng"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <fragment
             android:id="@+id/map"
@@ -42,11 +44,12 @@
                     android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
 
-                <View
+                <ImageView
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/test" />
+                    android:src="@drawable/test"
+                    android:layerType="software"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,16 +99,18 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="1.2"
+                        android:layout_weight="1.5"
                         android:gravity="right"
                       />
                 </LinearLayout>
 
-                <View
+
+                <ImageView
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/test" />
+                    android:src="@drawable/test"
+                    android:layerType="software"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

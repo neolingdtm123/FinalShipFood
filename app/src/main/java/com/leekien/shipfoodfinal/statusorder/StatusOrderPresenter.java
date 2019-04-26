@@ -28,44 +28,47 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Order order = response.body();
-                List<StatusOrder> list = new ArrayList<>();
-                StatusOrder statusOrder1 = new StatusOrder();
-                StatusOrder statusOrder2 = new StatusOrder();
-                StatusOrder statusOrder3 = new StatusOrder();
-                statusOrder1.setCheck(true);
-                statusOrder1.setStatus("Đặt hàng");
-                statusOrder1.setTime(order.getCreatehour());
-                statusOrder2.setStatus("Đã nhận hàng");
-                statusOrder3.setStatus("Đã hoàn thành");
+                if(!CommonActivity.isNullOrEmpty(order)){
+                    List<StatusOrder> list = new ArrayList<>();
+                    StatusOrder statusOrder1 = new StatusOrder();
+                    StatusOrder statusOrder2 = new StatusOrder();
+                    StatusOrder statusOrder3 = new StatusOrder();
+                    statusOrder1.setCheck(true);
+                    statusOrder1.setStatus("Đặt hàng");
+                    statusOrder1.setTime(order.getCreatehour());
+                    statusOrder2.setStatus("Đã nhận hàng");
+                    statusOrder3.setStatus("Đã hoàn thành");
 
-                if(!CommonActivity.isNullOrEmpty(order.getEndtime())){
-                    statusOrder3.setTime(order.getEndhour());
-                }
-                if("Đã nhận hàng".equals(order.getType())){
-                    if(!CommonActivity.isNullOrEmpty(order.getShiphour())){
+                    if(!CommonActivity.isNullOrEmpty(order.getEndtime())){
+                        statusOrder3.setTime(order.getEndhour());
+                    }
+                    if("Đã nhận hàng".equals(order.getType())){
+                        if(!CommonActivity.isNullOrEmpty(order.getShiphour())){
+                            statusOrder2.setTime(order.getShiphour());
+                        }
+                        statusOrder2.setCheck(true);
+                        for(User user : order.getUserList()){
+                            if("ship".equals(user.getType())){
+                                statusOrder2.setShipinfo(user.getName());
+                            }
+                        }
+                    }
+                    else if("Ship hoàn thành".equals(order.getType())){
+                        statusOrder3.setCheck(true);
+                        statusOrder2.setCheck(true);
+                        for(User user : order.getUserList()){
+                            if("ship".equals(user.getType())){
+                                statusOrder2.setShipinfo(user.getName());
+                            }
+                        }
                         statusOrder2.setTime(order.getShiphour());
                     }
-                    statusOrder2.setCheck(true);
-                    for(User user : order.getUserList()){
-                        if("ship".equals(user.getType())){
-                            statusOrder2.setShipinfo(user.getName());
-                        }
-                    }
+                    list.add(statusOrder1);
+                    list.add(statusOrder2);
+                    list.add(statusOrder3);
+                    view.showStatusOrder(list,order);
                 }
-                else if("Ship hoàn thành".equals(order.getType())){
-                    statusOrder3.setCheck(true);
-                    statusOrder2.setCheck(true);
-                    for(User user : order.getUserList()){
-                        if("ship".equals(user.getType())){
-                            statusOrder2.setShipinfo(user.getName());
-                        }
-                    }
-                    statusOrder2.setTime(order.getShiphour());
-                }
-                list.add(statusOrder1);
-                list.add(statusOrder2);
-                list.add(statusOrder3);
-                view.showStatusOrder(list,order);
+
             }
 
             @Override
