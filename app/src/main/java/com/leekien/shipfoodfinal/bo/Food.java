@@ -10,6 +10,15 @@ public class Food implements Serializable {
     String urlfood;
     int price;
 
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
+    String discount;
     public Food() {
     }
 

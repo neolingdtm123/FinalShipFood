@@ -15,12 +15,16 @@ import retrofit2.Callback;
 
 public class AddFoodManager {
     interface View{
-        void showSuccess();
+        void showSuccess(String check);
     }
     interface Presenter{
         void addFood(Food food);
+        void updateFood(Food food);
+        void deleteFood(int id);
     }
     interface Interactor{
         void addFood(Callback<ResponseBody> callback,Food food);
+        void updateFood(Callback<ResponseBody> callback,Food food);
+        void deleteFood(Callback<ResponseBody> callback,int id);
     }
 }

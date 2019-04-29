@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
@@ -43,8 +44,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             viewHolder.textView.setVisibility(View.GONE);
             viewHolder.imgXoa.setVisibility(View.GONE);
         }
+        int discount;
+        if ("0".equals(food.getDiscount())) {
+            viewHolder.tvDiscount.setVisibility(View.GONE);
+            discount = 100;
+        } else {
+            discount = Integer.parseInt(food.getDiscount());
+            viewHolder.tvDiscount.setVisibility(View.VISIBLE);
+            viewHolder.tvDiscount.setText("-"+food.getDiscount()+"%");
+        }
         viewHolder.tvName.setText(food.getName());
-        viewHolder.tvPrice.setText(food.getPriceDat()+ " "+"đ");
+        viewHolder.tvPrice.setText(AppUtils.formatMoney(Integer.parseInt(food.getPriceDat()) * (100-discount) / 100+""));
         viewHolder.textView.setText(food.getNumberDat() + " " +"phần");
 
         viewHolder.imgXoa.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +76,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView,imgCong,imgTru,imgXoa;
-        TextView tvName,tvPrice,textView;
+        TextView tvName,tvPrice,textView,tvDiscount;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -79,6 +89,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             textView = itemView.findViewById(R.id.textview);
             tvPrice = itemView.findViewById(R.id.tvPrice);
             imgXoa = itemView.findViewById(R.id.imgXoa);
+            tvDiscount = itemView.findViewById(R.id.tvDiscount);
         }
     }
 

@@ -43,7 +43,7 @@
             android:textColor="#FFFFFF"
             android:layout_alignParentTop="true"
             android:elevation="7dp"
-            android:text="5"/>
+        />
     </RelativeLayout>
 
         />

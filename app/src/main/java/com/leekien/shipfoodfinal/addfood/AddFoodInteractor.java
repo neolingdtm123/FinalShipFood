@@ -18,4 +18,16 @@ public class AddFoodInteractor implements AddFoodManager.Interactor {
         Call<ResponseBody> call = appAPI.addFood(food);
         call.enqueue(callback);
     }
+
+    @Override
+    public void updateFood(Callback<ResponseBody> callback, Food food) {
+        Call<ResponseBody> call = appAPI.updateFood(food.getId(),food.getName(),String.valueOf(food.getPrice()),food.getUrlfood(),food.getDiscount());
+        call.enqueue(callback);
+    }
+
+    @Override
+    public void deleteFood(Callback<ResponseBody> callback, int id) {
+        Call<ResponseBody> call = appAPI.deleteFood(id);
+        call.enqueue(callback);
+    }
 }

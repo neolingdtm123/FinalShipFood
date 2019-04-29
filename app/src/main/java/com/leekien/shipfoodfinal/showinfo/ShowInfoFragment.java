@@ -131,10 +131,10 @@ public class ShowInfoFragment extends Fragment
         tvPriceFood.setText("Giá sản phẩm:" + " " + order.getPricefood());
         tvPrice.setText("Tổng giá trị đơn hàng:" + " " + order.getPrice());
         tvFood.setText(text);
-        String pattern = "MM/dd/yyyy HH:mm:ss";
+        String pattern = "dd/MM/yyyy";
         String pattern1 = "HH:mm";
-        DateFormat df = new SimpleDateFormat(pattern);
-        DateFormat df1 = new SimpleDateFormat(pattern1);
+        final DateFormat df = new SimpleDateFormat(pattern);
+        final DateFormat df1 = new SimpleDateFormat(pattern1);
         Date today = Calendar.getInstance().getTime();
         todayAsString = df.format(today);
         todayHour = df1.format(today);
@@ -152,6 +152,9 @@ public class ShowInfoFragment extends Fragment
         btnSubmit1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Date today = Calendar.getInstance().getTime();
+                todayAsString = df.format(today);
+                todayHour = df1.format(today);
                 order.setEndtime(todayAsString);
                 order.setEndhour(todayHour);
                 order.setType("Ship hoàn thành");

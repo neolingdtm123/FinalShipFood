@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <com.leekien.shipfoodfinal.customView.RobBoldText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lịch sử khách hàng"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_margin="20dp"/>
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1.5"
+            android:layout_gravity="right">
+            <com.leekien.shipfoodfinal.customView.RobLightText
+                android:id="@+id/tvfromDate"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:layout_width="0dp"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="16/04/2005"/>
+            <ImageView
+                android:id="@+id/imgFromDate"
+                android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_arrow_up"/>
+        </LinearLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_arrow_pointing_to_right"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1.5"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <com.leekien.shipfoodfinal.customView.RobLightText
+                android:id="@+id/tvEndDate"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:layout_width="0dp"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:text="16/04/2005"/>
+            <ImageView
+                android:id="@+id/imgEndDate"
+                android:layout_width="0dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/ic_arrow_up"/>
+        </LinearLayout>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvHistory"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

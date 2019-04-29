@@ -22,6 +22,12 @@ public interface AppAPI {
     Call<List<TypeFood>> getFood();
     @POST("foods/add")
     Call<ResponseBody> addFood(@Body Food food);
+    @FormUrlEncoded
+    @PUT("foods/update/{id}")
+    Call<ResponseBody> updateFood(@Path("id") int id,@Field("name") String name,@Field("price")
+            String price,@Field("url") String url,@Field("discount") String discount);
+    @DELETE("foods/delete/{id}")
+    Call<ResponseBody> deleteFood(@Path("id") int id);
     @POST("user/register")
     Call<ResponseBody> addUser(@Body User user);
     @GET("user/getusername")
@@ -42,6 +48,8 @@ public interface AppAPI {
     Call<ResponseBody> addFoodOrder(@Body Foodorder foodorder);
     @GET("orders/getall/{id}")
     Call<List<Order>> getAllOrder(@Path("id") int id);
+    @GET("orders/getOrderCus/{id}")
+    Call<List<Order>> getOrderCus(@Path("id") int id);
     @FormUrlEncoded
     @PUT("orders/update/{id}")
     Call<ResponseBody> updateOrder(@Path("id") int id,@Field("type") String type,@Field("shiphour")
@@ -59,4 +67,5 @@ public interface AppAPI {
     Call<ResponseBody> updateOrderSuccess(@Path("id") int id,@Field("type") String type,@Field("content") String content);
     @DELETE("orders/delete/{id}")
     Call<ResponseBody> deleteOrder(@Path("id") int id);
+
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leekien.shipfoodfinal.AppUtils;
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
 import com.leekien.shipfoodfinal.common.CommonActivity;
@@ -21,10 +22,12 @@ import butterknife.ButterKnife;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     List<Food> foodList;
     onReturn onReturn;
+    onEdit onEdit;
 
-    public FoodAdapter(List<Food> foodList, onReturn onReturn) {
+    public FoodAdapter(List<Food> foodList, onReturn onReturn,onEdit onEdit) {
         this.foodList = foodList;
         this.onReturn = onReturn;
+        this.onEdit= onEdit;
     }
 
 
@@ -41,6 +44,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlfood()).into(viewHolder.imageView);
         viewHolder.textviewTitle.setText(food.getName());
+        if(!CommonActivity.isNullOrEmpty(MainActivity.user)){
+            if("admin".equals(MainActivity.user.getType())){
+                viewHolder.imgEdit.setVisibility(View.VISIBLE);
+                viewHolder.tvNumberDat.setVisibility(View.GONE);
+            }
+            else {
+                viewHolder.imgEdit.setVisibility(View.GONE);
+                viewHolder.tvNumberDat.setVisibility(View.VISIBLE);
+            }
+        }
+        if ("0".equals(food.getDiscount())) {
+            viewHolder.tvDiscount.setVisibility(View.GONE);
+        } else {
+            viewHolder.tvDiscount.setText("-"+food.getDiscount()+"%");
+        }
         if (CommonActivity.isNullOrEmpty(food.getPrice())) {
             viewHolder.textviewPrice.setVisibility(View.GONE);
         } else {
@@ -57,6 +75,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
                 onReturn.onReturn(food, i);
             }
         });
+        viewHolder.imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEdit.onEdit(food, i);
+            }
+        });
     }
 
     @Override
@@ -66,10 +90,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        ImageView imageView,imgEdit;
         TextView textviewTitle;
         TextView textviewPrice;
-        TextView tvNumberDat;
+        TextView tvNumberDat,tvDiscount;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -78,13 +102,16 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             textviewTitle = itemView.findViewById(R.id.textviewTitle);
             textviewPrice = itemView.findViewById(R.id.textviewPrice);
             tvNumberDat = itemView.findViewById(R.id.tvNumberDat);
+            tvDiscount = itemView.findViewById(R.id.tvDiscount);
             imageView = itemView.findViewById(R.id.imageView);
-
+            imgEdit = itemView.findViewById(R.id.imgEdit);
         }
     }
 
     public interface onReturn {
         void onReturn(Food food, int groupPosition);
     }
-
+    public interface onEdit {
+        void onEdit(Food food, int groupPosition);
+    }
 }

@@ -31,13 +31,12 @@ import java.util.List;
  * Created by leekien on 9/21/2018.
  */
 
-public class DialogReasonFragment extends  android.support.v4.app.DialogFragment implements ReasonAdapter.onReturn {
-   RecyclerView rcvCancel;
-   TextView tvCancel;
+public class DialogReasonFragment extends android.support.v4.app.DialogFragment implements ReasonAdapter.onReturn {
+    RecyclerView rcvCancel;
+    TextView tvCancel;
     List<Reason> list = new ArrayList<>();
-   String context;
+    String context;
     private onBackDialog listener;
-    private Food food;
     public void setListener(onBackDialog listener) {
         this.listener = listener;
     }
@@ -48,21 +47,21 @@ public class DialogReasonFragment extends  android.support.v4.app.DialogFragment
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        final View dialog = inflater.inflate(R.layout.layout_reason,null);
+        final View dialog = inflater.inflate(R.layout.layout_reason, null);
         rcvCancel = dialog.findViewById(R.id.rcvCancel);
         tvCancel = dialog.findViewById(R.id.tvCancel);
         builder.setView(dialog);
         //add data reason
         List<Reason> reasonList = new ArrayList<>();
-        Reason reason1 = new Reason(false,"Suy nghĩ lại về giá cả va các loại phí");
-        Reason reason2 = new Reason(false,"Đặt lại đơn hàng khác");
-        Reason reason3 = new Reason(false,"Tôi có việc bận nên không thể nhận hàng");
-        Reason reason4 = new Reason(false,"Shipper xác nhận,giao đơn hàng chậm quá");
+        Reason reason1 = new Reason(false, "Suy nghĩ lại về giá cả va các loại phí");
+        Reason reason2 = new Reason(false, "Đặt lại đơn hàng khác");
+        Reason reason3 = new Reason(false, "Tôi có việc bận nên không thể nhận hàng");
+        Reason reason4 = new Reason(false, "Shipper xác nhận,giao đơn hàng chậm quá");
         reasonList.add(reason1);
         reasonList.add(reason2);
         reasonList.add(reason3);
         reasonList.add(reason4);
-        ReasonAdapter reasonAdapter = new ReasonAdapter(reasonList,this);
+        ReasonAdapter reasonAdapter = new ReasonAdapter(reasonList, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcvCancel.setLayoutManager(layoutManager);
@@ -80,19 +79,18 @@ public class DialogReasonFragment extends  android.support.v4.app.DialogFragment
 
     @Override
     public void onReturn(boolean check, Reason reason) {
-        context="";
-        if(!check){
+        context = "";
+        if (!check) {
             list.add(reason);
-        }
-        else {
-            for(int i =0;i<list.size();i++){
+        } else {
+            for (int i = 0; i < list.size(); i++) {
                 Reason reason1 = list.get(i);
-                if(reason1.getText().equals(reason.getText())){
+                if (reason1.getText().equals(reason.getText())) {
                     list.remove(i);
                 }
             }
         }
-        for(Reason reason1 : list){
+        for (Reason reason1 : list) {
             context += reason1.getText();
         }
     }

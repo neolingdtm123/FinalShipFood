@@ -266,7 +266,7 @@ public class CartFragment extends Fragment
     private void addNewOrder() {
         Order order = new Order();
         order.setType("Đặt hàng");
-        String pattern = "MM/dd/yyyy HH:mm:ss";
+        String pattern = "dd/MM/yyyy";
         String pattern1 = "HH:mm";
         DateFormat df = new SimpleDateFormat(pattern);
         DateFormat df1 = new SimpleDateFormat(pattern1);
@@ -334,19 +334,17 @@ public class CartFragment extends Fragment
         distanceMain = distance;
         tvDistance.setText(distance);
         String[] a = distance.split("km");
-        double gia =0;
-        if(Double.parseDouble(a[0]) <=2){
-            gia =0;
-        }
-        else if(Double.parseDouble(a[0]) <=5){
+        double gia = 0;
+        if (Double.parseDouble(a[0]) <= 2) {
+            gia = 0;
+        } else if (Double.parseDouble(a[0]) <= 5) {
             gia = 20000;
-        }
-        else {
-            gia = 20000 + 5000*(Double.parseDouble(a[0])-5);
+        } else {
+            gia = 20000 + 5000 * (Double.parseDouble(a[0]) - 5);
         }
         Double myDouble = Double.valueOf(gia);
         dem = myDouble.intValue();
-        tvPriceDistance.setText(AppUtils.formatMoney(dem+""));
+        tvPriceDistance.setText(AppUtils.formatMoney(dem + ""));
         if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
             tvPriceFood.setText(AppUtils.formatMoney(order.getPricefood()));
             priceSum = 0;
@@ -392,7 +390,7 @@ public class CartFragment extends Fragment
         MainActivity.checkOrder = false;
         StatusOrderFragment statusOrderFragment = new StatusOrderFragment();
         Bundle bundle = new Bundle();
-        idOrder =id;
+        idOrder = id;
         bundle.putInt("key", id);
         statusOrderFragment.setArguments(bundle);
         replaceFragment(statusOrderFragment, "statusOrderFragment");
@@ -412,9 +410,15 @@ public class CartFragment extends Fragment
 
     public int showPrice() {
         priceDat = 0;
+        int discount;
         for (Food food : listFood) {
+            if ("0".equals(food.getDiscount())) {
+                discount = 100;
+            } else {
+                discount = Integer.parseInt(food.getDiscount());
+            }
             if (!CommonActivity.isNullOrEmpty(food.getPriceDat())) {
-                priceDat += Integer.parseInt(food.getPriceDat());
+                priceDat += (Integer.parseInt(food.getPriceDat()) * (100-discount) / 100);
             }
         }
         return priceDat;

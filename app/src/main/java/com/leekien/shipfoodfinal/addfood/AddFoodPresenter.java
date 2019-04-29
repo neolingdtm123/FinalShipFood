@@ -26,7 +26,7 @@ public class AddFoodPresenter implements AddFoodManager.Presenter {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
-                    view.showSuccess();
+                    view.showSuccess("0");
                 }
             }
 
@@ -36,5 +36,41 @@ public class AddFoodPresenter implements AddFoodManager.Presenter {
             }
         };
         interactor.addFood(callback,food);
+    }
+
+    @Override
+    public void updateFood(Food food) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()){
+                    view.showSuccess("1");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.addFood(callback,food);
+    }
+
+    @Override
+    public void deleteFood(int id) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()){
+                    view.showSuccess("2");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.deleteFood(callback,id);
     }
 }

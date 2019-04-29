@@ -16,12 +16,14 @@ import android.widget.Toast;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
+import com.leekien.shipfoodfinal.common.CommonActivity;
 
-public class LogOutFragment extends Fragment implements View.OnClickListener,LogOutManager.View {
-    EditText edtName,edtLocation,edtPhone,edtBirthDate;
-    Button btnBack,btnSubmit;
+public class LogOutFragment extends Fragment implements View.OnClickListener, LogOutManager.View {
+    EditText edtName, edtLocation, edtPhone, edtBirthDate;
+    Button btnBack, btnSubmit;
     ImageView image;
     LogOutPresenter logOutPresenter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,10 +44,12 @@ public class LogOutFragment extends Fragment implements View.OnClickListener,Log
     }
 
     private void initView() {
-        edtName.setText(MainActivity.user.getName());
-        edtPhone.setText(MainActivity.user.getPhone());
-        edtBirthDate.setText(MainActivity.user.getBirthdate());
-        edtLocation.setText(MainActivity.user.getLocation());
+        if (!CommonActivity.isNullOrEmpty(MainActivity.user)) {
+            edtName.setText(MainActivity.user.getName());
+            edtPhone.setText(MainActivity.user.getPhone());
+            edtBirthDate.setText(MainActivity.user.getBirthdate());
+            edtLocation.setText(MainActivity.user.getLocation());
+        }
     }
 
     @Override
@@ -53,7 +57,7 @@ public class LogOutFragment extends Fragment implements View.OnClickListener,Log
         int id = view.getId();
         switch (id) {
             case R.id.btnBack:
-                getFragmentManager().popBackStack("loginFragment",0);
+                getFragmentManager().popBackStack("loginFragment", 0);
                 break;
             case R.id.image:
                 setDate();
@@ -78,7 +82,7 @@ public class LogOutFragment extends Fragment implements View.OnClickListener,Log
 
     @Override
     public void updateInfo() {
-        Toast.makeText(getContext(),"Cập nhật thông tin thành công",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
     }
 
     @Override

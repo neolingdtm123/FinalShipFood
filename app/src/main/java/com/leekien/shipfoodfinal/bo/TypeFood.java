@@ -62,4 +62,12 @@ public class TypeFood {
     public void setFoodList(List<Food> foodList) {
         this.foodList = foodList;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -15,8 +15,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onReturn, FoodAdapter.onReturn {
+public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onReturn, FoodAdapter.onReturn,FoodAdapter.onEdit {
     HomeManager.View view;
+
+    @Override
+    public void onEdit(Food food, int groupPosition) {
+        view.edit(food);
+    }
+
     HomeManager.Interactor interactor;
     String type;
 
@@ -42,17 +48,20 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
                 }
                 if ("admin".equals(user.getType())) {
                     Food food = new Food();
+                    food.setDiscount("0");
                     food.setName("Thêm mới");
                     food.setUrlfood("https://firebasestorage.googleapis.com/v0/b/" +
                             "finalshipfood.appspot.com/o/Group%202KIENNK.png?alt=media&token=256593b6-5266-4994-a4f2-830e0c4be810");
                     for (TypeFood typeFood : list) {
                         List<Food> list1 = new ArrayList<>();
                         list1.addAll(typeFood.getFoodList());
-                        list1.add(food);
+                        if(!"Phổ biến".equals(typeFood.getName())){
+                            list1.add(food);
+                        }
                         typeFood.setFoodList(list1);
                     }
                 }
-                view.showTypeFood(list, HomePresenter.this, HomePresenter.this, position);
+                view.showTypeFood(list, HomePresenter.this, HomePresenter.this,HomePresenter.this, position);
             }
 
             @Override

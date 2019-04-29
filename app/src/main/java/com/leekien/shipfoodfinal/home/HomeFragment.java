@@ -58,6 +58,7 @@ import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.customView.RobEditText;
 import com.leekien.shipfoodfinal.logout.LogOutFragment;
+import com.leekien.shipfoodfinal.logout.TabFragment;
 import com.leekien.shipfoodfinal.shipper.ShipperFragment;
 import com.leekien.shipfoodfinal.signup.SignUpFragment;
 import com.leekien.shipfoodfinal.statusorder.StatusOrderFragment;
@@ -103,6 +104,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     List<Food> foodList;
     TypeFoodAdapter.onReturn mOnReturn;
     FoodAdapter.onReturn mOnReturn1;
+    FoodAdapter.onEdit mOnReturn2;
     HomePresenter presenter;
     @SuppressLint("RestrictedApi")
     @Nullable
@@ -142,6 +144,12 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         MainActivity.checkAddFood= false;
         presenter.getWaitOrder(user.getId());
         initData();
+        if("user".equals(user.getType())){
+            fab.setVisibility(View.VISIBLE);
+        }
+        else {
+            fab.setVisibility(View.GONE);
+        }
         if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
             tvNumber1.setVisibility(View.VISIBLE);
             tvNumber.setVisibility(View.VISIBLE);
@@ -188,8 +196,8 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         fabAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LogOutFragment logOutFragment = new LogOutFragment();
-                replaceFragment(logOutFragment,"logOutFragment");
+                TabFragment tabFragment = new TabFragment();
+                replaceFragment(tabFragment,"tabFragment");
             }
         });
         tvCancel.setOnClickListener(this);
@@ -203,16 +211,17 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     @Override
     public void showFood(List<Food> foodList, FoodAdapter.onReturn onReturn, int position1) {
         position = position1;
-        FoodAdapter foodAdapter = new FoodAdapter(foodList, onReturn);
+        FoodAdapter foodAdapter = new FoodAdapter(foodList, onReturn,mOnReturn2);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
     }
 
     @Override
-    public void showTypeFood(List<TypeFood> typeFoods, TypeFoodAdapter.onReturn onReturn, FoodAdapter.onReturn onReturn1, int pos) {
+    public void showTypeFood(List<TypeFood> typeFoods, TypeFoodAdapter.onReturn onReturn, FoodAdapter.onReturn onReturn1,FoodAdapter.onEdit onEdit, int pos) {
         mOnReturn = onReturn;
         mOnReturn1 = onReturn1;
+        mOnReturn2= onEdit;
         typeFoodList = new ArrayList<>();
         typeFoodList.addAll(typeFoods);
         typeFoodAdapter = new TypeFoodAdapter(typeFoodList, onReturn);
@@ -222,7 +231,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         rcvType.setAdapter(typeFoodAdapter);
         foodList = new ArrayList<>();
         foodList = typeFoods.get(pos).getFoodList();
-        foodAdapter = new FoodAdapter(foodList, onReturn1);
+        foodAdapter = new FoodAdapter(foodList, onReturn1,onEdit);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
@@ -379,7 +388,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                         }
                     }
                 }
-                foodAdapter = new FoodAdapter(foodList, mOnReturn1);
+                foodAdapter = new FoodAdapter(foodList, mOnReturn1,mOnReturn2);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false);
                 rcvFood.setLayoutManager(gridLayoutManager);
                 rcvFood.setAdapter(foodAdapter);
@@ -451,8 +460,8 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                 replaceFragment(cartFragment1, "kiennk");
                 break;
             case R.id.imgAccount:
-                LogOutFragment logOutFragment = new LogOutFragment();
-                replaceFragment(logOutFragment,"logOutFragment");
+                TabFragment tabFragment = new TabFragment();
+                replaceFragment(tabFragment,"tabFragment");
         }
     }
 
@@ -496,7 +505,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
         rcvType.setAdapter(typeFoodAdapter);
         foodList = new ArrayList<>();
         foodList = typeFoodList.get(position).getFoodList();
-        foodAdapter = new FoodAdapter(foodList, mOnReturn1);
+        foodAdapter = new FoodAdapter(foodList, mOnReturn1,mOnReturn2);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.HORIZONTAL, false);
         rcvFood.setLayoutManager(gridLayoutManager);
         rcvFood.setAdapter(foodAdapter);
@@ -523,5 +532,14 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
                 }
             }
         }
+    }
+    @Override
+    public void edit(Food food) {
+        AddFoodFragment addFoodFragment = new AddFoodFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("food",food);
+        bundle.putString("key","1");
+        addFoodFragment.setArguments(bundle);
+        replaceFragment(addFoodFragment,"addFoodFragment");
     }
 }
