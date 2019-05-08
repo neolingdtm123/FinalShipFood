@@ -19,14 +19,19 @@ public class HomeManager {
         void edit(Food food );
         void upLoadImage();
         void checkFragment(Order order);
+        void initSpinner(List<User> list);
     }
     interface Presenter{
         void getFood(User user,int position);
+        void getListShop();
+        void getFoodShop(User user,int position);
         void getWaitOrder(int iduser);
 
     }
     interface Interactor{
         void getFood(Callback<List<TypeFood>> callback);
+        void getFoodShop(Callback<List<TypeFood>> callback,int idshop);
         void getWaitOrder(Callback<Order> callback,int iduser);
+        void getListShop(Callback<List<User>> callback);
     }
 }

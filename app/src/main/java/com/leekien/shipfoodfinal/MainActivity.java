@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     //    List<String> list = new ArrayList<String>();
 //    List<TypeFood> typeFoodList = new ArrayList<>();
     static public User user;
+    static public User userShop;
     static public List<Food> listFood = new ArrayList<>();
     static public String latShop = "20.997791";
     static public String lonShop = "105.841122";
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     static public boolean checkAddFood = false;
     static public double lat;
     static public double lon;
+    static public int idshop =0;
 
     @Override
     protected void onStop() {

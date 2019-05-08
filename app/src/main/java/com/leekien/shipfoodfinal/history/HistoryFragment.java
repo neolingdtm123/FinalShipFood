@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leekien.shipfoodfinal.R;
@@ -30,6 +31,7 @@ public class HistoryFragment extends Fragment implements HistoryManager.View, Vi
     TextView tvFromDate, tvTodate;
     String fromDate, toDate;
     RecyclerView rcvHistory;
+    LinearLayout lnShow;
     HistoryPresenter historyPresenter;
     List<Order> orderList;
 
@@ -42,7 +44,8 @@ public class HistoryFragment extends Fragment implements HistoryManager.View, Vi
         tvFromDate = view.findViewById(R.id.tvfromDate);
         tvTodate = view.findViewById(R.id.tvEndDate);
         rcvHistory = view.findViewById(R.id.rcvHistory);
-        fromDate = "1/4/2019";
+        lnShow = view.findViewById(R.id.lnShow);
+        fromDate = "1/3/2019";
         tvFromDate.setText(fromDate);
         String pattern = "dd/MM/yyyy";
         Date today = Calendar.getInstance().getTime();
@@ -104,9 +107,10 @@ public class HistoryFragment extends Fragment implements HistoryManager.View, Vi
             }
         }
         if (CommonActivity.isNullOrEmpty(orders)) {
-            CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_no_data), getString(R.string.shipfood)).show();
+            lnShow.setVisibility(View.VISIBLE);
             rcvHistory.setAdapter(null);
         } else {
+            lnShow.setVisibility(View.GONE);
             HistoryAdapter historyAdapter = new HistoryAdapter(orders);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

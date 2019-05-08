@@ -12,6 +12,7 @@ import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.Food;
+import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -47,14 +48,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         int discount;
         if ("0".equals(food.getDiscount())) {
             viewHolder.tvDiscount.setVisibility(View.GONE);
-            discount = 100;
+            discount = 0;
         } else {
             discount = Integer.parseInt(food.getDiscount());
             viewHolder.tvDiscount.setVisibility(View.VISIBLE);
             viewHolder.tvDiscount.setText("-"+food.getDiscount()+"%");
         }
         viewHolder.tvName.setText(food.getName());
-        viewHolder.tvPrice.setText(AppUtils.formatMoney(Integer.parseInt(food.getPriceDat()) * (100-discount) / 100+""));
+        if(!CommonActivity.isNullOrEmpty(food.getPriceDat())){
+            viewHolder.tvPrice.setText(AppUtils.formatMoney(Integer.parseInt(food.getPriceDat()) * (100-discount) / 100+""));
+        }
         viewHolder.textView.setText(food.getNumberDat() + " " +"phần");
 
         viewHolder.imgXoa.setOnClickListener(new View.OnClickListener() {

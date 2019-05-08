@@ -14,7 +14,7 @@ public class SuccessOrderInteractor implements SuccessOrderManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void getListOrder(Callback<List<Order>> callback) {
-        Call<List<Order>> call = appAPI.getSuccessOrder();
-        call.enqueue(callback);
+//        Call<List<Order>> call = appAPI.getSuccessOrder();
+//        call.enqueue(callback);
     }
 }

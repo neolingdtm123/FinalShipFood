@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
+import com.leekien.shipfoodfinal.admin.AdminFragment;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.home.HomeFragment;
@@ -46,9 +47,13 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
             @Override
             public void onClick(View view) {
                 SignUpFragment signUpFragment = new SignUpFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("check","0");
+                signUpFragment.setArguments(bundle);
                 replaceFragment(signUpFragment,"hash");
             }
         });
+        MainActivity.idshop=0;
         return view;
     }
 
@@ -57,13 +62,13 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
         if ("0".equals(code)) {
             Toast.makeText(getContext(), getString(R.string.success_login), Toast.LENGTH_LONG).show();
             MainActivity.listFood = new ArrayList<>();
-            SharedPreferences myPreferences
-                    = PreferenceManager.getDefaultSharedPreferences(getContext());
-            SharedPreferences.Editor myEditor = myPreferences.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(MainActivity.listFood);
-            myEditor.putString("MyObject", json);
-            myEditor.commit();
+//            SharedPreferences myPreferences
+//                    = PreferenceManager.getDefaultSharedPreferences(getContext());
+//            SharedPreferences.Editor myEditor = myPreferences.edit();
+//            Gson gson = new Gson();
+//            String json = gson.toJson(MainActivity.listFood);
+//            myEditor.putString("MyObject", json);
+//            myEditor.commit();
             MainActivity.user = user;
             if("ship".equals(user.getType())){
                 ShipperFragment shipperFragment = new ShipperFragment();
@@ -71,6 +76,10 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
                 bundle.putSerializable("user", (Serializable) user);
                 shipperFragment.setArguments(bundle);
                 replaceFragment(shipperFragment,"sạdja");
+            }
+            else if("admin".equals(user.getType())){
+                AdminFragment adminFragment = new AdminFragment();
+                replaceFragment(adminFragment,"adminFragment");
             }
             else {
                 HomeFragment homeFragment = new HomeFragment();

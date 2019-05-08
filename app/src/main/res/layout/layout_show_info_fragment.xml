@@ -64,7 +64,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvNameCus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvFood"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvPriceFood"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:layout_gravity="center"
                         app:srcCompat="@drawable/ic_ellipse_2circcle_muc" />
 
-                    <TextView
+                    <com.leekien.shipfoodfinal.customView.RobLightText
                         android:id="@+id/tvPrice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -187,6 +187,7 @@
 
     <LinearLayout
         android:id="@+id/linear"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"

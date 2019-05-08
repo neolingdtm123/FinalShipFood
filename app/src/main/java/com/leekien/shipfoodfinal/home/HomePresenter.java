@@ -24,7 +24,6 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
     }
 
     HomeManager.Interactor interactor;
-    String type;
 
     public HomePresenter(HomeManager.View view) {
         this.view = view;
@@ -32,8 +31,25 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
     }
 
     @Override
+    public void getListShop() {
+        Callback<List<User>> callback = new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if(response.isSuccessful()){
+                    view.initSpinner(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        };
+        interactor.getListShop(callback);
+    }
+
+    @Override
     public void getFood(final User user, final int position) {
-        type = user.getType();
         Callback<List<TypeFood>> callback = new Callback<List<TypeFood>>() {
             @Override
             public void onResponse(Call<List<TypeFood>> call, Response<List<TypeFood>> response) {
@@ -46,9 +62,37 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
                     }
 
                 }
-                if ("admin".equals(user.getType())) {
+                view.showTypeFood(list, HomePresenter.this, HomePresenter.this,HomePresenter.this, position);
+            }
+
+            @Override
+            public void onFailure(Call<List<TypeFood>> call, Throwable t) {
+
+            }
+        };
+        interactor.getFood(callback);
+
+
+    }
+
+    @Override
+    public void getFoodShop(final User user, final int position) {
+        Callback<List<TypeFood>> callback = new Callback<List<TypeFood>>() {
+            @Override
+            public void onResponse(Call<List<TypeFood>> call, Response<List<TypeFood>> response) {
+                List<TypeFood> list = response.body();
+                for (int i = 0; i < list.size(); i++) {
+                    if (i == position) {
+                        list.get(i).setCheck(true);
+                    } else {
+                        list.get(i).setCheck(false);
+                    }
+
+                }
+                if ("shop".equals(user.getType())) {
                     Food food = new Food();
                     food.setDiscount("0");
+                    food.setNameshop(MainActivity.user.getName());
                     food.setName("Thêm mới");
                     food.setUrlfood("https://firebasestorage.googleapis.com/v0/b/" +
                             "finalshipfood.appspot.com/o/Group%202KIENNK.png?alt=media&token=256593b6-5266-4994-a4f2-830e0c4be810");
@@ -69,9 +113,7 @@ public class HomePresenter implements HomeManager.Presenter, TypeFoodAdapter.onR
 
             }
         };
-        interactor.getFood(callback);
-
-
+        interactor.getFoodShop(callback,user.getId());
     }
 
     @Override

@@ -43,11 +43,16 @@ public class SignUpFragment extends Fragment implements SignUpManager.View {
     EditText edtPhone;
     Button btnBack;
     Button btnSubmit;
+    String check;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_sign_up, container, false);
+        Bundle bundle = getArguments();
+        if(!CommonActivity.isNullOrEmpty(bundle)){
+            check = bundle.getString("check");
+        }
         signUpPresenter = new SignUpPresenter(SignUpFragment.this);
         edtName = view.findViewById(R.id.edtName);
         edtCalendar = view.findViewById(R.id.edtCalendar);
@@ -97,7 +102,15 @@ public class SignUpFragment extends Fragment implements SignUpManager.View {
             User user = new User();
             user.setUsername(edtUserName.getText().toString());
             user.setPassword(edtPass.getText().toString());
-            user.setType("user");
+            if("0".equals(check)){
+                user.setType("user");
+            }
+            else if("1".equals(check)){
+                user.setType("shop");
+            }
+            else if("2".equals(check)){
+                user.setType("ship");
+            }
             user.setLocation(edtLocation.getText().toString());
             user.setName(edtName.getText().toString());
             user.setPhone(edtPhone.getText().toString());

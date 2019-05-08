@@ -1,5 +1,6 @@
 package com.leekien.shipfoodfinal.statusorder;
 
+import com.leekien.shipfoodfinal.adapter.StatusOrderAdapter;
 import com.leekien.shipfoodfinal.bo.Order;
 import com.leekien.shipfoodfinal.bo.StatusOrder;
 import com.leekien.shipfoodfinal.bo.User;
@@ -13,9 +14,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StatusOrderPresenter implements StatusOrderManager.Presenter {
+public class StatusOrderPresenter implements StatusOrderManager.Presenter, StatusOrderAdapter.onReturn {
     StatusOrderManager.View view;
     StatusOrderManager.Interactor interactor;
+    List<StatusOrder> list;
 
     public StatusOrderPresenter(StatusOrderManager.View view) {
         this.view = view;
@@ -28,8 +30,8 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Order order = response.body();
-                if(!CommonActivity.isNullOrEmpty(order)){
-                    List<StatusOrder> list = new ArrayList<>();
+                if (!CommonActivity.isNullOrEmpty(order)) {
+                    list = new ArrayList<>();
                     StatusOrder statusOrder1 = new StatusOrder();
                     StatusOrder statusOrder2 = new StatusOrder();
                     StatusOrder statusOrder3 = new StatusOrder();
@@ -39,26 +41,27 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
                     statusOrder2.setStatus("Đã nhận hàng");
                     statusOrder3.setStatus("Đã hoàn thành");
 
-                    if(!CommonActivity.isNullOrEmpty(order.getEndtime())){
+                    if (!CommonActivity.isNullOrEmpty(order.getEndtime())) {
                         statusOrder3.setTime(order.getEndhour());
                     }
-                    if("Đã nhận hàng".equals(order.getType())){
-                        if(!CommonActivity.isNullOrEmpty(order.getShiphour())){
+                    if ("Đã nhận hàng".equals(order.getType())) {
+                        if (!CommonActivity.isNullOrEmpty(order.getShiphour())) {
                             statusOrder2.setTime(order.getShiphour());
                         }
                         statusOrder2.setCheck(true);
-                        for(User user : order.getUserList()){
-                            if("ship".equals(user.getType())){
+                        for (User user : order.getUserList()) {
+                            if ("ship".equals(user.getType())) {
                                 statusOrder2.setShipinfo(user.getName());
+                                statusOrder2.setShipPhone(user.getPhone());
                             }
                         }
-                    }
-                    else if("Ship hoàn thành".equals(order.getType())){
+                    } else if ("Ship hoàn thành".equals(order.getType())) {
                         statusOrder3.setCheck(true);
                         statusOrder2.setCheck(true);
-                        for(User user : order.getUserList()){
-                            if("ship".equals(user.getType())){
+                        for (User user : order.getUserList()) {
+                            if ("ship".equals(user.getType())) {
                                 statusOrder2.setShipinfo(user.getName());
+                                statusOrder2.setShipPhone(user.getPhone());
                             }
                         }
                         statusOrder2.setTime(order.getShiphour());
@@ -66,7 +69,7 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
                     list.add(statusOrder1);
                     list.add(statusOrder2);
                     list.add(statusOrder3);
-                    view.showStatusOrder(list,order);
+                    view.showStatusOrder(list, order, StatusOrderPresenter.this);
                 }
 
             }
@@ -76,7 +79,7 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
 
             }
         };
-        interactor.getOrder(callback,idOrder);
+        interactor.getOrder(callback, idOrder);
     }
 
     @Override
@@ -84,7 +87,7 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     view.cancelSuccess(checkType);
                 }
             }
@@ -94,6 +97,11 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter {
 
             }
         };
-        interactor.deleteOrder(callback,order);
+        interactor.deleteOrder(callback, order);
+    }
+
+    @Override
+    public void onReturn(StatusOrder statusOrder) {
+        view.call(statusOrder.getShipPhone());
     }
 }

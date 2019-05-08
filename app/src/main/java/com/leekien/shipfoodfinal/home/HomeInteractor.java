@@ -20,8 +20,20 @@ public class HomeInteractor implements HomeManager.Interactor {
     }
 
     @Override
+    public void getFoodShop(Callback<List<TypeFood>> callback,int id) {
+        Call<List<TypeFood>> call = appAPI.getAllFoodShop(id);
+        call.enqueue(callback);
+    }
+
+    @Override
     public void getWaitOrder(Callback<Order> callback, int iduser) {
         Call<Order> call = appAPI.getWaitOrder(iduser);
+        call.enqueue(callback);
+    }
+
+    @Override
+    public void getListShop(Callback<List<User>> callback) {
+        Call<List<User>> call = appAPI.getShop();
         call.enqueue(callback);
     }
 }

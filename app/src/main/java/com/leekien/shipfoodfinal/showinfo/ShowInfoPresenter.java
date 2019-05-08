@@ -21,8 +21,8 @@ public class ShowInfoPresenter implements ShowInfoManager.Presenter {
     }
 
     @Override
-    public void getInfo(String lat, String lon) {
-        interactor.getListStep(lat, lon, new onPostSuccess() {
+    public void getInfo(String lat, String lon,String lat1,String lon1) {
+        interactor.getListStep(lat, lon,lat1,lon1, new onPostSuccess() {
             @Override
             public void onPost(List<String> result) {
                 view.directShop(result);

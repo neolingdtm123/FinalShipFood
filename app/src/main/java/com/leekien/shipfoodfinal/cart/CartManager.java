@@ -23,7 +23,7 @@ public class CartManager {
         void showSuccess(int id);
     }
     interface Presenter{
-        void getDistance(LatLng mCurrentLocation);
+        void getDistance(String latUser, String lonUser,String lat,String lon);
         void showList();
         void newOrder(Order order, List<Food> list);
         void newFoodOrder(Foodorder foodorder);

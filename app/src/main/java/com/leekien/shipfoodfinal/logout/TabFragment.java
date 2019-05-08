@@ -22,7 +22,7 @@ public class TabFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("THÔNG TIN"));
         tabLayout.addTab(tabLayout.newTab().setText("LỊCH SỬ"));
         final ViewPager viewPager =view.findViewById(R.id.view_pager);
-        TabsAdapter tabsAdapter = new TabsAdapter(getFragmentManager(), tabLayout.getTabCount());
+        TabsAdapter tabsAdapter = new TabsAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(tabsAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

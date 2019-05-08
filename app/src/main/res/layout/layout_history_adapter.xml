@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
@@ -19,13 +21,13 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_gravity="center">
         <com.leekien.shipfoodfinal.customView.RobBoldText
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:text="Đồ ăn"
             android:layout_gravity="center"
             android:textColor="#000000"
@@ -34,23 +36,77 @@
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:text="Đã hooàn thành"
             android:layout_weight="2"
             android:gravity="left|center"/>
         <TextView
             android:id="@+id/tvId"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:text="Đã hủy"
             android:layout_weight="4"
             android:gravity="right|center"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:id="@+id/lnReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.leekien.shipfoodfinal.customView.RobBoldText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:text="Lí do hủy:"/>
+        <com.leekien.shipfoodfinal.customView.RobLightText
+            android:id="@+id/tvReason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+    </LinearLayout>
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="1dp"
+        android:background="@color/gray_3"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/ic_call"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvShopName"
+                android:gravity="center|left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Happy House"/>
+            <TextView
+                android:id="@+id/tvShopLocation"
+                android:gravity="center|left"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Happy House"/>
+        </LinearLayout>
+    </LinearLayout>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="1dp"
         android:background="@color/gray_3"/>
     <com.leekien.shipfoodfinal.customView.RobLightText

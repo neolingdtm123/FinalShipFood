@@ -5,6 +5,25 @@ import java.io.Serializable;
 public class Food implements Serializable {
     int id;
     int idTypeFood;
+    int idshop;
+
+    public int getIdshop() {
+        return idshop;
+    }
+
+    public void setIdshop(int idshop) {
+        this.idshop = idshop;
+    }
+    String nameshop;
+
+    public String getNameshop() {
+        return nameshop;
+    }
+
+    public void setNameshop(String nameshop) {
+        this.nameshop = nameshop;
+    }
+
     String name;
     String content;
     String urlfood;

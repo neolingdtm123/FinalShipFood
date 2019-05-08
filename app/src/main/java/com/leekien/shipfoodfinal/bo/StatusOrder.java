@@ -4,6 +4,7 @@ public class StatusOrder {
     String status;
     String time;
     String shipinfo;
+    String shipPhone;
     boolean check =false;
 
     public boolean isCheck() {
@@ -36,5 +37,13 @@ public class StatusOrder {
 
     public void setShipinfo(String shipinfo) {
         this.shipinfo = shipinfo;
+    }
+
+    public String getShipPhone() {
+        return shipPhone;
+    }
+
+    public void setShipPhone(String shipPhone) {
+        this.shipPhone = shipPhone;
     }
 }

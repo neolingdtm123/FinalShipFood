@@ -46,6 +46,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -56,6 +57,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.adapter.DonHangAdapter;
@@ -63,8 +65,12 @@ import com.leekien.shipfoodfinal.bo.DonHang;
 import com.leekien.shipfoodfinal.bo.GetDirectionsTask;
 import com.leekien.shipfoodfinal.bo.Order;
 //import com.leekien.shipfoodfinal.service.PushLocationService;
+import com.leekien.shipfoodfinal.bo.User;
+import com.leekien.shipfoodfinal.common.CommonActivity;
+import com.leekien.shipfoodfinal.logout.TabFragment;
 import com.leekien.shipfoodfinal.service.PushLocationService;
 import com.leekien.shipfoodfinal.showinfo.ShowInfoFragment;
+import com.leekien.shipfoodfinal.statis.StatisFragment;
 import com.leekien.shipfoodfinal.successorder.SuccessOrderFragment;
 
 
@@ -95,7 +101,7 @@ public class ShipperFragment extends Fragment
     ShipperPresenter shipperPresenter;
     RecyclerView rcvDonHang;
     ImageView imgLocation;
-    TextView tvHistory;
+    TextView tvHistory, tvInfo;
     Context context;
 
     @Override
@@ -111,6 +117,7 @@ public class ShipperFragment extends Fragment
         rcvDonHang = view.findViewById(R.id.rcvDonHang);
         imgLocation = view.findViewById(R.id.imgLocation);
         tvHistory = view.findViewById(R.id.tvHistory);
+        tvInfo = view.findViewById(R.id.tvInfo);
         imgLocation.setOnClickListener(this);
         shipperPresenter = new ShipperPresenter(this);
         mGoogleApiClient = new GoogleApiClient.Builder(getContext()).addConnectionCallbacks(this)
@@ -123,8 +130,18 @@ public class ShipperFragment extends Fragment
         tvHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SuccessOrderFragment successOrderFragment = new SuccessOrderFragment();
-                replaceFragment(successOrderFragment, "successOrderFragment");
+                StatisFragment statisFragment = new StatisFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("check","0");
+                statisFragment.setArguments(bundle);
+                replaceFragment(statisFragment, "statisFragment");
+            }
+        });
+        tvInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TabFragment tabFragment = new TabFragment();
+                replaceFragment(tabFragment, "tabFragment");
             }
         });
         return view;
@@ -177,7 +194,7 @@ public class ShipperFragment extends Fragment
 
         shipperPresenter.getLocation(MainActivity.user.getId(), mCurrentLocation.latitude, mCurrentLocation.longitude);
 
-        showShopLocation();
+//        showShopLocation();
     }
 
     @Override
@@ -212,6 +229,8 @@ public class ShipperFragment extends Fragment
                 && ActivityCompat.checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+            UiSettings uiSettings = mGoogleMap.getUiSettings();
+            uiSettings.setMyLocationButtonEnabled(true);
             mGoogleMap.setMyLocationEnabled(true);
         } else {
             //            Common.checkAndRequestPermissionsGPS(getActivity());
@@ -264,65 +283,12 @@ public class ShipperFragment extends Fragment
     }
 
     public void init() {
-//        edtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if (actionId == EditorInfo.IME_ACTION_DONE
-////                        || actionId == EditorInfo.IME_ACTION_SEARCH
-////                        || event.getAction() == KeyEvent.ACTION_DOWN
-////                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-////                    if(edtSearch.getText().toString().isEmpty()){
-////                        button.setVisibility(View.GONE);
-////                    }
-////                    else {
-////                        searchLocation();
-////                    }
-////
-////                }
-////                return false;
-////            }
-////        });
+//
     }
 //
-//    private void searchLocation(String location) {
-//        Geocoder geocoder = new Geocoder(getContext());
-//        List<android.location.Address> list = new ArrayList<>();
-//        try {
-//            list = geocoder.getFromLocationName(location, 1);
-//        } catch (IOException e) {
-//        }
-//        if (list.size() > 0) {
-//            android.location.Address address = list.get(0);
-//            directShip(address);
-////            button.setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View v) {
-////                    task.execute();
-////                }
-////            });
-//        }
 //
-//    }
 
 
-    private void directShip1(String lat, String lon) {
-
-
-    }
-
-    private void showShopLocation() {
-        MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
-        markerOptions.position(latLng);
-        markerOptions.title("Vị trí của shop");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-        markerOptions.alpha(0.8f);
-        markerOptions.rotation(0);
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-    }
-
-    ;
 
     public void showCameraToPosition(LatLngBounds bounds, int padding) {
         if (mGoogleMap != null) {
@@ -331,26 +297,20 @@ public class ShipperFragment extends Fragment
     }
 
 
-    public void showMarkerToGoogleMap(LatLng position) {
-        mGoogleMap.clear();
-        MarkerOptions markerOptions = new MarkerOptions().position(position);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_active));
-        mGoogleMap.addMarker(markerOptions);
-    }
-
-    private LatLng locationMinMax(boolean positive, LatLng position, float radius) {
-        double sign = positive ? 1 : -1;
-        double dx = (sign * radius * 1000) / 6378000 * (180 / Math.PI);
-        double lat = position.latitude + dx;
-        double lon = position.longitude + dx / Math.cos(position.latitude * Math.PI / 180);
-        return new LatLng(lat, lon);
-    }
-
-
     @Override
     public void showListDonHang(List<Order> list, DonHangAdapter.onReturn onReturn) {
         for (Order order : list) {
-            order.setAddress(getAddress(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon())));
+            List<User> users = order.getUserList();
+            for (User user : users) {
+                if ("shop".equals(user.getType())) {
+                    order.setShopAdress(user.getLocation());
+                }
+            }
+            if (CommonActivity.isNullOrEmpty(order.getAddressship())) {
+                order.setAddress(getAddress(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon())));
+            } else {
+                order.setAddress(order.getAddressship());
+            }
         }
         DonHangAdapter donHangAdapter = new DonHangAdapter(list, onReturn);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -360,25 +320,38 @@ public class ShipperFragment extends Fragment
     }
 
     @Override
-    public void directShip(String lat, String lon) {
+    public void directShip(Order order, String shipAddress, String shopAddress) {
         mGoogleMap.clear();
-        showShopLocation();
         MarkerOptions markerOptions = new MarkerOptions();
-        latlngMain = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
+        String add = getLocationFromAddress(shipAddress);
+        latlngMain = new LatLng(Double.valueOf(add.split("/")[0]), Double.valueOf(add.split("/")[1]));
+
         markerOptions.position(latlngMain);
-        markerOptions.title("Vị trí khách hàng");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.title("Vị trí cần ship");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         markerOptions.alpha(0.8f);
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-        showCameraToPosition(latlngMain, 13f);
+        showCameraToPosition(latlngMain, 12f);
+
+
+        MarkerOptions markerOptions1 = new MarkerOptions();
+        String add1 = getLocationFromAddress(shopAddress);
+        latlngMain = new LatLng(Double.valueOf(add1.split("/")[0]), Double.valueOf(add1.split("/")[1]));
+        markerOptions1.position(latlngMain);
+        markerOptions1.title("Vị trí cuả shop");
+        markerOptions1.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions1.alpha(0.8f);
+        markerOptions1.rotation(0);
+        Marker marker1 = mGoogleMap.addMarker(markerOptions1);
+        marker1.showInfoWindow();
+        showCameraToPosition(latlngMain, 12f);
     }
 
 
     @Override
     public void replace(Order order) {
-        showShopLocation();
         ShowInfoFragment showInfoFragment = new ShowInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("key", order);
@@ -406,13 +379,6 @@ public class ShipperFragment extends Fragment
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
             add = obj.getAddressLine(0);
-//            add = add + "\n" + obj.getCountryName();
-//            add = add + "\n" + obj.getCountryCode();
-//            add = add + "\n" + obj.getAdminArea();
-//            add = add + "\n" + obj.getPostalCode();
-//            add = add + "\n" + obj.getSubAdminArea();
-//            add = add + "\n" + obj.getLocality();
-//            add = add + "\n" + obj.getSubThoroughfare();
             return add;
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -436,7 +402,7 @@ public class ShipperFragment extends Fragment
 
     public void getLocation() {
         requestPermission();
-        client = LocationServices.getFusedLocationProviderClient(getActivity());
+        client = LocationServices.getFusedLocationProviderClient(context);
         if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -460,5 +426,25 @@ public class ShipperFragment extends Fragment
 
     public void requestPermission() {
         ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, 1);
+    }
+
+    public String getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            String lat = String.valueOf(location.getLatitude());
+            String lon = String.valueOf(location.getLongitude());
+            return lat + "/" + lon;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

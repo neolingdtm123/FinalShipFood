@@ -16,7 +16,7 @@ public class ShipperManager {
     public interface View {
         void showListDonHang(List<Order> list, DonHangAdapter.onReturn onReturn);
 
-        void directShip(String lat, String lon);
+        void directShip(Order order,String shipAddress,String shopAddress);
 
         void replace(Order order);
     }

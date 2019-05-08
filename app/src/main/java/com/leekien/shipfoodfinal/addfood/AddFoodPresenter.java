@@ -53,7 +53,7 @@ public class AddFoodPresenter implements AddFoodManager.Presenter {
 
             }
         };
-        interactor.addFood(callback,food);
+        interactor.updateFood(callback,food);
     }
 
     @Override

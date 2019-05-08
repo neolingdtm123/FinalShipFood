@@ -55,6 +55,25 @@ public class Order implements Serializable {
     String pricefood;
     String distance;
     String address;
+    String addressship;
+
+    public String getAddressship() {
+        return addressship;
+    }
+
+    public void setAddressship(String addressship) {
+        this.addressship = addressship;
+    }
+
+    public String getShopAdress() {
+        return shopAdress;
+    }
+
+    public void setShopAdress(String shopAdress) {
+        this.shopAdress = shopAdress;
+    }
+
+    String shopAdress;
 
     public String getAddress() {
         return address;

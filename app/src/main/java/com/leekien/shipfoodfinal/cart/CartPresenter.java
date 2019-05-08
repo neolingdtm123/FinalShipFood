@@ -19,12 +19,10 @@ import retrofit2.Response;
 
 public class CartPresenter implements CartManager.Presenter, CartAdapter.onReturn {
     CartManager.View view;
-
     CartManager.Interactor interactor;
-
     @Override
-    public void getDistance(LatLng mCurrentLocation) {
-        interactor.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude+"", MainActivity.latShop,MainActivity.lonShop, new onPostDistance() {
+    public void getDistance(String latUser ,String lonUser,String lat,String lon) {
+        interactor.getDistance(latUser, lonUser, lat,lon, new onPostDistance() {
             @Override
             public void onPost(String result) {
                 view.showDistance(result);

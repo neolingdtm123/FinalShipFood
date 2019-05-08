@@ -1,14 +1,16 @@
 <resources>
-<string name="app_name">ShipFoodFinal</string>
-<string name="maps_api_key">AIzaSyBH8DVS13wnxPjs-MxPpwpq73WFxGMASRw</string>
-<string name="null_value">Bạn chưa nhập đầy đủ các thông tin!</string>
-<string name="shipfood">Ship Food</string>
-<string name="error_password">Mật khẩu bạn nhập chưa trùng khớp!</string>
-<string name="error_username">Tên người dùng đã được sử dụng,vui lòng chọn lại tên khác!</string>
-<string name="wrong_login">Bạn đã nhập sai tài khoản hoặc mật khẩu!</string>
-<string name="success_login">Đăng nhập thành công!</string>
-<string name="success_cancel">Huỷ đơn hàng thành công!</string>
-<string name="error_order">Bạn đang còn đơn hàng chưa hoàn thành!</string>
-<string name="error_order_change">Bạn không được thay đổi đơn hàng chưa hoàn thành!</string>
-<string name="error_no_data">Không có dữ liệu trong thời gian bạn chọn!</string>
+    <string name="app_name">ShipFoodFinal</string>
+    <string name="maps_api_key">AIzaSyBH8DVS13wnxPjs-MxPpwpq73WFxGMASRw</string>
+    <string name="null_value">Bạn chưa nhập đầy đủ các thông tin!</string>
+    <string name="shipfood">Ship Food</string>
+    <string name="error_password">Mật khẩu bạn nhập chưa trùng khớp!</string>
+    <string name="error_username">Tên người dùng đã được sử dụng,vui lòng chọn lại tên khác!</string>
+    <string name="wrong_login">Bạn đã nhập sai tài khoản hoặc mật khẩu!</string>
+    <string name="success_login">Đăng nhập thành công!</string>
+    <string name="success_cancel">Huỷ đơn hàng thành công!</string>
+    <string name="error_order">Bạn đang còn đơn hàng chưa hoàn thành!</string>
+    <string name="error_order_change">Bạn không được thay đổi đơn hàng chưa hoàn thành!</string>
+    <string name="error_no_data">Không có dữ liệu trong thời gian bạn chọn!</string>
+    <string name="notify_order">Bạn chỉ được các sản phẩm cùng 1 cửa hàng trong 1 đơn hàng!</string>
+    <string name="error_location">Không tìm thấy địa chỉ này,bạn cần nhập lại địa chỉ chính xác hơn!</string>
 </resources>

@@ -3,6 +3,7 @@ package com.leekien.shipfoodfinal.statusorder;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
@@ -13,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,6 +80,7 @@ public class StatusOrderFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener, StatusOrderManager.View, onBackDialog {
+    static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 2005;
 
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -293,7 +297,34 @@ public class StatusOrderFragment extends Fragment
 
 
     @Override
-    public void showStatusOrder(List<StatusOrder> statusOrderList, Order order) {
+    public void call(String phone) {
+        String number = ("tel:" + phone);
+        Intent mIntent = new Intent(Intent.ACTION_CALL);
+        mIntent.setData(Uri.parse(number));
+// Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
+            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+        } else {
+            //You already have permission
+            try {
+                startActivity(mIntent);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void showStatusOrder(List<StatusOrder> statusOrderList, Order order,StatusOrderAdapter.onReturn onReturn) {
         mGoogleMap.clear();
         showShopLocation();
         for (User user : order.getUserList()) {
@@ -310,7 +341,7 @@ public class StatusOrderFragment extends Fragment
             btnCancel.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.GONE);
         }
-        StatusOrderAdapter statusOrderAdapter = new StatusOrderAdapter(statusOrderList);
+        StatusOrderAdapter statusOrderAdapter = new StatusOrderAdapter(statusOrderList,onReturn);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcvStatus.setLayoutManager(layoutManager);

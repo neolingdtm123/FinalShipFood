@@ -72,6 +72,7 @@ public class AddFoodFragment extends Fragment implements AddFoodManager.View, Vi
             food = (Food) bundle.getSerializable("food");
             check = bundle.getString("key");
         }
+        MainActivity.checkAddFood = true;
         storageReference = firebaseStorage.getReferenceFromUrl("gs://finalshipfood.appspot.com");
         presenter = new AddFoodPresenter(this);
         edtName = view.findViewById(R.id.edtName);
@@ -241,6 +242,7 @@ public class AddFoodFragment extends Fragment implements AddFoodManager.View, Vi
         } else {
 
             Food food = new Food();
+            food.setIdshop(MainActivity.user.getId());
             food.setUrlfood(downloadUrl.toString());
             food.setName(edtName.getText().toString());
             food.setPrice(Integer.parseInt(edtPrice.getText().toString()));
@@ -262,7 +264,6 @@ public class AddFoodFragment extends Fragment implements AddFoodManager.View, Vi
             Toast.makeText(getContext(), "Xóa món ăn thành công", Toast.LENGTH_LONG).show();
         }
 
-        MainActivity.checkAddFood = true;
         getFragmentManager().popBackStack();
     }
 

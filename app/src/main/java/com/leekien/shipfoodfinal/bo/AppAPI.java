@@ -18,8 +18,16 @@ public interface AppAPI {
 
     @GET("user/login")
     Call<List<User>> getUser();
+    @GET("user/getShip")
+    Call<List<User>> getShip();
+    @GET("user/getShop")
+    Call<List<User>> getShop();
+    @DELETE("user/delete/{id}")
+    Call<ResponseBody> deleteUser(@Path("id") int id);
     @GET("foods/all")
     Call<List<TypeFood>> getFood();
+    @GET("foods/allShop/{id}")
+    Call<List<TypeFood>> getAllFoodShop(@Path("id") int id);
     @POST("foods/add")
     Call<ResponseBody> addFood(@Body Food food);
     @FormUrlEncoded
@@ -58,8 +66,8 @@ public interface AppAPI {
     @PUT("orders/updateend/{id}")
     Call<ResponseBody> updateEnd(@Path("id") int id,@Field("type") String type,@Field("endhour")
             String endhour,@Field("endtime") String endtime);
-    @GET("orders/getSuccessOrder")
-    Call<List<Order>> getSuccessOrder();
+    @GET("orders/getSuccessOrder/{id}")
+    Call<List<Order>> getSuccessOrder(@Path("id") int id);
     @GET("orders/getWaitOrder/{id}")
     Call<Order> getWaitOrder(@Path("id") int id);
     @FormUrlEncoded

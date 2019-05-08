@@ -29,8 +29,8 @@ public class ShowInfoInteractor  implements ShowInfoManager.Interactor{
 
 
     @Override
-    public void getListStep(String lat, String lon, onPostSuccess onPostSuccess) {
-        GetDirectionAsynTask getDirectionAsynTask = new GetDirectionAsynTask(lat,lon, MainActivity.latShop,MainActivity.lonShop,onPostSuccess);
+    public void getListStep(String lat, String lon,String shoplat,String shoplon, onPostSuccess onPostSuccess) {
+        GetDirectionAsynTask getDirectionAsynTask = new GetDirectionAsynTask(lat,lon,shoplat,shoplon,onPostSuccess);
         getDirectionAsynTask.execute();
     }
 

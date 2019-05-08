@@ -45,8 +45,8 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.ViewHold
         final Order order = orderList.get(i);
         viewHolder.tvDistance.setText(order.getDistance());
         viewHolder.tvStatus.setText(order.getType());
-        viewHolder.tvLocation.setText(order.getAddress());
-        viewHolder.tvId.setText("Đơn #"+order.getId()+"");
+        viewHolder.tvLocation.setText(order.getShopAdress());
+        viewHolder.tvId.setText("#"+order.getId()+"");
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

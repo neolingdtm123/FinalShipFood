@@ -87,21 +87,30 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
             @Override
             public void onClick(View view) {
                 if (num != 0) {
-                    food.setNumberDat(num + "");
-                    if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
-                        for (int i = 0; i < MainActivity.listFood.size(); i++) {
-                            if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
-                                    == food.getIdTypeFood()) {
-                                MainActivity.listFood.set(i, food);
-                                check = true;
+                    if (MainActivity.idshop == 0 || MainActivity.idshop == food.getIdshop()) {
+                        MainActivity.idshop = food.getIdshop();
+                        food.setNumberDat(num + "");
+                        if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
+                            for (int i = 0; i < MainActivity.listFood.size(); i++) {
+                                if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()
+                                        == food.getIdTypeFood()) {
+                                    MainActivity.listFood.set(i, food);
+                                    check = true;
+                                }
                             }
-                        }
 
+                        }
+                        if (!check) {
+                            MainActivity.listFood.add(food);
+                        }
+                    } else {
+                        CommonActivity.createAlertDialog(getActivity(),getString(R.string.notify_order),getString(R.string.shipfood)).show();
                     }
-                    if (!check) {
-                        MainActivity.listFood.add(food);
-                    }
+
                 } else {
+                    if(MainActivity.listFood.size()==1&& food.getIdshop() == MainActivity.idshop){
+                        MainActivity.idshop = 0;
+                    }
                     if (!CommonActivity.isNullOrEmpty(MainActivity.listFood)) {
                         for (int i = 0; i < MainActivity.listFood.size(); i++) {
                             if (MainActivity.listFood.get(i).getId() == food.getId() && MainActivity.listFood.get(i).getIdTypeFood()

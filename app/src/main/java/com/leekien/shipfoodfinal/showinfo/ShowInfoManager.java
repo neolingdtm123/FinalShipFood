@@ -20,7 +20,7 @@ public class ShowInfoManager {
     }
 
     public interface Presenter {
-        void getInfo(String lat, String lon);
+        void getInfo(String lat, String lon,String lat1,String lon1);
 
         void accept(Order order);
 
@@ -28,7 +28,7 @@ public class ShowInfoManager {
     }
 
     public interface Interactor {
-        void getListStep(String lat, String lon, onPostSuccess onPostSuccess);
+        void getListStep(String lat, String lon,String shoplat,String shoplon, onPostSuccess onPostSuccess);
 
         void updateOrder(Order order, Callback<ResponseBody> callback);
 

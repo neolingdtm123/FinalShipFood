@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -17,10 +18,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,13 +89,18 @@ public class CartFragment extends Fragment
     CartPresenter cartPresenter;
     RecyclerView rcvDonHang;
     TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice, tvSubmit, tvShow;
+    EditText edtShipAddress;
     int priceDat = 0;
     double priceDistance = 0;
     String distanceMain;
     int dem = 0;
     int priceSum = 0;
-    int idOrder;
+    int priceShip = 0;
+    int idOrder = 0;
     Order order;
+    String address;
+    List<User> userList;
+    String addShop;
 
     @Nullable
     @Override
@@ -106,8 +116,11 @@ public class CartFragment extends Fragment
 //        listFood = new Gson().fromJson(json, type);
         Bundle bundle = getArguments();
         if (!CommonActivity.isNullOrEmpty(bundle)) {
-            idOrder = bundle.getInt("idOrder");
+            if (idOrder == 0) {
+                idOrder = bundle.getInt("idOrder");
+            }
             order = (Order) bundle.getSerializable("order");
+            userList = (List<User>) bundle.getSerializable("shop");
         }
         tvDistance = view.findViewById(R.id.tvDistance);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
@@ -115,10 +128,24 @@ public class CartFragment extends Fragment
         tvSubmit = view.findViewById(R.id.tvSubmit);
         tvSumPrice = view.findViewById(R.id.tvSumPrice);
         tvShow = view.findViewById(R.id.tvShow);
+        edtShipAddress = view.findViewById(R.id.edtShipAddress);
+
         if (MainActivity.checkOrder) {
             tvSubmit.setVisibility(View.VISIBLE);
         } else {
             tvShow.setVisibility(View.VISIBLE);
+            edtShipAddress.setKeyListener(null);
+        }
+        if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
+            if (CommonActivity.isNullOrEmpty(order.getAddressship())) {
+                edtShipAddress.setVisibility(View.GONE);
+            } else {
+                edtShipAddress.setText(order.getAddressship());
+                edtShipAddress.setVisibility(View.VISIBLE);
+            }
+
+        } else {
+            edtShipAddress.setText(address);
         }
         cartPresenter.showList();
         tvSubmit.setOnClickListener(this);
@@ -127,22 +154,57 @@ public class CartFragment extends Fragment
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-//        view.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-//                if (i == KeyEvent.KEYCODE_BACK) {
-//                     myPreferences
-//                            = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                    SharedPreferences.Editor myEditor = myPreferences.edit();
-//                    Gson gson = new Gson();
-//                    String json = gson.toJson(listFood);
-//                    myEditor.putString("MyObject", json);
-//                    myEditor.commit();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+        edtShipAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                address = charSequence.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        edtShipAddress.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        // Identifier of the action. This will be either the identifier you supplied,
+                        // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH
+                                || actionId == EditorInfo.IME_ACTION_DONE
+                                || event.getAction() == KeyEvent.ACTION_DOWN
+                                || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                            if (CommonActivity.isNullOrEmpty(edtShipAddress.getText().toString())) {
+                                mGoogleMap.clear();
+                                showShopLocation();
+                                showCameraToPosition(mCurrentLocation, 13f);
+                                cartPresenter.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude + "",
+                                        addShop.split("/")[0], addShop.split("/")[1]);
+                            } else {
+                                String addUser = getLocationFromAddress(edtShipAddress.getText().toString());
+                                if (CommonActivity.isNullOrEmpty(addUser)) {
+                                    CommonActivity.createAlertDialog(getActivity(), getString(R.string.error_location), getString(R.string.shipfood)).show();
+                                } else {
+                                    mGoogleMap.clear();
+                                    showShopLocation();
+                                    showShipLocation(addUser);
+                                    cartPresenter.getDistance(addUser.split("/")[0], addUser.split("/")[1],
+                                            addShop.split("/")[0], addShop.split("/")[1]);
+                                }
+                            }
+                            return true;
+                        }
+                        // Return true if you have consumed the action, else false.
+                        return false;
+                    }
+                });
 
         return view;
     }
@@ -187,7 +249,10 @@ public class CartFragment extends Fragment
                 showCameraToPosition(mCurrentLocation, 13f);
             }
         }
-        cartPresenter.getDistance(mCurrentLocation);
+
+        addShop = getLocationFromAddress(MainActivity.userShop.getLocation());
+        cartPresenter.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude + "", addShop.split("/")[0], addShop.split("/")[1]);
+        showShopLocation();
 
 
     }
@@ -204,20 +269,7 @@ public class CartFragment extends Fragment
 
     @Override
     public void onMapClick(LatLng latLng) {
-//        mLatLngSearchPosition = latLng;
-//        showMarkerToGoogleMap(mLatLngSearchPosition);
 //
-//        if (mRadiusSearch.get() <= Constant.RADIUS_DEFAULT
-//                || mRadiusSearch.get() >= Constant.RADIUS_ALL) {
-//            showCameraToPosition(mLatLngSearchPosition, Constant.LEVEL_ZOOM_DEFAULT);
-//        } else {
-//            final LatLngBounds circleBounds = new LatLngBounds(
-//                    locationMinMax(false, mLatLngSearchPosition, mRadiusSearch.get()),
-//                    locationMinMax(true, mLatLngSearchPosition, mRadiusSearch.get()));
-//            showCameraToPosition(circleBounds, 200);
-//        }
-//
-//        showCircleToGoogleMap(mLatLngSearchPosition, mRadiusSearch.get());
     }
 
     @Override
@@ -241,7 +293,6 @@ public class CartFragment extends Fragment
         } else {
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
-        showShopLocation();
 
 
     }
@@ -279,10 +330,16 @@ public class CartFragment extends Fragment
         order.setCurrentlon(String.valueOf(mCurrentLocation.longitude));
         order.setFoodList(listFood);
         order.setDistance(distanceMain);
-        order.setPrice(priceSum + "");
+        order.setPrice(priceShip + "");
         order.setPricefood(priceDat + "");
+        order.setAddressship(edtShipAddress.getText().toString());
         List<User> list = new ArrayList<>();
         list.add(MainActivity.user);
+        for (User user : userList) {
+            if (user.getId() == MainActivity.idshop) {
+                list.add(user);
+            }
+        }
         order.setUserList(list);
         cartPresenter.newOrder(order, listFood);
 
@@ -304,10 +361,22 @@ public class CartFragment extends Fragment
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
+        LatLng latLng = new LatLng(Double.valueOf(addShop.split("/")[0]), Double.valueOf(addShop.split("/")[1]));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        markerOptions.alpha(0.8f);
+        markerOptions.rotation(0);
+        Marker marker = mGoogleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+    }
+
+    private void showShipLocation(String addUser) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng latLng = new LatLng(Double.valueOf(addUser.split("/")[0]), Double.valueOf(addUser.split("/")[1]));
+        markerOptions.position(latLng);
+        markerOptions.title("Vị trí cần ship");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         markerOptions.alpha(0.8f);
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
@@ -332,18 +401,23 @@ public class CartFragment extends Fragment
     @Override
     public void showDistance(String distance) {
         distanceMain = distance;
-        tvDistance.setText(distance);
-        String[] a = distance.split("km");
+        String a = "";
+        if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
+            a = order.getDistance().split("km")[0];
+            tvDistance.setText(order.getDistance());
+        } else {
+            a = distance.split("km")[0];
+            tvDistance.setText(distance);
+        }
         double gia = 0;
-        if (Double.parseDouble(a[0]) <= 2) {
-            gia = 0;
-        } else if (Double.parseDouble(a[0]) <= 5) {
+        if (Double.parseDouble(a) <= 4) {
             gia = 20000;
         } else {
-            gia = 20000 + 5000 * (Double.parseDouble(a[0]) - 5);
+            gia = 20000 + 5000 * (Double.parseDouble(a) - 4);
         }
         Double myDouble = Double.valueOf(gia);
         dem = myDouble.intValue();
+        priceShip = dem;
         tvPriceDistance.setText(AppUtils.formatMoney(dem + ""));
         if (!MainActivity.checkOrder && !CommonActivity.isNullOrEmpty(order)) {
             tvPriceFood.setText(AppUtils.formatMoney(order.getPricefood()));
@@ -353,6 +427,7 @@ public class CartFragment extends Fragment
         } else {
             tvPriceFood.setText(AppUtils.formatMoney(showPrice() + ""));
             priceSum = 0;
+            priceSum = showPrice() + dem;
             tvSumPrice.setText(AppUtils.formatMoney(showPrice() + dem + ""));
         }
 
@@ -398,13 +473,6 @@ public class CartFragment extends Fragment
 
     @Override
     public boolean onBackPressed() {
-//        SharedPreferences myPreferences
-//                = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        SharedPreferences.Editor myEditor = myPreferences.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(listFood);
-//        myEditor.putString("MyObject", json);
-//        myEditor.commit();
         return false;
     }
 
@@ -413,14 +481,34 @@ public class CartFragment extends Fragment
         int discount;
         for (Food food : listFood) {
             if ("0".equals(food.getDiscount())) {
-                discount = 100;
+                discount = 0;
             } else {
                 discount = Integer.parseInt(food.getDiscount());
             }
             if (!CommonActivity.isNullOrEmpty(food.getPriceDat())) {
-                priceDat += (Integer.parseInt(food.getPriceDat()) * (100-discount) / 100);
+                priceDat += (Integer.parseInt(food.getPriceDat()) * (100 - discount) / 100);
             }
         }
         return priceDat;
+    }
+
+    public String getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (CommonActivity.isNullOrEmpty(address)) {
+                return null;
+            }
+            Address location = address.get(0);
+            String lat = String.valueOf(location.getLatitude());
+            String lon = String.valueOf(location.getLongitude());
+            return lat + "/" + lon;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

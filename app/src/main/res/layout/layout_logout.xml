@@ -36,7 +36,7 @@
                 <com.leekien.shipfoodfinal.customView.RobLightText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Họ và tên"
+                    android:text="Tên khách hàng"
                     android:textSize="15sp" />
 
                 <LinearLayout
@@ -96,7 +96,7 @@
                         <com.leekien.shipfoodfinal.customView.RobEditText
                             android:id="@+id/edtLocation"
                             android:layout_width="match_parent"
-                            android:layout_height="30dp"
+                            android:layout_height="40dp"
                             android:layout_margin="1dp"
                             android:background="@color/gray_1"
                             android:clickable="true"
@@ -145,6 +145,7 @@
                 </LinearLayout>
 
                 <com.leekien.shipfoodfinal.customView.RobLightText
+                    android:id="@+id/tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -152,6 +153,7 @@
                     android:textSize="15sp" />
 
                 <LinearLayout
+                    android:id="@+id/ln"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp">
@@ -188,6 +190,29 @@
 
                     </FrameLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    >
+                    <com.leekien.shipfoodfinal.customView.RobLightText
+                        android:textColor="#000000"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.2"
+                        android:layout_height="wrap_content"
+                        android:text="Thống kê doanh thu"
+                        android:layout_gravity="center"
+                        android:textSize="15sp" />
+                    <ImageView
+                        app:srcCompat="@drawable/ic_fast_forward"
+                        android:layout_width="0dp"
+                        android:id="@+id/imgStatis"
+                        android:scaleType="fitStart"
+                        android:layout_gravity="left|center"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"/>
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

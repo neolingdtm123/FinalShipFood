@@ -61,7 +61,7 @@ public class ShipperPresenter implements ShipperManager.Presenter, DonHangAdapte
 
     @Override
     public void onReturn(Order order, int groupPosition) {
-        view.directShip(order.getCurrentlat(),order.getCurrentlon());
+        view.directShip(order,order.getAddress(),order.getShopAdress());
     }
 
     @Override
