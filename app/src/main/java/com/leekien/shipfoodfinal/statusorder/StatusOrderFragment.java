@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -47,13 +48,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.data.Subscription;
-import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -72,6 +73,7 @@ import com.leekien.shipfoodfinal.bo.onBackDialog;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.home.DialogFragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +99,8 @@ public class StatusOrderFragment extends Fragment
     Button btnCancel;
     Order orderMain;
     Context context;
+    String addShop;
+
 
     @Override
     public void onAttach(Context context) {
@@ -181,6 +185,8 @@ public class StatusOrderFragment extends Fragment
             if (mLatLngSearchPosition == null) {
                 showCameraToPosition(mCurrentLocation, 15f);
             }
+            addShop = getLocationFromAddress(MainActivity.userShop.getLocation());
+            showShopLocation();
         }
 
 
@@ -217,11 +223,12 @@ public class StatusOrderFragment extends Fragment
                 && ActivityCompat.checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+            UiSettings uiSettings = mGoogleMap.getUiSettings();
+            uiSettings.setMyLocationButtonEnabled(true);
             mGoogleMap.setMyLocationEnabled(true);
         } else {
             //            Common.checkAndRequestPermissionsGPS(getActivity());
         }
-        showShopLocation();
         final boolean shouldStopLoop = false;
         final Handler mHandler = new Handler();
 
@@ -283,7 +290,7 @@ public class StatusOrderFragment extends Fragment
 
     private void showShopLocation() {
         MarkerOptions markerOptions = new MarkerOptions();
-        LatLng latLng = new LatLng(Double.valueOf(MainActivity.latShop), Double.valueOf(MainActivity.lonShop));
+        LatLng latLng = new LatLng(Double.valueOf(addShop.split("/")[0]), Double.valueOf(addShop.split("/")[1]));
         markerOptions.position(latLng);
         markerOptions.title("Vị trí của shop");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
@@ -291,6 +298,25 @@ public class StatusOrderFragment extends Fragment
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
         marker.showInfoWindow();
+    }
+    public String getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(getContext());
+        List<android.location.Address> address;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (CommonActivity.isNullOrEmpty(address)) {
+                return null;
+            }
+            Address location = address.get(0);
+            String lat = String.valueOf(location.getLatitude());
+            String lon = String.valueOf(location.getLongitude());
+            return lat + "/" + lon;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     ;
@@ -356,13 +382,6 @@ public class StatusOrderFragment extends Fragment
         }
 
         MainActivity.listFood = new ArrayList<>();
-//        SharedPreferences myPreferences
-//                = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        SharedPreferences.Editor myEditor = myPreferences.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(MainActivity.listFood);
-//        myEditor.putString("MyObject", json);
-//        myEditor.commit();
         getFragmentManager().popBackStack("homeframent", 0);
     }
 

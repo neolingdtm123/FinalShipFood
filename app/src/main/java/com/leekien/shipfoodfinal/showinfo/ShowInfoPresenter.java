@@ -50,6 +50,24 @@ public class ShowInfoPresenter implements ShowInfoManager.Presenter {
     }
 
     @Override
+    public void send(int id) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    view.end();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.send(id,callback);
+    }
+
+    @Override
     public void updatEnd(final Order order1) {
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override

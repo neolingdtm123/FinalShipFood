@@ -1,5 +1,6 @@
 package com.leekien.shipfoodfinal.signup;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.bo.AppAPI;
 import com.leekien.shipfoodfinal.bo.Comment;
 import com.leekien.shipfoodfinal.bo.NetworkController;
@@ -23,13 +24,13 @@ public class SignUpInteractor implements SignUpManager.Interactor  {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void add(User user, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = appAPI.addUser(user);
+        Call<ResponseBody> call = appAPI.addUser(user, MainActivity.auth);
         call.enqueue(callback);
     }
 
     @Override
     public void getUserName(Callback<List<String>> callback) {
-        Call<List<String>> call = appAPI.getUserName();
+        Call<List<String>> call = appAPI.getUserName(MainActivity.auth);
         call.enqueue(callback);
     }
 

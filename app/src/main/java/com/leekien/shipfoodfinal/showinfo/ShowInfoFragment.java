@@ -133,8 +133,17 @@ public class ShowInfoFragment extends Fragment
         tvPhone.setText(order.getUserList().get(0).getPhone());
         tvId.setText("Đơn hàng" + " " + "#" + order.getId());
         String text = "";
-        for (Food food : order.getFoodList()) {
-            text += food.getName();
+        for (int i =0;i<order.getFoodList().size();i++) {
+            Food food = order.getFoodList().get(i);
+            String text1 ="";
+            if(i!= order.getFoodList().size()-1){
+                text1= food.getName()+"("+food.getNumberDat()+" phần)+";
+            }
+            else {
+                text1= food.getName()+"("+food.getNumberDat()+" phần)";
+            }
+
+            text += text1;
         }
         tvPriceFood.setText("Giá sản phẩm:" + " " + order.getPricefood());
         tvPrice.setText("Giá ship:" + " " + " " + order.getPrice());
@@ -226,12 +235,32 @@ public class ShowInfoFragment extends Fragment
             btnSubmit1.setVisibility(View.GONE);
             btnSubmit.setVisibility(View.VISIBLE);
         } else {
-            MarkerOptions markerOptions = new MarkerOptions();
+//            MarkerOptions markerOptions = new MarkerOptions();
+//            if ("".equals(order.getAddressship())) {
+//                latlngMain = new LatLng(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon()));
+//            } else {
+//                latlngMain = new LatLng(Double.valueOf(add1.split("/")[0]), Double.valueOf(add1.split("/")[1]));
+//            }
+//            markerOptions.position(latlngMain);
+//            markerOptions.title("Vị trí cần ship");
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//            markerOptions.alpha(0.8f);
+//            markerOptions.rotation(0);
+//            Marker marker = mGoogleMap.addMarker(markerOptions);
+//            marker.showInfoWindow();
+//            showCameraToPosition(latlngMain, 13f);
             if ("".equals(order.getAddressship())) {
+                showInfoPresenter.getInfo(add.split("/")[0], add.split("/")[1],
+                        order.getCurrentlat(), order.getCurrentlon());
                 latlngMain = new LatLng(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon()));
+
             } else {
+                add1 = getLocationFromAddress(order.getAddressship());
+                showInfoPresenter.getInfo(add.split("/")[0], add.split("/")[1],
+                        add1.split("/")[0], add1.split("/")[1]);
                 latlngMain = new LatLng(Double.valueOf(add1.split("/")[0]), Double.valueOf(add1.split("/")[1]));
             }
+            MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latlngMain);
             markerOptions.title("Vị trí cần ship");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -240,14 +269,6 @@ public class ShowInfoFragment extends Fragment
             Marker marker = mGoogleMap.addMarker(markerOptions);
             marker.showInfoWindow();
             showCameraToPosition(latlngMain, 13f);
-            if ("".equals(order.getAddressship())) {
-                showInfoPresenter.getInfo(add.split("/")[0], add.split("/")[1],
-                        order.getCurrentlat(), order.getCurrentlon());
-            } else {
-                add1 = getLocationFromAddress(order.getAddressship());
-                showInfoPresenter.getInfo(add.split("/")[0], add.split("/")[1],
-                        add1.split("/")[0], add1.split("/")[0]);
-            }
 
             btnSubmit1.setVisibility(View.VISIBLE);
             btnSubmit.setVisibility(View.GONE);
@@ -441,6 +462,7 @@ public class ShowInfoFragment extends Fragment
 
     @Override
     public void replace(Order order) {
+        showInfoPresenter.send(order.getId());
         MarkerOptions markerOptions = new MarkerOptions();
         if("".equals(order.getAddressship())){
             latlngMain = new LatLng(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon()));

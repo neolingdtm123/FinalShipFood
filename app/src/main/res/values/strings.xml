@@ -11,6 +11,6 @@
     <string name="error_order">Bạn đang còn đơn hàng chưa hoàn thành!</string>
     <string name="error_order_change">Bạn không được thay đổi đơn hàng chưa hoàn thành!</string>
     <string name="error_no_data">Không có dữ liệu trong thời gian bạn chọn!</string>
-    <string name="notify_order">Bạn chỉ được các sản phẩm cùng 1 cửa hàng trong 1 đơn hàng!</string>
+    <string name="notify_order">Bạn chỉ được chọn các sản phẩm cùng 1 cửa hàng trong 1 đơn hàng!</string>
     <string name="error_location">Không tìm thấy địa chỉ này,bạn cần nhập lại địa chỉ chính xác hơn!</string>
 </resources>

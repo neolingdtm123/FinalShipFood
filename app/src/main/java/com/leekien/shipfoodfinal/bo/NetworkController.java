@@ -6,9 +6,14 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import com.leekien.shipfoodfinal.MainActivity;
 
 import java.io.IOException;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -38,6 +43,16 @@ public class NetworkController {
      * @return
      */
     public static AppAPI getInfoService() {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().addHeader("Authorization", MainActivity.auth).build();
+                return chain.proceed(request);
+            }
+        });
         if (appAPI == null) {
             Gson gson = new GsonBuilder()
                     .setLenient()
@@ -49,12 +64,32 @@ public class NetworkController {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     //.client(getUnsafeOkHttpClient(60,60))
-                    // .client(okHttpClient())
+                     .client(httpClient.build())
                     .build();
             appAPI = retrofit.create(AppAPI.class);
         }
         return appAPI;
     }
+    public static AppAPI getInfoServices() {
+
+
+        if (appAPI == null) {
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .registerTypeAdapter(Long.class,new LongTypeAdapter())
+                    .registerTypeAdapter(Integer.class, new IntegerTypeAdapter())
+                    .registerTypeAdapter(Double.class,new DoubleTypeAdapter())
+                    .create();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    //.client(getUnsafeOkHttpClient(60,60))
+                    .build();
+            appAPI = retrofit.create(AppAPI.class);
+        }
+        return appAPI;
+    }
+
 
     public static AppAPI signInAuth() {
         if (appAPI == null) {

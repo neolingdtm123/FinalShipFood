@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        >
+
+        <FrameLayout
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="7"
+            android:background="@color/gray_3">
+
+            <com.leekien.shipfoodfinal.customView.RobEditText
+                android:id="@+id/edtPass"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="1dp"
+                android:hint="Nhập mật khẩu mới"
+                android:background="@color/gray_1"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
+                android:textSize="14sp" />
+
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <FrameLayout
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="7"
+            android:background="@color/gray_3">
+
+            <com.leekien.shipfoodfinal.customView.RobEditText
+                android:id="@+id/edtConfirmPass"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_margin="1dp"
+                android:hint="Nhập lại mật khẩu mới"
+                android:background="@color/gray_1"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
+                android:textSize="14sp" />
+
+        </FrameLayout>
+    </LinearLayout>
+    <com.leekien.shipfoodfinal.customView.RobButton
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_button_tieptuc"
+        android:text="Đổi mật khẩu"
+        android:textColor="#FFFFFF"
+        android:visibility="visible" />
+
+</LinearLayout>

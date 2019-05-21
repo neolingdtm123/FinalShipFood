@@ -14,7 +14,7 @@ public class HistoryInteractor implements HistoryManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void getOrderCus(Callback<List<Order>> callback) {
-        Call<List<Order>> call = appAPI.getOrderCus(MainActivity.user.getId());
+        Call<List<Order>> call = appAPI.getOrderCus(MainActivity.user.getId(),MainActivity.auth);
         call.enqueue(callback);
     }
 }

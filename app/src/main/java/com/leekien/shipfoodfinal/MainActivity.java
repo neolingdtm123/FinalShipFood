@@ -43,13 +43,12 @@ public class MainActivity extends AppCompatActivity {
     static public User user;
     static public User userShop;
     static public List<Food> listFood = new ArrayList<>();
-    static public String latShop = "20.997791";
-    static public String lonShop = "105.841122";
     static public boolean checkOrder = true;
     static public boolean checkAddFood = false;
     static public double lat;
     static public double lon;
     static public int idshop =0;
+    static public String auth;
 
     @Override
     protected void onStop() {

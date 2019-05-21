@@ -57,7 +57,7 @@ public class PushLocationService extends Service {
                 };
 
 
-                Call<ResponseBody> call = appAPI.updateLocation(MainActivity.user.getId(), String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                Call<ResponseBody> call = appAPI.updateLocation(MainActivity.user.getId(), String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()),MainActivity.auth);
                 call.enqueue(callback);
             }
 

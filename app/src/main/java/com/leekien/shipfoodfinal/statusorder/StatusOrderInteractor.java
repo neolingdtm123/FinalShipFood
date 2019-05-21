@@ -1,5 +1,6 @@
 package com.leekien.shipfoodfinal.statusorder;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.bo.AppAPI;
 import com.leekien.shipfoodfinal.bo.NetworkController;
 import com.leekien.shipfoodfinal.bo.Order;
@@ -13,7 +14,7 @@ public class StatusOrderInteractor implements StatusOrderManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void getOrder(Callback<Order> callback, int idOrder) {
-        Call<Order> call = appAPI.getOrder(idOrder);
+        Call<Order> call = appAPI.getOrder(idOrder, MainActivity.auth);
         call.enqueue(callback);
     }
     @Override
@@ -25,7 +26,7 @@ public class StatusOrderInteractor implements StatusOrderManager.Interactor {
         else {
             content=order.getContentcancel();
         }
-        Call<ResponseBody> call = appAPI.updateOrderSuccess(order.getId(),order.getType(),content);
+        Call<ResponseBody> call = appAPI.updateOrderSuccess(order.getId(),order.getType(),content,MainActivity.auth);
         call.enqueue(callback);
     }
 }

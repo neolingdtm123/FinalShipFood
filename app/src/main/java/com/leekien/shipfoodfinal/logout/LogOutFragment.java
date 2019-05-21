@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
+import com.leekien.shipfoodfinal.changepass.ChangePassFragment;
 import com.leekien.shipfoodfinal.common.CommonActivity;
 import com.leekien.shipfoodfinal.statis.StatisFragment;
 
@@ -26,8 +27,8 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
     EditText edtName, edtLocation, edtPhone, edtBirthDate;
     Button btnBack, btnSubmit;
     TextView tv;
-    LinearLayout ln;
-    ImageView image,imgStatis;
+    LinearLayout ln,lnStatis;
+    ImageView image,imgStatis,imgchangePass;
     LogOutPresenter logOutPresenter;
 
     @Nullable
@@ -43,6 +44,8 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
         btnSubmit = view.findViewById(R.id.btnSubmit);
         image = view.findViewById(R.id.image);
         imgStatis = view.findViewById(R.id.imgStatis);
+        lnStatis = view.findViewById(R.id.lnStatis);
+        imgchangePass = view.findViewById(R.id.imgchangePass);
         ln = view.findViewById(R.id.ln);
         tv = view.findViewById(R.id.tv);
         initView();
@@ -50,6 +53,7 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
         btnSubmit.setOnClickListener(this);
         image.setOnClickListener(this);
         imgStatis.setOnClickListener(this);
+        imgchangePass.setOnClickListener(this);
         return view;
     }
 
@@ -61,12 +65,12 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
             edtLocation.setText(MainActivity.user.getLocation());
         }
         if(!CommonActivity.isNullOrEmpty(MainActivity.user)&&"shop".equals(MainActivity.user.getType())){
-            imgStatis.setVisibility(View.VISIBLE);
+            lnStatis.setVisibility(View.VISIBLE);
             tv.setVisibility(View.GONE);
             ln.setVisibility(View.GONE);
         }
         else {
-            imgStatis.setVisibility(View.GONE);
+            lnStatis.setVisibility(View.GONE);
             tv.setVisibility(View.VISIBLE);
             ln.setVisibility(View.VISIBLE);
         }
@@ -91,6 +95,10 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
                 bundle.putString("check","1");
                 statisFragment.setArguments(bundle);
                 replaceFragment(statisFragment, "statisFragment");
+                break;
+            case R.id.imgchangePass:
+                ChangePassFragment changePassFragment = new ChangePassFragment();
+                replaceFragment(changePassFragment, "changePassFragment");
                 break;
         }
     }

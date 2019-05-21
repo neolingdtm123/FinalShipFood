@@ -1,5 +1,6 @@
 package com.leekien.shipfoodfinal.admin;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.bo.AppAPI;
 import com.leekien.shipfoodfinal.bo.NetworkController;
 import com.leekien.shipfoodfinal.bo.User;
@@ -14,20 +15,20 @@ public class AdminInteractor implements AdminManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void getShip(Callback<List<User>> callback) {
-        Call<List<User>> call = appAPI.getShip();
+        Call<List<User>> call = appAPI.getShip(MainActivity.auth);
         call.enqueue(callback);
     }
 
     @Override
     public void getShop(Callback<List<User>> callback) {
-        Call<List<User>> call = appAPI.getShop();
+        Call<List<User>> call = appAPI.getShop(MainActivity.auth);
         call.enqueue(callback);
 
     }
 
     @Override
     public void deleteUser(int id, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = appAPI.deleteUser(id);
+        Call<ResponseBody> call = appAPI.deleteUser(id,MainActivity.auth);
         call.enqueue(callback);
     }
 }

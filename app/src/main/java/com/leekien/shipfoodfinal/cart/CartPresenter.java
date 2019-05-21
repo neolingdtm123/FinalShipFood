@@ -70,6 +70,24 @@ public class CartPresenter implements CartManager.Presenter, CartAdapter.onRetur
         interactor.newFoodOrder(foodorder,callback);
     }
 
+    @Override
+    public void send(int id) {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.send(callback,id);
+    }
+
     public CartPresenter(CartManager.View view) {
         this.view = view;
         this.interactor = new CartInteractor();

@@ -1,5 +1,6 @@
 package com.leekien.shipfoodfinal.cart;
 
+import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.asyntask.GetDirectionAsynTask;
 import com.leekien.shipfoodfinal.asyntask.GetDistanceAsyn;
 import com.leekien.shipfoodfinal.bo.AppAPI;
@@ -20,13 +21,19 @@ public class CartInteractor implements CartManager.Interactor {
 
     @Override
     public void newOrder(Order order, List<Food> list, Callback<Integer> callback) {
-        Call<Integer> call = appAPI.addOrder(order);
+        Call<Integer> call = appAPI.addOrder(order,MainActivity.auth);
         call.enqueue(callback);
     }
 
     @Override
     public void newFoodOrder(Foodorder foodorder, Callback<ResponseBody> callback) {
-        Call<ResponseBody> call = appAPI.addFoodOrder(foodorder);
+        Call<ResponseBody> call = appAPI.addFoodOrder(foodorder,MainActivity.auth);
+        call.enqueue(callback);
+    }
+
+    @Override
+    public void send(Callback<ResponseBody> callback,int id) {
+        Call<ResponseBody> call = appAPI.push(id, "Đặt hàng",MainActivity.auth);
         call.enqueue(callback);
     }
 

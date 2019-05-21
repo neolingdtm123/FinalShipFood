@@ -37,14 +37,20 @@ public class ShowInfoInteractor  implements ShowInfoManager.Interactor{
     @Override
     public void updateOrder(Order order, Callback<ResponseBody> callback) {
         int a = order.getId();
-        Call<ResponseBody> call = appAPI.updateOrder(a,order.getType(),order.getShiphour(),MainActivity.user.getId(),order.getShiptime());
+        Call<ResponseBody> call = appAPI.updateOrder(a,order.getType(),order.getShiphour(),MainActivity.user.getId(),order.getShiptime(),MainActivity.auth);
+        call.enqueue(callback);
+    }
+
+    @Override
+    public void send(int id, Callback<ResponseBody> callback) {
+        Call<ResponseBody> call = appAPI.push(id,"Nhận hàng",MainActivity.auth);
         call.enqueue(callback);
     }
 
     @Override
     public void updateEnd(Order order, Callback<ResponseBody> callback) {
         int a = order.getId();
-        Call<ResponseBody> call = appAPI.updateEnd(a,order.getType(),order.getEndhour(),order.getEndtime());
+        Call<ResponseBody> call = appAPI.updateEnd(a,order.getType(),order.getEndhour(),order.getEndtime(),MainActivity.auth);
         call.enqueue(callback);
     }
 

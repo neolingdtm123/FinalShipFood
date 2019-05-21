@@ -22,7 +22,8 @@ import butterknife.ButterKnife;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     List<Food> foodList;
     onReturn onReturn;
-    public CartAdapter(List<Food> foodList,onReturn onReturn) {
+
+    public CartAdapter(List<Food> foodList, onReturn onReturn) {
         this.foodList = foodList;
         this.onReturn = onReturn;
     }
@@ -40,9 +41,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final CartAdapter.ViewHolder viewHolder, final int i) {
         final Food food = foodList.get(i);
         Picasso.get().load(food.getUrlfood()).into(viewHolder.imageView);
-        if(!MainActivity.checkOrder){
-            viewHolder.tvPrice.setVisibility(View.GONE);
-            viewHolder.textView.setVisibility(View.GONE);
+        if (!MainActivity.checkOrder) {
+//            viewHolder.tvPrice.setVisibility(View.GONE);
+//            viewHolder.textView.setVisibility(View.GONE);
             viewHolder.imgXoa.setVisibility(View.GONE);
         }
         int discount;
@@ -52,23 +53,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         } else {
             discount = Integer.parseInt(food.getDiscount());
             viewHolder.tvDiscount.setVisibility(View.VISIBLE);
-            viewHolder.tvDiscount.setText("-"+food.getDiscount()+"%");
+            viewHolder.tvDiscount.setText("-" + food.getDiscount() + "%");
         }
         viewHolder.tvName.setText(food.getName());
-        if(!CommonActivity.isNullOrEmpty(food.getPriceDat())){
-            viewHolder.tvPrice.setText(AppUtils.formatMoney(Integer.parseInt(food.getPriceDat()) * (100-discount) / 100+""));
-        }
-        viewHolder.textView.setText(food.getNumberDat() + " " +"phần");
+        viewHolder.tvPrice.setText(AppUtils.formatMoney(food.getPrice()*Integer.parseInt(food.getNumberDat()) * (100 - discount) / 100 + ""));
+
+        viewHolder.textView.setText(food.getNumberDat() + " " + "phần");
 
         viewHolder.imgXoa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReturn.onReturn(food,i);
+                onReturn.onReturn(food, i);
             }
         });
     }
-    public interface  onReturn{
-        void onReturn(Food food,int position);
+
+    public interface onReturn {
+        void onReturn(Food food, int position);
     }
 
     @Override
@@ -78,8 +79,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView,imgCong,imgTru,imgXoa;
-        TextView tvName,tvPrice,textView,tvDiscount;
+        ImageView imageView, imgCong, imgTru, imgXoa;
+        TextView tvName, tvPrice, textView, tvDiscount;
 
         public ViewHolder(View itemView) {
             super(itemView);

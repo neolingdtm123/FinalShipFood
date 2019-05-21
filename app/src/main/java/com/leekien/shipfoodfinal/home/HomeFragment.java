@@ -36,12 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 import com.leekien.shipfoodfinal.AppUtils;
 import com.leekien.shipfoodfinal.MainActivity;
 import com.leekien.shipfoodfinal.R;
@@ -61,18 +55,10 @@ import com.leekien.shipfoodfinal.customView.RobBoldText;
 import com.leekien.shipfoodfinal.customView.RobEditText;
 import com.leekien.shipfoodfinal.logout.TabFragment;
 import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import butterknife.BindView;
 import me.relex.circleindicator.CircleIndicator;
-
-import static android.app.Activity.RESULT_OK;
-import static com.leekien.shipfoodfinal.MainActivity.listFood;
 
 public class HomeFragment extends Fragment implements HomeManager.View, View.OnClickListener, IOnBackPressed, onBackDialog {
     List<String> list = new ArrayList<String>();
@@ -113,6 +99,7 @@ public class HomeFragment extends Fragment implements HomeManager.View, View.OnC
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_customer, container, false);
+        MainActivity.idshop = 0;
         Bundle bundle = getArguments();
         if (!CommonActivity.isNullOrEmpty(bundle)) {
             user = (User) bundle.getSerializable("user");

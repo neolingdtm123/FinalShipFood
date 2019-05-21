@@ -14,7 +14,7 @@ public class StatisInteractor implements StatisManager.Interactor {
     AppAPI appAPI = NetworkController.getInfoService();
     @Override
     public void getSuccessOrder(Callback<List<Order>> callback) {
-        Call<List<Order>> call = appAPI.getSuccessOrder(MainActivity.user.getId());
+        Call<List<Order>> call = appAPI.getSuccessOrder(MainActivity.user.getId(),MainActivity.auth);
         call.enqueue(callback);
     }
 }

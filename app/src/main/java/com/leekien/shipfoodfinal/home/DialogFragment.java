@@ -62,6 +62,7 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
         textViewTitle.setText(food.getName());
         tvPrice.setText(food.getPrice() + " " + "đ");
         num = Integer.parseInt(textView.getText().toString());
+        food.setNumberDat(textView.getText().toString());
         food.setPriceDat(food.getPrice() * num + "");
         imageViewCong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +71,7 @@ public class DialogFragment extends android.support.v4.app.DialogFragment {
                 textView.setText(num + "");
                 tvPrice.setText(AppUtils.formatMoney(food.getPrice() * num + ""));
                 food.setPriceDat(food.getPrice() * num + "");
+
             }
         });
         imageViewTru.setOnClickListener(new View.OnClickListener() {
