@@ -101,6 +101,21 @@ public class StatusOrderPresenter implements StatusOrderManager.Presenter, Statu
     }
 
     @Override
+    public void updateUser() {
+        Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        };
+        interactor.updateUser(callback);
+    }
+
+    @Override
     public void onReturn(StatusOrder statusOrder) {
         view.call(statusOrder.getShipPhone());
     }

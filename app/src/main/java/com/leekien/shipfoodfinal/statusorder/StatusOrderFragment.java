@@ -380,7 +380,13 @@ public class StatusOrderFragment extends Fragment
         if ("2".equals(checkType)) {
             Toast.makeText(getActivity(), getString(R.string.success_cancel), Toast.LENGTH_SHORT).show();
         }
-
+        else {
+            int point = Integer.parseInt(MainActivity.point);
+            point += ((Integer.parseInt(orderMain.getPrice())+Integer.parseInt(orderMain.getPricefood()))/1000);
+            MainActivity.point= String.valueOf(point);
+            statusOrderPresenter.updateUser();
+            Toast.makeText(getActivity(), "Bạn được cộng thêm "+String.valueOf((Integer.parseInt(orderMain.getPrice())+Integer.parseInt(orderMain.getPricefood()))/1000)+" điểm vào điểm rank của mình", Toast.LENGTH_SHORT).show();
+        }
         MainActivity.listFood = new ArrayList<>();
         getFragmentManager().popBackStack("homeframent", 0);
     }

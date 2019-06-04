@@ -77,6 +77,7 @@ public class LoginFragment extends Fragment implements LoginManager.View, View.O
     @Override
     public void replace(String code, User user) {
         MainActivity.user = user;
+        MainActivity.point = user.getPoint();
         if("ship".equals(user.getType())){
             ShipperFragment shipperFragment = new ShipperFragment();
             Bundle bundle = new Bundle();

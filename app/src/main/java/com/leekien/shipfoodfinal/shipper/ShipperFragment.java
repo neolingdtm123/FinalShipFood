@@ -323,8 +323,13 @@ public class ShipperFragment extends Fragment
     public void directShip(Order order, String shipAddress, String shopAddress) {
         mGoogleMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
-        String add = getLocationFromAddress(shipAddress);
-        latlngMain = new LatLng(Double.valueOf(add.split("/")[0]), Double.valueOf(add.split("/")[1]));
+        if(CommonActivity.isNullOrEmpty(order.getAddressship())){
+            latlngMain= new LatLng(Double.valueOf(order.getCurrentlat()),Double.valueOf(order.getCurrentlon()));
+        }
+        else {
+            String add = getLocationFromAddress(shipAddress);
+            latlngMain = new LatLng(Double.valueOf(add.split("/")[0]), Double.valueOf(add.split("/")[1]));
+        }
 
         markerOptions.position(latlngMain);
         markerOptions.title("Vị trí cần ship");

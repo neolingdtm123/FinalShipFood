@@ -21,15 +21,17 @@ import com.leekien.shipfoodfinal.R;
 import com.leekien.shipfoodfinal.bo.User;
 import com.leekien.shipfoodfinal.changepass.ChangePassFragment;
 import com.leekien.shipfoodfinal.common.CommonActivity;
+import com.leekien.shipfoodfinal.rank.RankFragment;
 import com.leekien.shipfoodfinal.statis.StatisFragment;
 
 public class LogOutFragment extends Fragment implements View.OnClickListener, LogOutManager.View {
     EditText edtName, edtLocation, edtPhone, edtBirthDate;
     Button btnBack, btnSubmit;
-    TextView tv;
-    LinearLayout ln,lnStatis;
-    ImageView image,imgStatis,imgchangePass;
+    TextView tv,tvRank,tvPointRank;
+    LinearLayout ln,lnStatis,lnShow;
+    ImageView image,imgStatis,imgchangePass,imgShow;
     LogOutPresenter logOutPresenter;
+    View view1,view2;
 
     @Nullable
     @Override
@@ -48,21 +50,54 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
         imgchangePass = view.findViewById(R.id.imgchangePass);
         ln = view.findViewById(R.id.ln);
         tv = view.findViewById(R.id.tv);
+        lnShow = view.findViewById(R.id.lnShow);
+        imgShow = view.findViewById(R.id.imgShow);
+        tvRank = view.findViewById(R.id.tvRank);
+        tvPointRank = view.findViewById(R.id.tvPointRank);
+        view1 = view.findViewById(R.id.view1);
+        view2 = view.findViewById(R.id.view2);
         initView();
         btnBack.setOnClickListener(this);
         btnSubmit.setOnClickListener(this);
         image.setOnClickListener(this);
         imgStatis.setOnClickListener(this);
         imgchangePass.setOnClickListener(this);
+        imgShow.setOnClickListener(this);
         return view;
     }
 
     private void initView() {
+        if(!CommonActivity.isNullOrEmpty(MainActivity.point)){
+            if(Integer.parseInt(MainActivity.point) <500){
+                tvRank.setText("Thành viên chuẩn");
+                tvPointRank.setText("Còn "+String.valueOf(500-Integer.parseInt(MainActivity.point))+" điểm để nâng rank");
+
+            }
+            else if(Integer.parseInt(MainActivity.point)<1000){
+                tvRank.setText("Thành viên bạc");
+                tvPointRank.setText("Còn "+String.valueOf(1000-Integer.parseInt(MainActivity.point))+" điểm để nâng rank");
+            }
+            else {
+                tvRank.setText("Thành viên vàng");
+                tvPointRank.setVisibility(View.GONE);
+            }
+        }
+
         if (!CommonActivity.isNullOrEmpty(MainActivity.user)) {
             edtName.setText(MainActivity.user.getName());
             edtPhone.setText(MainActivity.user.getPhone());
             edtBirthDate.setText(MainActivity.user.getBirthdate());
             edtLocation.setText(MainActivity.user.getLocation());
+        }
+        if(!CommonActivity.isNullOrEmpty(MainActivity.user)&&"user".equals(MainActivity.user.getType())){
+            lnShow.setVisibility(View.VISIBLE);
+            view1.setVisibility(View.VISIBLE);
+            view2.setVisibility(View.VISIBLE);
+        }
+        else {
+            lnShow.setVisibility(View.GONE);
+            view1.setVisibility(View.GONE);
+            view2.setVisibility(View.GONE);
         }
         if(!CommonActivity.isNullOrEmpty(MainActivity.user)&&"shop".equals(MainActivity.user.getType())){
             lnStatis.setVisibility(View.VISIBLE);
@@ -99,6 +134,10 @@ public class LogOutFragment extends Fragment implements View.OnClickListener, Lo
             case R.id.imgchangePass:
                 ChangePassFragment changePassFragment = new ChangePassFragment();
                 replaceFragment(changePassFragment, "changePassFragment");
+                break;
+            case R.id.imgShow:
+                RankFragment rankFragment = new RankFragment();
+                replaceFragment(rankFragment, "rankFragment");
                 break;
         }
     }

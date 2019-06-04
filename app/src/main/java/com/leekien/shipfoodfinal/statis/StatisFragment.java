@@ -107,6 +107,7 @@ public class StatisFragment extends Fragment implements StatisManager.View {
         lineDataSet.setColor(Color.BLUE);
         lineDataSets.add(lineDataSet);
         lineChart.setData(new LineData(lineDataSets));
+        lineChart.invalidate();
         lineChart.setDragEnabled(true);
         lineChart.setTouchEnabled(true);
 

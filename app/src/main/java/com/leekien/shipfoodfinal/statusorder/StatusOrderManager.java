@@ -22,10 +22,12 @@ public class StatusOrderManager {
     public interface Presenter {
         void getOrder(int idOrder);
         void deleteOrder(Order order,String checkType);
+        void updateUser();
     }
 
     public interface Interactor {
         void getOrder(Callback<Order> callback, int idOrder);
         void deleteOrder(Callback<ResponseBody> callback,Order order);
+        void updateUser(Callback<ResponseBody> callback);
     }
 }

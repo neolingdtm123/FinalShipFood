@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:id="@+id/ln"
+    android:layout_height="60dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/lnRank"
+        android:layout_marginTop="10dp"
+        android:layout_width="20dp"
+        android:layout_gravity="center"
+        android:layout_height="20dp"
+        android:background="@drawable/custom_cicle_chuan"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_crown" />
+    </LinearLayout>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvName"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Chuẩn"/>
+</LinearLayout>

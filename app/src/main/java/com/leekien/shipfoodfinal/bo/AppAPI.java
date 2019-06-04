@@ -60,6 +60,9 @@ public interface AppAPI {
     @PUT("user/updateLocation/{id}")
     Call<ResponseBody> updateLocation(@Path("id") int id,@Field("lat") String lat,@Field("lon")
             String lon,@Header("Authorization") String authHeader);
+    @FormUrlEncoded
+    @PUT("user/updatePoint/{id}")
+    Call<ResponseBody> updatePoint(@Path("id") int id,@Field("point") String point,@Header("Authorization") String authHeader);
     @GET("orders/getOrder/{id}")
     Call<Order> getOrder(@Path("id") int id,@Header("Authorization") String authHeader);
     @POST("orders/add")

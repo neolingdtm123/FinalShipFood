@@ -89,7 +89,7 @@ public class CartFragment extends Fragment
     SupportMapFragment m;
     CartPresenter cartPresenter;
     RecyclerView rcvDonHang;
-    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice, tvSubmit, tvShow;
+    TextView tvDistance, tvPriceFood, tvPriceDistance, tvSumPrice, tvSubmit, tvShow, tvRank;
     EditText edtShipAddress;
     int priceDat = 0;
     double priceDistance = 0;
@@ -126,11 +126,11 @@ public class CartFragment extends Fragment
         tvDistance = view.findViewById(R.id.tvDistance);
         tvPriceFood = view.findViewById(R.id.tvPriceFood);
         tvPriceDistance = view.findViewById(R.id.tvPriceDistance);
+        tvRank = view.findViewById(R.id.tvRank);
         tvSubmit = view.findViewById(R.id.tvSubmit);
         tvSumPrice = view.findViewById(R.id.tvSumPrice);
         tvShow = view.findViewById(R.id.tvShow);
         edtShipAddress = view.findViewById(R.id.edtShipAddress);
-
         if (MainActivity.checkOrder) {
             tvSubmit.setVisibility(View.VISIBLE);
         } else {
@@ -147,6 +147,15 @@ public class CartFragment extends Fragment
 
         } else {
             edtShipAddress.setText(address);
+        }
+        if (Integer.parseInt(MainActivity.point) < 500) {
+            tvRank.setVisibility(View.GONE);
+        } else if (Integer.parseInt(MainActivity.point) < 1000) {
+            tvRank.setVisibility(View.VISIBLE);
+            tvRank.setText("-5%(Thành viên bạc)");
+        } else {
+            tvRank.setVisibility(View.VISIBLE);
+            tvRank.setText("-10%(Thành viên vàng)");
         }
         cartPresenter.showList();
         tvSubmit.setOnClickListener(this);
@@ -250,9 +259,11 @@ public class CartFragment extends Fragment
                 showCameraToPosition(mCurrentLocation, 13f);
             }
         }
+        if (!CommonActivity.isNullOrEmpty(MainActivity.userShop)) {
+            addShop = getLocationFromAddress(MainActivity.userShop.getLocation());
+            cartPresenter.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude + "", addShop.split("/")[0], addShop.split("/")[1]);
+        }
 
-        addShop = getLocationFromAddress(MainActivity.userShop.getLocation());
-        cartPresenter.getDistance(mCurrentLocation.latitude + "", mCurrentLocation.longitude + "", addShop.split("/")[0], addShop.split("/")[1]);
         showShopLocation();
 
 
@@ -334,7 +345,7 @@ public class CartFragment extends Fragment
         order.setFoodList(listFood);
         order.setDistance(distanceMain);
         order.setPrice(priceShip + "");
-        order.setPricefood(priceDat + "");
+        order.setPricefood(showPrice() + "");
         order.setAddressship(edtShipAddress.getText().toString());
         List<User> list = new ArrayList<>();
         list.add(MainActivity.user);
@@ -493,7 +504,16 @@ public class CartFragment extends Fragment
                 priceDat += (Integer.parseInt(food.getPriceDat()) * (100 - discount) / 100);
             }
         }
-        return priceDat;
+        int price = 0;
+        if (Integer.parseInt(MainActivity.point) < 500) {
+            price = priceDat;
+
+        } else if (Integer.parseInt(MainActivity.point) < 1000) {
+            price = priceDat * 95 / 100;
+        } else {
+            price = priceDat * 90 / 100;
+        }
+        return price;
     }
 
     public String getLocationFromAddress(String strAddress) {

@@ -464,6 +464,7 @@ public class ShowInfoFragment extends Fragment
     public void replace(Order order) {
         showInfoPresenter.send(order.getId());
         MarkerOptions markerOptions = new MarkerOptions();
+        add1 = getLocationFromAddress(order.getAddressship());
         if("".equals(order.getAddressship())){
             latlngMain = new LatLng(Double.valueOf(order.getCurrentlat()), Double.valueOf(order.getCurrentlon()));
         }else {
@@ -471,7 +472,7 @@ public class ShowInfoFragment extends Fragment
         }
         markerOptions.position(latlngMain);
         markerOptions.title("Vị trí cần ship");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         markerOptions.alpha(0.8f);
         markerOptions.rotation(0);
         Marker marker = mGoogleMap.addMarker(markerOptions);
@@ -484,7 +485,7 @@ public class ShowInfoFragment extends Fragment
         else {
             add1 = getLocationFromAddress(order.getAddressship());
             showInfoPresenter.getInfo(add.split("/")[0],add.split("/")[1],
-                    add1.split("/")[0], add1.split("/")[0]);
+                    add1.split("/")[0], add1.split("/")[1]);
         }
         btnSubmit1.setVisibility(View.VISIBLE);
         btnSubmit.setVisibility(View.GONE);

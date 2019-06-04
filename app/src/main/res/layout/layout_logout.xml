@@ -23,8 +23,66 @@
                 android:layout_height="160dp"
                 android:layout_gravity="center"
                 android:src="@drawable/logo_shipfood" />
+            <View
+                android:id="@+id/view1"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_3"/>
+            <LinearLayout
+                android:id="@+id/lnShow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
 
+                <LinearLayout
+                    android:layout_width="30dp"
+                    android:layout_gravity="center"
+                    android:layout_height="30dp"
+                    android:background="@drawable/custom_cicle_orange"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_crown" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.leekien.shipfoodfinal.customView.RobBoldText
+                        android:text="Thành viên chuẩn"
+                        android:id="@+id/tvRank"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <com.leekien.shipfoodfinal.customView.RobLightText
+                        android:id="@+id/tvPointRank"
+                        android:text="Còn 80 điểm để nâng rank"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/imgShow"
+                    app:srcCompat="@drawable/ic_right_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_3"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

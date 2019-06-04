@@ -29,4 +29,10 @@ public class StatusOrderInteractor implements StatusOrderManager.Interactor {
         Call<ResponseBody> call = appAPI.updateOrderSuccess(order.getId(),order.getType(),content,MainActivity.auth);
         call.enqueue(callback);
     }
+
+    @Override
+    public void updateUser(Callback<ResponseBody> callback) {
+        Call<ResponseBody> call = appAPI.updatePoint(MainActivity.user.getId(),MainActivity.point, MainActivity.auth);
+        call.enqueue(callback);
+    }
 }

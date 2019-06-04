@@ -54,9 +54,7 @@ public class ShowInfoPresenter implements ShowInfoManager.Presenter {
         Callback<ResponseBody> callback = new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
-                    view.end();
-                }
+
             }
 
             @Override

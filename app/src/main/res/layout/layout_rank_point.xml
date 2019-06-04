@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="20dp"
+
+    >
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="THÔNG TIN THÀNH VIÊN"
+        android:textSize="16sp"
+        android:textColor="#000000"/>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvName"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="20 ĐIỂM"
+        android:textSize="18sp"
+        android:textColor="@color/red"/>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvNameRank"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="20 điểm sẽ hết hạn vào ngày 20/4/111">
+    </com.leekien.shipfoodfinal.customView.RobLightText>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/gray_3"></View>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ĐIỂM CÓ THỂ SỬ DỤNG"
+        android:textSize="16sp"
+        android:textColor="#000000"/>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvPointRank"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="20 ĐIỂM"
+        android:textSize="18sp"
+        android:textColor="@color/red"/>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvDate"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="20 điểm sẽ hết hạn vào ngày 20/4/111">
+    </com.leekien.shipfoodfinal.customView.RobLightText>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/gray_3"></View>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QÚA TRÌNH TÍCH ĐIỂM"
+        android:textSize="16sp"
+        android:textColor="#000000"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+         >
+            <View
+                android:layout_gravity="center"
+                android:id="@+id/view1"
+                android:layout_width="wrap_content"
+                android:layout_height="3dp"
+                android:background="@color/orange" />
+
+            <View
+                android:layout_gravity="center"
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="3dp"
+                android:background="@color/gray_3" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ln"
+            android:layout_width="20dp"
+            android:layout_gravity="center"
+            android:layout_height="20dp"
+            android:background="@drawable/custom_cicle_orange"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_crown" />
+        </LinearLayout>
+    </LinearLayout>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvNotify"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tích lũy thêm 80 điểm để đạt thành viên Bạc"/>
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/gray_3"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvRank"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+  >
+    </android.support.v7.widget.RecyclerView>
+    <com.leekien.shipfoodfinal.customView.RobLightText
+        android:id="@+id/tvContent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="THÔNG TIN THÀNH VIÊN"
+        android:textSize="16sp"
+        android:textColor="#000000"/>
+    <LinearLayout
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ln1"
+            android:layout_width="20dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_height="20dp"
+            android:background="@drawable/custom_cicle_orange"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_crown" />
+        </LinearLayout>
+        <com.leekien.shipfoodfinal.customView.RobLightText
+            android:id="@+id/tvDisCount"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:text="Giảm giá đơn hàng 5%"/>
+    </LinearLayout>
+
+</LinearLayout>

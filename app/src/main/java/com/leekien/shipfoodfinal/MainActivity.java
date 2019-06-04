@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     static public double lon;
     static public int idshop =0;
     static public String auth;
+    static public String point;
 
     @Override
     protected void onStop() {
